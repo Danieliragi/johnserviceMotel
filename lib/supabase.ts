@@ -4,11 +4,13 @@ import { createClient } from "@supabase/supabase-js"
 // NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 // NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+// Update the supabase client creation to handle missing environment variables during build
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
+// Only throw an error if we're not in the build process
+if ((!supabaseUrl || !supabaseAnonKey) && process.env.NODE_ENV !== "production") {
+  console.warn(
     "Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file.",
   )
 }
