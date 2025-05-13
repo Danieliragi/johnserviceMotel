@@ -1,14 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { supabase, hasSupabaseCredentials } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase"
 
 // GET /api/utilisateurs - Récupérer tous les utilisateurs
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Check if Supabase credentials are available
-    if (!hasSupabaseCredentials || !supabase) {
-      return NextResponse.json({ error: "Supabase credentials not configured" }, { status: 503 })
-    }
-
     const { data, error } = await supabase.from("utilisateurs").select("*").order("date_creation", { ascending: false })
 
     if (error) {

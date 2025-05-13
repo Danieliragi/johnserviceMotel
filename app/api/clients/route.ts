@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server"
-import { supabase, hasSupabaseCredentials } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase"
 
 export async function GET() {
   try {
-    // Check if Supabase credentials are available
-    if (!hasSupabaseCredentials || !supabase) {
-      return NextResponse.json({ error: "Supabase credentials not configured" }, { status: 503 })
-    }
-
     const { data, error } = await supabase.from("clients").select("*")
 
     if (error) {
+      console.error("Supabase error:", error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
@@ -23,11 +19,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    // Check if Supabase credentials are available
-    if (!hasSupabaseCredentials) {
-      return NextResponse.json({ error: "Supabase credentials not configured" }, { status: 503 })
-    }
-
     const body = await request.json()
     const { nom, telephone, email, localisation } = body
 

@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server"
-import { supabase, hasSupabaseCredentials } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase"
 
 export async function GET() {
   try {
-    // Check if Supabase credentials are available
-    if (!hasSupabaseCredentials || !supabase) {
-      return NextResponse.json({ error: "Supabase credentials not configured" }, { status: 503 })
-    }
-
     const { data, error } = await supabase
       .from("reservations")
-      .select("*, clients(nom, telephone), chambres(nom)")
+      .select("*, clients(*), chambres(nom)")
       .order("date_arrivee", { ascending: false })
 
     if (error) {
