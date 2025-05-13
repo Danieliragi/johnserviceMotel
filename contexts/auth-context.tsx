@@ -1,217 +1,111 @@
 "use client"
 
-import type React from "react"
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { getSupabaseClient } from "@/lib/supabase"
 
-import { createContext, useContext, useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
-import type { User } from "@supabase/supabase-js"
-import Cookies from "js-cookie"
+type User = {
+  id: string
+  role: string
+  telephone: string
+  nom_complet: string | null
+}
 
 type AuthContextType = {
   user: User | null
   loading: boolean
-  signIn: (
-    email: string,
-    password: string,
-    isMockLogin?: boolean,
-    mockUser?: User | null,
-  ) => Promise<{
-    error: Error | null
-    success: boolean
-  }>
-  signUp: (
-    email: string,
-    password: string,
-    telephone: string,
-    nom_complet: string,
-  ) => Promise<{
-    error: Error | null
-    success: boolean
-  }>
-  signOut: () => Promise<void>
+  error: string | null
+  login: (telephone: string) => Promise<{ success: boolean; message: string }>
+  logout: () => Promise<void>
+  isAuthenticated: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    checkAuth()
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null)
-      setIsAuthenticated(!!session?.user)
-      setLoading(false)
-    })
-
-    return () => {
-      subscription.unsubscribe()
+    // Check for user in localStorage on initial load
+    const checkUser = () => {
+      try {
+        const storedUser = localStorage.getItem("user")
+        if (storedUser) {
+          setUser(JSON.parse(storedUser))
+        }
+      } catch (err) {
+        console.error("Error checking authentication:", err)
+      } finally {
+        setLoading(false)
+      }
     }
+
+    checkUser()
   }, [])
 
-  async function signIn(email: string, password: string, isMockLogin = false, mockUser: User | null = null) {
-    setLoading(true)
+  const login = async (telephone: string): Promise<{ success: boolean; message: string }> => {
     try {
-      // Si c'est une connexion simulée avec un utilisateur mock
-      if (isMockLogin && mockUser) {
-        setUser(mockUser)
-        setIsAuthenticated(true)
-        setLoading(false)
-        return { error: null, success: true }
+      setLoading(true)
+      setError(null)
+
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        throw new Error("Supabase client is not initialized")
       }
 
-      // Sinon, continuer avec le processus normal de Supabase
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-      if (error) {
-        setLoading(false)
-        return { error, success: false }
+      // Validate phone format
+      const phoneRegex = /^\+243[0-9]{9}$/
+      if (!phoneRegex.test(telephone)) {
+        return {
+          success: false,
+          message: "Le format du numéro de téléphone doit être +243 suivi de 9 chiffres",
+        }
       }
 
-      // Update user metadata in the utilisateurs table
-      if (data.user) {
-        await supabase.from("utilisateurs").upsert(
-          {
-            id: data.user.id,
-            derniere_connexion: new Date().toISOString(),
-          },
-          { onConflict: "id" },
-        )
+      // Find user by telephone
+      const { data, error } = await supabase.from("utilisateurs").select("*").eq("telephone", telephone).single()
+
+      if (error || !data) {
+        return { success: false, message: "Utilisateur non trouvé" }
       }
 
-      setUser(data.user)
-      setIsAuthenticated(true)
+      // Update last login
+      await supabase.from("utilisateurs").update({ derniere_connexion: new Date().toISOString() }).eq("id", data.id)
+
+      // Set user in state and localStorage
+      setUser(data)
+      localStorage.setItem("user", JSON.stringify(data))
+
+      return { success: true, message: "Connexion réussie" }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Une erreur est survenue lors de la connexion"
+      setError(errorMessage)
+      return { success: false, message: errorMessage }
+    } finally {
       setLoading(false)
-      return { error: null, success: true }
-    } catch (error) {
-      console.error("Error signing in:", error)
-      setLoading(false)
-      return { error: error as Error, success: false }
     }
   }
 
-  async function checkAuth() {
-    setLoading(true)
-
-    // Vérifier d'abord s'il y a un utilisateur simulé dans localStorage
-    const mockUserString = localStorage.getItem("mockUser")
-    const mockAuthCookie = Cookies.get("mockAuth")
-
-    if (mockUserString && mockAuthCookie === "true") {
-      try {
-        const mockUser = JSON.parse(mockUserString)
-        setUser(mockUser)
-        setIsAuthenticated(true)
-        setLoading(false)
-        return true
-      } catch (e) {
-        // Si le JSON est invalide, supprimer l'entrée
-        localStorage.removeItem("mockUser")
-        Cookies.remove("mockAuth")
-      }
-    }
-
-    // Sinon, vérifier avec Supabase
-    try {
-      const { data } = await supabase.auth.getSession()
-      if (data.session) {
-        setUser(data.session.user)
-        setIsAuthenticated(true)
-        setLoading(false)
-        return true
-      } else {
-        setUser(null)
-        setIsAuthenticated(false)
-        setLoading(false)
-        return false
-      }
-    } catch (error) {
-      console.error("Auth check error:", error)
-      setUser(null)
-      setIsAuthenticated(false)
-      setLoading(false)
-      return false
-    }
+  const logout = async (): Promise<void> => {
+    setUser(null)
+    localStorage.removeItem("user")
   }
 
-  const signUp = async (email: string, password: string, telephone: string, nom_complet: string) => {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            telephone,
-            nom_complet,
-          },
-        },
-      })
-
-      if (error) throw error
-
-      // Create a record in the utilisateurs table
-      if (data.user) {
-        await supabase.from("utilisateurs").insert({
-          id: data.user.id,
-          role: "user",
-          telephone,
-          nom_complet,
-          date_creation: new Date().toISOString(),
-        })
-      }
-
-      return { error: null, success: true }
-    } catch (error) {
-      console.error("Error signing up:", error)
-      return { error: error as Error, success: false }
-    }
-  }
-
-  async function signOut() {
-    setLoading(true)
-
-    // Vérifier s'il y a un utilisateur simulé
-    const mockUserString = localStorage.getItem("mockUser")
-    const mockAuthCookie = Cookies.get("mockAuth")
-
-    if (mockUserString || mockAuthCookie) {
-      localStorage.removeItem("mockUser")
-      Cookies.remove("mockAuth", { path: "/" })
-      setUser(null)
-      setIsAuthenticated(false)
-      setLoading(false)
-      return
-    }
-
-    // Sinon, déconnexion normale via Supabase
-    try {
-      const { error } = await supabase.auth.signOut()
-      if (error) {
-        setLoading(false)
-        return
-      }
-
-      setUser(null)
-      setIsAuthenticated(false)
-      setLoading(false)
-      return
-    } catch (error) {
-      console.error("Error signing out:", error)
-      setLoading(false)
-      return
-    }
-  }
-
-  return <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        login,
+        logout,
+        isAuthenticated: !!user,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {

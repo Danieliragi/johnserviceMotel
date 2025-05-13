@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function SupabaseTest() {
@@ -13,6 +13,12 @@ export default function SupabaseTest() {
     async function fetchRooms() {
       try {
         setLoading(true)
+        const supabase = getSupabaseClient()
+
+        if (!supabase) {
+          throw new Error("Supabase client is not initialized. Please check your environment variables.")
+        }
+
         const { data, error } = await supabase.from("chambres").select("*")
 
         if (error) {

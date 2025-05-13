@@ -4,19 +4,31 @@ import { createClient } from "@supabase/supabase-js"
 // NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 // NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
-// Update the supabase client creation to handle missing environment variables during build
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Only throw an error if we're not in the build process
-if ((!supabaseUrl || !supabaseAnonKey) && process.env.NODE_ENV !== "production") {
-  console.warn(
-    "Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file.",
-  )
+// Create a conditional supabase client
+let supabaseClient: ReturnType<typeof createClient> | null = null
+
+// Only create the client if both URL and key are available
+if (supabaseUrl && supabaseAnonKey) {
+  supabaseClient = createClient(supabaseUrl, supabaseAnonKey)
+} else {
+  // Log a warning in development
+  if (process.env.NODE_ENV !== "production") {
+    console.warn(
+      "Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file.",
+    )
+  }
 }
 
-// Create a single supabase client for interacting with your database
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Export the client directly for backward compatibility
+export const supabase = supabaseClient
+
+// Export a function to safely get the supabase client
+export function getSupabaseClient() {
+  return supabaseClient
+}
 
 // Type definitions for database tables
 export type Database = {

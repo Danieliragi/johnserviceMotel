@@ -1,17 +1,30 @@
 import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 
 export async function GET() {
   try {
-    const { data, error } = await supabase.from("services").select("*").eq("disponible", true)
+    const supabase = getSupabaseClient()
+
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json(
+        {
+          error: "Supabase client is not initialized. Please check your environment variables.",
+          services: [],
+        },
+        { status: 503 },
+      )
+    }
+
+    const { data, error } = await supabase.from("services").select("*").order("nom", { ascending: true })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: error.message, services: [] }, { status: 500 })
     }
 
     return NextResponse.json({ services: data })
   } catch (error) {
     console.error("Error fetching services:", error)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal Server Error", services: [] }, { status: 500 })
   }
 }

@@ -1,16 +1,29 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 
 // GET /api/utilisateurs - Récupérer tous les utilisateurs
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
+
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json(
+        {
+          error: "Supabase client is not initialized. Please check your environment variables.",
+          utilisateurs: [],
+        },
+        { status: 503 },
+      )
+    }
+
     const { data, error } = await supabase.from("utilisateurs").select("*").order("date_creation", { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: error.message, utilisateurs: [] }, { status: 500 })
     }
 
-    return NextResponse.json(data)
+    return NextResponse.json({ utilisateurs: data })
   } catch (error) {
     return NextResponse.json(
       { error: "Une erreur est survenue lors de la récupération des utilisateurs" },
@@ -22,6 +35,14 @@ export async function GET(request: NextRequest) {
 // POST /api/utilisateurs - Créer un nouvel utilisateur
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase client is not initialized. Please check your environment variables." },
+        { status: 503 },
+      )
+    }
+
     const body = await request.json()
 
     // Validation de base
@@ -73,6 +94,14 @@ export async function POST(request: NextRequest) {
 // PATCH /api/utilisateurs/:id - Mettre à jour un utilisateur
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase client is not initialized. Please check your environment variables." },
+        { status: 503 },
+      )
+    }
+
     const id = params.id
     const body = await request.json()
 
@@ -115,6 +144,14 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 // DELETE /api/utilisateurs/:id - Supprimer un utilisateur
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase client is not initialized. Please check your environment variables." },
+        { status: 503 },
+      )
+    }
+
     const id = params.id
 
     const { error } = await supabase.from("utilisateurs").delete().eq("id", id)
