@@ -4,14 +4,13 @@ import { supabase, hasSupabaseCredentials } from "@/lib/supabase"
 export async function GET() {
   try {
     // Check if Supabase credentials are available
-    if (!hasSupabaseCredentials) {
+    if (!hasSupabaseCredentials || !supabase) {
       return NextResponse.json({ error: "Supabase credentials not configured" }, { status: 503 })
     }
 
     const { data, error } = await supabase.from("clients").select("*")
 
     if (error) {
-      console.error("Supabase error:", error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 

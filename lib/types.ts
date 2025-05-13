@@ -1,21 +1,3 @@
-import { createClient } from "@supabase/supabase-js"
-import type { Database as DB } from "./types"
-
-// These environment variables need to be set in your .env.local file
-// NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-// NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-// Check if we have the required environment variables
-export const hasSupabaseCredentials =
-  typeof supabaseUrl === "string" && supabaseUrl !== "" && typeof supabaseAnonKey === "string" && supabaseAnonKey !== ""
-
-// Create a single supabase client for interacting with your database
-export const supabase = hasSupabaseCredentials ? createClient<DB>(supabaseUrl!, supabaseAnonKey!) : null
-
-// Type definitions for database tables
 export type Database = {
   public: {
     Tables: {
