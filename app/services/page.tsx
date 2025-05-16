@@ -3,16 +3,15 @@ import Link from "next/link"
 import {
   Wifi,
   Utensils,
-  Car,
-  Dumbbell,
   Briefcase,
   ShowerHead,
   Coffee,
   Tv,
   Clock,
-  Shirt,
-  Baby,
-  Phone,
+  Users,
+  Bed,
+  ChefHat,
+  PresentationIcon as PresentationScreen,
 } from "lucide-react"
 
 import ScrollAnimation from "@/components/scroll-animation"
@@ -23,7 +22,7 @@ export default function ServicesPage() {
     <main className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[50vh] overflow-hidden">
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <div className="absolute inset-0 bg-primary z-10"></div>
         <Image
           src="/comfortable-motel-beds.png"
           alt="Services du motel"
@@ -37,7 +36,7 @@ export default function ServicesPage() {
           </ScrollAnimation>
           <ScrollAnimation delay={200}>
             <p className="text-xl md:text-2xl max-w-2xl">
-              Découvrez tous les services premium que nous proposons pour rendre votre séjour inoubliable
+              Découvrez nos trois services principaux : Hébergement, Restaurant et Salles de Réunion/Conférence
             </p>
           </ScrollAnimation>
         </div>
@@ -46,13 +45,13 @@ export default function ServicesPage() {
       {/* Stats Section */}
       <section className="bg-slate-100 py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <ScrollAnimation direction="up" delay={100}>
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <p className="text-4xl font-bold text-primary mb-2">
                   <CountUp end={24} duration={2} />h
                 </p>
-                <p className="text-gray-600">Réception</p>
+                <p className="text-gray-600">Service d'Accueil</p>
               </div>
             </ScrollAnimation>
             <ScrollAnimation direction="up" delay={200}>
@@ -60,49 +59,51 @@ export default function ServicesPage() {
                 <p className="text-4xl font-bold text-primary mb-2">
                   <CountUp end={100} duration={2} />%
                 </p>
-                <p className="text-gray-600">Satisfaction</p>
+                <p className="text-gray-600">Satisfaction Client</p>
               </div>
             </ScrollAnimation>
             <ScrollAnimation direction="up" delay={300}>
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <p className="text-4xl font-bold text-primary mb-2">
-                  <CountUp end={15} duration={2} />+
+                  <CountUp end={3} duration={2} />
                 </p>
-                <p className="text-gray-600">Services</p>
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={400}>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <p className="text-4xl font-bold text-primary mb-2">
-                  <CountUp end={5} duration={2} />
-                  <span className="text-2xl">/5</span>
-                </p>
-                <p className="text-gray-600">Note moyenne</p>
+                <p className="text-gray-600">Services Principaux</p>
               </div>
             </ScrollAnimation>
           </div>
         </div>
       </section>
 
-      {/* Main Services */}
+      {/* Hébergement Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <ScrollAnimation>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Services Inclus</h2>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Bed className="h-8 w-8 text-primary" />
+              <h2 className="text-3xl md:text-4xl font-bold text-center">Hébergement</h2>
+            </div>
+          </ScrollAnimation>
+          <ScrollAnimation delay={100}>
+            <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12">
+              Profitez de nos chambres confortables et élégantes, conçues pour vous offrir un séjour inoubliable.
+            </p>
           </ScrollAnimation>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             <ScrollAnimation direction="up" delay={100}>
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center mb-4">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <Wifi className="h-6 w-6 text-primary" />
+                    <Bed className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">Wi-Fi Haut Débit</h3>
+                  <h3 className="text-xl font-semibold">Chambres Standard</h3>
                 </div>
-                <p className="text-gray-600">
-                  Connexion Wi-Fi gratuite et ultra-rapide dans toutes les chambres et espaces communs.
+                <p className="text-gray-600 mb-4">
+                  Nos chambres standard offrent tout le confort nécessaire pour un séjour agréable à un prix abordable.
                 </p>
+                <Link href="/chambres/standard" className="text-primary font-medium hover:underline">
+                  En savoir plus →
+                </Link>
               </div>
             </ScrollAnimation>
 
@@ -110,13 +111,16 @@ export default function ServicesPage() {
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center mb-4">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <Car className="h-6 w-6 text-primary" />
+                    <Bed className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">Parking Gratuit</h3>
+                  <h3 className="text-xl font-semibold">Chambres De Luxe</h3>
                 </div>
-                <p className="text-gray-600">
-                  Stationnement sécurisé et gratuit pour tous nos clients pendant toute la durée du séjour.
+                <p className="text-gray-600 mb-4">
+                  Élégantes et spacieuses, nos chambres de luxe offrent un confort supérieur pour un séjour raffiné.
                 </p>
+                <Link href="/chambres/deluxe" className="text-primary font-medium hover:underline">
+                  En savoir plus →
+                </Link>
               </div>
             </ScrollAnimation>
 
@@ -124,188 +128,59 @@ export default function ServicesPage() {
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center mb-4">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <Tv className="h-6 w-6 text-primary" />
+                    <Bed className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">TV Écran Plat</h3>
+                  <h3 className="text-xl font-semibold">Chambres VIP</h3>
                 </div>
-                <p className="text-gray-600">
-                  Télévision à écran plat avec chaînes premium et service de streaming dans chaque chambre.
+                <p className="text-gray-600 mb-4">
+                  Luxe et élégance caractérisent nos chambres VIP, pour un séjour d'exception avec des services premium.
                 </p>
-              </div>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={250}>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="flex items-center mb-4">
-                  <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <ShowerHead className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Produits de Toilette</h3>
-                </div>
-                <p className="text-gray-600">
-                  Ensemble complet de produits de toilette de qualité supérieure dans chaque salle de bain.
-                </p>
-              </div>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={300}>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="flex items-center mb-4">
-                  <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <Clock className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Réception 24h/24</h3>
-                </div>
-                <p className="text-gray-600">
-                  Notre équipe est à votre disposition 24h/24 et 7j/7 pour répondre à tous vos besoins.
-                </p>
-              </div>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={350}>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="flex items-center mb-4">
-                  <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <Briefcase className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold">Espace de Travail</h3>
-                </div>
-                <p className="text-gray-600">
-                  Bureau confortable et ergonomique dans chaque chambre pour vos besoins professionnels.
-                </p>
-              </div>
-            </ScrollAnimation>
-          </div>
-        </div>
-      </section>
-
-      {/* Premium Services */}
-      <section className="py-16 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <ScrollAnimation>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Services Premium</h2>
-          </ScrollAnimation>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <ScrollAnimation direction="left">
-              <div className="bg-slate-800 p-8 rounded-lg hover:bg-slate-700 transition-all duration-300">
-                <div className="flex items-center mb-6">
-                  <div className="bg-white/10 p-4 rounded-full mr-4">
-                    <Utensils className="h-8 w-8 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold">Petit-déjeuner Continental</h3>
-                    <p className="text-slate-300 mt-1">$12 par personne</p>
-                  </div>
-                </div>
-                <p className="text-slate-300 mb-6">
-                  Commencez votre journée avec notre petit-déjeuner continental comprenant des viennoiseries fraîches,
-                  des fruits de saison, des céréales, des yaourts, des jus frais et du café de qualité.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-center">
-                    <span className="text-green-400 mr-2">✓</span>
-                    <span>Servi de 6h30 à 10h30</span>
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-400 mr-2">✓</span>
-                    <span>Options végétariennes disponibles</span>
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-400 mr-2">✓</span>
-                    <span>Service en chambre disponible</span>
-                  </li>
-                </ul>
-                <button className="bg-white text-slate-900 hover:bg-slate-100 py-2 px-6 rounded-full font-medium transition-colors duration-300">
-                  Réserver
-                </button>
-              </div>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="right">
-              <div className="bg-slate-800 p-8 rounded-lg hover:bg-slate-700 transition-all duration-300">
-                <div className="flex items-center mb-6">
-                  <div className="bg-white/10 p-4 rounded-full mr-4">
-                    <Dumbbell className="h-8 w-8 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold">Accès Salle de Sport</h3>
-                    <p className="text-slate-300 mt-1">$8 par jour</p>
-                  </div>
-                </div>
-                <p className="text-slate-300 mb-6">
-                  Maintenez votre routine d'exercice pendant votre séjour avec notre salle de sport entièrement équipée,
-                  comprenant des équipements cardio et de musculation modernes.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-center">
-                    <span className="text-green-400 mr-2">✓</span>
-                    <span>Ouvert 24h/24</span>
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-400 mr-2">✓</span>
-                    <span>Serviettes et eau fournies</span>
-                  </li>
-                  <li className="flex items-center">
-                    <span className="text-green-400 mr-2">✓</span>
-                    <span>Équipements de dernière génération</span>
-                  </li>
-                </ul>
-                <button className="bg-white text-slate-900 hover:bg-slate-100 py-2 px-6 rounded-full font-medium transition-colors duration-300">
-                  Réserver
-                </button>
+                <Link href="/chambres/vip" className="text-primary font-medium hover:underline">
+                  En savoir plus →
+                </Link>
               </div>
             </ScrollAnimation>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ScrollAnimation direction="up" delay={100}>
-              <div className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-all duration-300">
+              <div className="bg-slate-100 p-6 rounded-lg">
                 <div className="flex items-center mb-4">
-                  <div className="bg-white/10 p-3 rounded-full mr-3">
-                    <Shirt className="h-5 w-5 text-white" />
+                  <div className="bg-primary/10 p-3 rounded-full mr-3">
+                    <Wifi className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Service de Blanchisserie</h3>
-                    <p className="text-slate-300 text-sm mt-1">À partir de $15</p>
-                  </div>
+                  <h3 className="text-lg font-semibold">Wi-Fi Gratuit</h3>
                 </div>
-                <p className="text-slate-300 text-sm">
-                  Service de nettoyage et repassage de vos vêtements avec retour sous 24h.
+                <p className="text-gray-600 text-sm">
+                  Connexion Wi-Fi haut débit gratuite dans toutes nos chambres et espaces communs.
+                </p>
+              </div>
+            </ScrollAnimation>
+
+            <ScrollAnimation direction="up" delay={150}>
+              <div className="bg-slate-100 p-6 rounded-lg">
+                <div className="flex items-center mb-4">
+                  <div className="bg-primary/10 p-3 rounded-full mr-3">
+                    <Tv className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold">TV Écran Plat</h3>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  Télévisions à écran plat avec chaînes premium dans toutes nos chambres.
                 </p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation direction="up" delay={200}>
-              <div className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-all duration-300">
+              <div className="bg-slate-100 p-6 rounded-lg">
                 <div className="flex items-center mb-4">
-                  <div className="bg-white/10 p-3 rounded-full mr-3">
-                    <Baby className="h-5 w-5 text-white" />
+                  <div className="bg-primary/10 p-3 rounded-full mr-3">
+                    <ShowerHead className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Service de Garde d'Enfants</h3>
-                    <p className="text-slate-300 text-sm mt-1">$25/heure</p>
-                  </div>
+                  <h3 className="text-lg font-semibold">Produits de Toilette</h3>
                 </div>
-                <p className="text-slate-300 text-sm">
-                  Personnel qualifié pour s'occuper de vos enfants pendant que vous vous détendez.
-                </p>
-              </div>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={300}>
-              <div className="bg-slate-800 p-6 rounded-lg hover:bg-slate-700 transition-all duration-300">
-                <div className="flex items-center mb-4">
-                  <div className="bg-white/10 p-3 rounded-full mr-3">
-                    <Car className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Service de Navette</h3>
-                    <p className="text-slate-300 text-sm mt-1">$20 par trajet</p>
-                  </div>
-                </div>
-                <p className="text-slate-300 text-sm">
-                  Transport vers/depuis l'aéroport ou la gare, disponible sur réservation.
+                <p className="text-gray-600 text-sm">
+                  Ensemble complet de produits de toilette de qualité dans chaque salle de bain.
                 </p>
               </div>
             </ScrollAnimation>
@@ -313,73 +188,71 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Business Services */}
-      <section className="py-16">
+      {/* Restaurant Section */}
+      <section className="py-16 bg-slate-900 text-white">
         <div className="container mx-auto px-4">
           <ScrollAnimation>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Services d'Affaires</h2>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <ChefHat className="h-8 w-8 text-white" />
+              <h2 className="text-3xl md:text-4xl font-bold text-center">Restaurant</h2>
+            </div>
           </ScrollAnimation>
           <ScrollAnimation delay={100}>
-            <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12">
-              Que vous soyez en voyage d'affaires ou que vous ayez besoin de rester connecté, nous proposons une gamme
-              complète de services professionnels.
+            <p className="text-center text-slate-300 max-w-3xl mx-auto mb-12">
+              Découvrez notre restaurant où nos chefs talentueux préparent des plats délicieux avec des ingrédients
+              frais et locaux.
             </p>
           </ScrollAnimation>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <ScrollAnimation direction="left">
-              <div className="relative overflow-hidden rounded-lg">
-                <Image
-                  src="/business-traveler-motel-laptop.png"
-                  alt="Services d'affaires"
-                  width={600}
-                  height={400}
-                  className="w-full h-full object-cover rounded-lg"
-                />
+              <div className="relative overflow-hidden rounded-lg h-[400px]">
+                <Image src="/motel-restaurant.jpeg" alt="Restaurant du motel" fill className="object-cover" />
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation direction="right">
               <div className="space-y-6">
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                <div className="bg-slate-800 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-primary/10 p-3 rounded-full mr-4">
-                      <Briefcase className="h-6 w-6 text-primary" />
+                    <div className="bg-white/10 p-3 rounded-full mr-4">
+                      <Coffee className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold">Centre d'Affaires</h3>
+                    <h3 className="text-xl font-semibold">Petit-déjeuner Continental</h3>
                   </div>
-                  <p className="text-gray-600 mb-4">
-                    Accès à notre centre d'affaires entièrement équipé avec ordinateurs, imprimantes et scanners.
+                  <p className="text-slate-300 mb-2">
+                    Commencez votre journée avec notre petit-déjeuner continental comprenant des viennoiseries fraîches,
+                    des fruits de saison, des céréales, des yaourts, des jus frais et du café de qualité.
                   </p>
-                  <p className="text-primary font-medium">$10 par heure</p>
+                  <p className="text-white font-medium">Servi de 6h30 à 10h30</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                <div className="bg-slate-800 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-primary/10 p-3 rounded-full mr-4">
-                      <Coffee className="h-6 w-6 text-primary" />
+                    <div className="bg-white/10 p-3 rounded-full mr-4">
+                      <Utensils className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold">Salle de Réunion</h3>
+                    <h3 className="text-xl font-semibold">Restaurant Gastronomique</h3>
                   </div>
-                  <p className="text-gray-600 mb-4">
-                    Salle de réunion professionnelle pouvant accueillir jusqu'à 12 personnes, équipée de matériel
-                    audiovisuel.
+                  <p className="text-slate-300 mb-2">
+                    Notre restaurant propose une cuisine raffinée mettant en valeur les produits locaux et de saison.
+                    Menu à la carte et formules du jour disponibles.
                   </p>
-                  <p className="text-primary font-medium">$50 par heure</p>
+                  <p className="text-white font-medium">Déjeuner: 12h-14h30 | Dîner: 19h-22h30</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                <div className="bg-slate-800 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-primary/10 p-3 rounded-full mr-4">
-                      <Phone className="h-6 w-6 text-primary" />
+                    <div className="bg-white/10 p-3 rounded-full mr-4">
+                      <Clock className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold">Service de Conciergerie</h3>
+                    <h3 className="text-xl font-semibold">Service en Chambre</h3>
                   </div>
-                  <p className="text-gray-600 mb-4">
-                    Assistance personnalisée pour vos besoins professionnels : réservations, organisation de transport,
-                    etc.
+                  <p className="text-slate-300 mb-2">
+                    Profitez de notre service en chambre pour savourer nos délicieux plats dans l'intimité de votre
+                    chambre.
                   </p>
-                  <p className="text-primary font-medium">Service gratuit</p>
+                  <p className="text-white font-medium">Disponible de 7h à 22h</p>
                 </div>
               </div>
             </ScrollAnimation>
@@ -387,123 +260,104 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Service Packages */}
-      <section className="py-16 bg-slate-100">
+      {/* Salles de Réunion Section */}
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <ScrollAnimation>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Forfaits Services</h2>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <PresentationScreen className="h-8 w-8 text-primary" />
+              <h2 className="text-3xl md:text-4xl font-bold text-center">Salles de Réunion & Conférence</h2>
+            </div>
+          </ScrollAnimation>
+          <ScrollAnimation delay={100}>
+            <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12">
+              Des espaces professionnels parfaitement équipés pour vos réunions d'affaires, conférences et événements.
+            </p>
           </ScrollAnimation>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ScrollAnimation direction="up" delay={100}>
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div className="bg-blue-600 text-white p-6 text-center">
-                  <h3 className="text-2xl font-bold">Forfait Essentiel</h3>
-                  <p className="text-4xl font-bold mt-4 mb-2">$25</p>
-                  <p className="text-sm opacity-80">par séjour</p>
-                </div>
-                <div className="p-6">
-                  <ul className="space-y-3 mb-6">
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Petit-déjeuner continental (1 jour)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Wi-Fi premium haute vitesse</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Check-out tardif (jusqu'à 14h)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Bouteilles d'eau quotidiennes</span>
-                    </li>
-                  </ul>
-                  <button className="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors duration-300">
-                    Choisir ce forfait
-                  </button>
-                </div>
-              </div>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={200}>
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ring-2 ring-primary">
-                <div className="bg-primary text-white p-6 text-center relative">
-                  <div className="absolute top-0 right-0 bg-yellow-400 text-primary text-xs font-bold px-3 py-1 transform translate-y-2 rotate-45">
-                    POPULAIRE
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ScrollAnimation direction="left">
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-primary/10 p-3 rounded-full mr-4">
+                      <Users className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">Salle de Réunion Executive</h3>
+                      <p className="text-gray-500 text-sm">Capacité: jusqu'à 12 personnes</p>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold">Forfait Confort</h3>
-                  <p className="text-4xl font-bold mt-4 mb-2">$45</p>
-                  <p className="text-sm opacity-80">par séjour</p>
+                  <p className="text-gray-600 mb-4">
+                    Salle de réunion intime et professionnelle, idéale pour les petites réunions d'affaires et les
+                    entretiens. Équipée d'un écran de projection, système de visioconférence et connexion Wi-Fi haut
+                    débit.
+                  </p>
+                  <p className="text-primary font-medium">À partir de 150€ / demi-journée</p>
                 </div>
-                <div className="p-6">
-                  <ul className="space-y-3 mb-6">
+
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-primary/10 p-3 rounded-full mr-4">
+                      <Users className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">Salle de Conférence</h3>
+                      <p className="text-gray-500 text-sm">Capacité: jusqu'à 50 personnes</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    Notre salle de conférence spacieuse est parfaite pour les présentations, formations et séminaires.
+                    Équipée d'un système audio-visuel complet, podium et disposition flexible des sièges.
+                  </p>
+                  <p className="text-primary font-medium">À partir de 300€ / demi-journée</p>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-primary/10 p-3 rounded-full mr-4">
+                      <Briefcase className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold">Services Inclus</h3>
+                  </div>
+                  <ul className="text-gray-600 space-y-2">
                     <li className="flex items-start">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span>Petit-déjeuner continental (tous les jours)</span>
+                      <span>Wi-Fi haut débit</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span>Wi-Fi premium haute vitesse</span>
+                      <span>Équipement audiovisuel</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span>Check-out tardif (jusqu'à 16h)</span>
+                      <span>Eau minérale et bloc-notes</span>
                     </li>
                     <li className="flex items-start">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span>Accès salle de sport (1 jour)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Service de blanchisserie (2 articles)</span>
+                      <span>Assistance technique</span>
                     </li>
                   </ul>
-                  <button className="w-full bg-primary text-white py-3 rounded-md font-medium hover:bg-primary/90 transition-colors duration-300">
-                    Choisir ce forfait
-                  </button>
                 </div>
               </div>
             </ScrollAnimation>
 
-            <ScrollAnimation direction="up" delay={300}>
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div className="bg-slate-800 text-white p-6 text-center">
-                  <h3 className="text-2xl font-bold">Forfait Premium</h3>
-                  <p className="text-4xl font-bold mt-4 mb-2">$75</p>
-                  <p className="text-sm opacity-80">par séjour</p>
-                </div>
-                <div className="p-6">
-                  <ul className="space-y-3 mb-6">
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Petit-déjeuner continental (tous les jours)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Wi-Fi premium haute vitesse</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Check-out tardif (jusqu'à 18h)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Accès salle de sport (tous les jours)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Service de blanchisserie (5 articles)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      <span>Navette aéroport (aller-retour)</span>
-                    </li>
-                  </ul>
-                  <button className="w-full bg-slate-800 text-white py-3 rounded-md font-medium hover:bg-slate-700 transition-colors duration-300">
-                    Choisir ce forfait
+            <ScrollAnimation direction="right">
+              <div className="relative overflow-hidden rounded-lg h-full min-h-[600px]">
+                <Image
+                  src="/business-traveler-motel-laptop.png"
+                  alt="Salle de réunion"
+                  fill
+                  className="object-cover rounded-lg"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                  <h3 className="text-2xl font-bold text-white mb-2">Forfaits Événements</h3>
+                  <p className="text-white/90 mb-4">
+                    Nous proposons des forfaits complets incluant la location de salle, restauration et hébergement pour
+                    vos événements d'entreprise.
+                  </p>
+                  <button className="bg-white text-primary hover:bg-slate-100 py-2 px-6 rounded-full font-medium transition-colors duration-300">
+                    Demander un devis
                   </button>
                 </div>
               </div>

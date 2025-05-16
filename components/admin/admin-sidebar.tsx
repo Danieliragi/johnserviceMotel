@@ -101,6 +101,13 @@ export function AdminSidebar({ className, collapsed = false }: SidebarNavProps) 
       mockService: true,
     },
     {
+      title: "Factures",
+      href: "/admin/factures",
+      icon: FileText,
+      variant: "ghost",
+      mockService: true,
+    },
+    {
       title: "Utilisateurs",
       href: "/admin/utilisateurs",
       icon: Users,

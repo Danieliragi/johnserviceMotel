@@ -1,9 +1,12 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { StarIcon, BedDouble, Users } from "lucide-react"
+import React from "react"
 
 interface RoomCardProps {
   name: string
@@ -11,7 +14,7 @@ interface RoomCardProps {
   price: number
   image: string
   rating: number
-  type: "standard" | "family" | "premium"
+  type: "standard" | "deluxe" | "vip"
   capacity: number
   features: string[]
   slug: string
@@ -30,14 +33,55 @@ export default function RoomCard({
   slug,
   popular = false,
 }: RoomCardProps) {
+  const imagePath = React.useMemo(() => {
+    // Vérifier si l'image existe dans notre liste d'images connues
+    if (!image) return "/placeholder.svg"
+
+    // Si l'image est un chemin relatif sans extension, essayons de la corriger
+    if (image.startsWith("/standard") && !image.includes("-room-")) {
+      // Convertir /standard7.jpeg en /standard-room-7.jpeg
+      const match = image.match(/\/standard(\d+)\.jpeg/)
+      if (match && match[1]) {
+        return `/standard-room-${match[1]}.jpeg`
+      }
+    }
+
+    // De même pour les autres types de chambres
+    if (image.startsWith("/deluxe") && !image.includes("-room-")) {
+      const match = image.match(/\/deluxe(\d+)\.jpeg/)
+      if (match && match[1]) {
+        return `/deluxe-room-${match[1]}.jpeg`
+      }
+    }
+
+    if (image.startsWith("/vip") && !image.includes("-")) {
+      const match = image.match(/\/vip(\d+)\.jpeg/)
+      if (match && match[1]) {
+        return `/vip${match[1]}.jpeg`
+      }
+    }
+
+    return image
+  }, [image])
   return (
     <Card className="overflow-hidden card-hover border-gray-200">
       <div className="relative h-64 overflow-hidden group">
+        {/* Ajout d'un état de chargement */}
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         <Image
-          src={image || "/placeholder.svg"}
+          src={imagePath || "/placeholder.svg"}
           alt={name}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-110"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            const target = e.target as HTMLImageElement
+            // Créer un placeholder avec le nom de la chambre
+            target.src = `/placeholder.svg?text=${encodeURIComponent(name)}`
+            console.log(`Image originale non trouvée: ${image}, utilisation du placeholder à la place`)
+          }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={popular} // Prioritize loading popular room images
         />
         {popular && <Badge className="absolute top-3 right-3 bg-amber-500">Populaire</Badge>}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
@@ -66,8 +110,8 @@ export default function RoomCard({
           <div className="flex items-center gap-1 text-sm text-gray-600">
             <BedDouble className="h-4 w-4 text-slate-800" />
             {type === "standard" && "Lit Queen Size"}
-            {type === "family" && "1 Lit Queen + 2 Lits Simples"}
-            {type === "premium" && "Lit King Size"}
+            {type === "deluxe" && "Lit King Size"}
+            {type === "vip" && "Lit King Size Premium"}
           </div>
           <div className="flex items-center gap-1 text-sm text-gray-600">
             <Users className="h-4 w-4 text-slate-800" />

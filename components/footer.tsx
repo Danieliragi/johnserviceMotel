@@ -2,49 +2,81 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, ChevronRight } from "lucide-react"
+import { Facebook, Instagram, Mail, Phone, MapPin, ChevronRight, X, Linkedin } from "lucide-react"
 
 export default function Footer() {
+  // TikTok icon is not available in lucide-react, so we'll create a custom one
+  const TikTokIcon = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5"
+    >
+      <path d="M9 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
+      <path d="M15 8a4 4 0 0 0 0 8" />
+      <path d="M15 8a4 4 0 0 1 4 4" />
+      <path d="M19 8h-4V4" />
+    </svg>
+  )
+
   return (
     <footer className="bg-gray-900 text-gray-200">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <div className="relative h-10 w-10 overflow-hidden transition-transform duration-300 group-hover:scale-110">
-                <Image
-                  src="/john-services-motel-logo.png"
-                  alt="John Services Motel Logo"
-                  fill
-                  className="object-contain"
-                />
+              <div className="relative h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-110">
+                <Image src="/john-services-logo.jpeg" alt="John Services Motel Logo" fill className="object-contain" />
               </div>
-              <span className="font-bold text-xl text-white">JohnService Motel</span>
+              <span className="font-bold text-xl text-white">John Services Motel</span>
             </Link>
             <p className="text-gray-400 mb-4">
-              Votre hébergement idéal pour une étape confortable sur la route. Situé à proximité de l'autoroute A7.
+              Votre hébergement idéal pour une étape confortable sur la route. Il est situé à l'adresse suivante : Si
+              vous êtes au rond-point de Cukudu, continuez tout droit en direction de la BDGL, en diagonale par rapport
+              à l'Ecobank.
             </p>
             <div className="flex gap-4">
               <Link
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61575803102763"
                 className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
               >
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link
-                href="#"
+                href="https://www.instagram.com/john_services_motel?utm_source=qr&igsh=MWV6OWxoN3Z2NWJ5cw=="
                 className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
               >
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link
-                href="#"
+                href="https://x.com/John_SMotel?t=Muvk4gx1RnrOxsCFjVlH1A&s=09"
                 className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
               >
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
+                <X className="h-5 w-5" />
+                <span className="sr-only">X (Twitter)</span>
+              </Link>
+              <Link
+                href="https://www.linkedin.com/company/john-services-motel/"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+              >
+                <Linkedin className="h-5 w-5" />
+                <span className="sr-only">LinkedIn</span>
+              </Link>
+              <Link
+                href="https://www.tiktok.com/@john.services.motel?_t=ZM-8wLpXpOkfaw&_r=1"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+              >
+                <TikTokIcon />
+                <span className="sr-only">TikTok</span>
               </Link>
             </div>
           </div>
@@ -110,26 +142,24 @@ export default function Footer() {
                 <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors mt-0.5 flex-shrink-0">
                   <MapPin className="h-4 w-4" />
                 </span>
-                <span className="text-gray-400">123 Route Nationale, 84000 Avignon, France</span>
+                <span className="text-gray-400">Quartier: Le volcan, AV. Le messager, N° 13B</span>
               </li>
               <li className="flex items-center gap-2 group hover-scale">
                 <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors flex-shrink-0">
                   <Phone className="h-4 w-4" />
                 </span>
-                <Link href="tel:+243998691478" className="text-gray-400 hover:text-white transition-colors">
-                  +243 998 691 478
-                </Link>
+                <span className="text-gray-400">+243 997 163 443</span>
               </li>
               <li className="flex items-center gap-2 group hover-scale">
                 <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors flex-shrink-0">
                   <Mail className="h-4 w-4" />
                 </span>
-                <Link
-                  href="mailto:contact@johnservicemotel.fr"
+                <a
+                  href="mailto:johnservicesmotel@gmail.com"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  contact@johnservicemotel.fr
-                </Link>
+                  johnservicesmotel@gmail.com
+                </a>
               </li>
             </ul>
           </div>
@@ -159,7 +189,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} JohnService Motel. Tous droits réservés.
+            &copy; {new Date().getFullYear()} John Services Motel. Tous droits réservés.
           </p>
           <div className="flex gap-4 text-sm">
             <Link href="/mentions-legales" className="text-gray-500 hover:text-white transition-colors">

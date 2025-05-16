@@ -1,77 +1,170 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/contexts/auth-context"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useToast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { getSupabaseClient } from "@/lib/supabase"
+
+const formSchema = z
+  .object({
+    nom_complet: z.string().min(2, {
+      message: "Le nom complet doit contenir au moins 2 caractères.",
+    }),
+    telephone: z
+      .string()
+      .min(10, {
+        message: "Le numéro de téléphone doit contenir au moins 10 chiffres.",
+      })
+      .refine((val) => /^\+243[0-9]{9}$/.test(val), {
+        message: "Le numéro de téléphone doit être au format +243 suivi de 9 chiffres.",
+      }),
+    email: z.string().email({
+      message: "Veuillez entrer une adresse email valide.",
+    }),
+    password: z.string().min(8, {
+      message: "Le mot de passe doit contenir au moins 8 caractères.",
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas.",
+    path: ["confirmPassword"],
+  })
 
 export default function RegisterForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [telephone, setTelephone] = useState("")
-  const [nom, setNom] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const { signUp } = useAuth()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const router = useRouter()
+  const { toast } = useToast()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      nom_complet: "",
+      telephone: "+243",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  })
 
-    if (password !== confirmPassword) {
-      toast({
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    // Validate phone number format
-    const phoneRegex = /^\+243[0-9]{9}$/
-    if (!phoneRegex.test(telephone)) {
-      toast({
-        title: "Format incorrect",
-        description: "Le numéro de téléphone doit être au format +243 suivi de 9 chiffres.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsLoading(true)
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const { error, success } = await signUp(email, password, telephone, nom)
+      setErrorMessage(null)
+      setSuccessMessage(null)
+      setIsLoading(true)
 
-      if (error) {
+      console.log("Form submitted", values)
+
+      // Get Supabase client
+      const supabase = getSupabaseClient()
+
+      if (!supabase) {
+        setErrorMessage("Service d'authentification non disponible")
         toast({
-          title: "Erreur d'inscription",
-          description: error.message || "Une erreur s'est produite lors de l'inscription.",
           variant: "destructive",
+          title: "Erreur",
+          description: "Service d'authentification non disponible",
         })
         return
       }
 
-      if (success) {
-        toast({
-          title: "Inscription réussie",
-          description: "Votre compte a été créé. Veuillez vérifier votre email pour confirmer votre inscription.",
-        })
-        router.push("/auth/login")
+      // Check if user already exists by email
+      const { data: existingUsersByEmail, error: emailCheckError } = await supabase
+        .from("utilisateurs")
+        .select("id")
+        .eq("email", values.email)
+        .maybeSingle()
+
+      if (emailCheckError) {
+        console.error("Error checking existing user by email:", emailCheckError)
+        setErrorMessage(`Erreur lors de la vérification de l'email: ${emailCheckError.message}`)
+        return
       }
-    } catch (error) {
-      console.error("Registration error:", error)
+
+      if (existingUsersByEmail) {
+        setErrorMessage("Cette adresse email est déjà utilisée")
+        return
+      }
+
+      // Check if user already exists by phone
+      const { data: existingUsersByPhone, error: phoneCheckError } = await supabase
+        .from("utilisateurs")
+        .select("id")
+        .eq("telephone", values.telephone)
+        .maybeSingle()
+
+      if (phoneCheckError) {
+        console.error("Error checking existing user by phone:", phoneCheckError)
+        setErrorMessage(`Erreur lors de la vérification du téléphone: ${phoneCheckError.message}`)
+        return
+      }
+
+      if (existingUsersByPhone) {
+        setErrorMessage("Ce numéro de téléphone est déjà utilisé")
+        return
+      }
+
+      // Sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+      })
+
+      if (signUpError) {
+        console.error("Error signing up:", signUpError)
+        setErrorMessage(`Erreur lors de l'inscription: ${signUpError.message}`)
+        return
+      }
+
+      if (!authData.user) {
+        setErrorMessage("Erreur lors de la création du compte: Aucun utilisateur créé")
+        return
+      }
+
+      // Create user profile
+      const { error: profileError } = await supabase.from("utilisateurs").insert({
+        auth_id: authData.user.id,
+        email: values.email,
+        nom_complet: values.nom_complet,
+        telephone: values.telephone,
+        role: "user",
+        date_creation: new Date().toISOString(),
+      })
+
+      if (profileError) {
+        console.error("Error creating user profile:", profileError)
+        setErrorMessage(`Erreur lors de la création du profil: ${profileError.message}`)
+        return
+      }
+
+      // Success
+      setSuccessMessage("Compte créé avec succès. Vous pouvez maintenant vous connecter.")
       toast({
-        title: "Erreur d'inscription",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
+        title: "Compte créé avec succès",
+        description: "Vous pouvez maintenant vous connecter",
+      })
+
+      // Redirect after a short delay
+      setTimeout(() => {
+        router.push("/auth/login")
+      }, 2000)
+    } catch (error: any) {
+      console.error("Registration error:", error)
+      setErrorMessage(error.message || "Une erreur est survenue lors de la création du compte")
+      toast({
         variant: "destructive",
+        title: "Erreur lors de la création du compte",
+        description: error.message || "Veuillez réessayer plus tard",
       })
     } finally {
       setIsLoading(false)
@@ -79,92 +172,104 @@ export default function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="nom">Nom complet</Label>
-        <Input
-          id="nom"
-          type="text"
-          placeholder="Votre nom complet"
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
-          required
-          disabled={isLoading}
-        />
+    <>
+      <div className="space-y-2 text-center">
+        <h1 className="text-3xl font-bold">Créer un compte</h1>
+        <p className="text-gray-500">Entrez vos informations pour créer un compte</p>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="telephone">Téléphone (format: +243...)</Label>
-        <Input
-          id="telephone"
-          type="tel"
-          placeholder="+243970000000"
-          value={telephone}
-          onChange={(e) => setTelephone(e.target.value)}
-          required
-          disabled={isLoading}
-        />
-      </div>
+      {errorMessage && (
+        <Alert variant="destructive">
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="votre@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          disabled={isLoading}
-        />
-      </div>
+      {successMessage && (
+        <Alert>
+          <AlertDescription>{successMessage}</AlertDescription>
+        </Alert>
+      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="password">Mot de passe</Label>
-        <div className="relative">
-          <Input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={isLoading}
-            minLength={6}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="nom_complet"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom complet</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <button
-            type="button"
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
-        </div>
-      </div>
+          <FormField
+            control={form.control}
+            name="telephone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Téléphone (format: +243...)</FormLabel>
+                <FormControl>
+                  <Input placeholder="+243970000000" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="john@example.com" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mot de passe</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="********" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmer le mot de passe</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="********" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
-        <Input
-          id="confirmPassword"
-          type={showPassword ? "text" : "password"}
-          placeholder="••••••••"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          disabled={isLoading}
-        />
-      </div>
-
-      <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Inscription en cours...
-          </>
-        ) : (
-          "Créer un compte"
-        )}
-      </Button>
-    </form>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Création en cours...
+              </>
+            ) : (
+              "Créer un compte"
+            )}
+          </Button>
+        </form>
+      </Form>
+    </>
   )
 }

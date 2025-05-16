@@ -7,18 +7,39 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CalendarIcon, Users, BedDouble, CreditCard } from "lucide-react"
+import { CalendarIcon, BedDouble, CreditCard } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "@/contexts/auth-context"
-import { supabase } from "@/lib/supabase"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks"
+import { setAvailabilityDates } from "@/lib/redux/slices/roomsSlice"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import type { Database } from "@/lib/database.types"
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
 
 export default function BookingForm() {
-  const [checkIn, setCheckIn] = useState<Date>()
-  const [checkOut, setCheckOut] = useState<Date>()
+  const dispatch = useAppDispatch()
+  const { toast } = useToast()
+  const router = useRouter()
+  const supabase = createClientComponentClient<Database>()
+
+  // Get state from Redux with safe fallbacks
+  const roomsState = useAppSelector((state) => state.rooms)
+  const availabilityDates = roomsState?.availabilityDates || { checkIn: null, checkOut: null }
+  const authState = useAppSelector((state) => state.auth)
+  const user = authState?.user || null
+
+  const [checkIn, setCheckIn] = useState<Date | undefined>(
+    availabilityDates.checkIn ? new Date(availabilityDates.checkIn) : undefined,
+  )
+  const [checkOut, setCheckOut] = useState<Date | undefined>(
+    availabilityDates.checkOut ? new Date(availabilityDates.checkOut) : undefined,
+  )
   const [adults, setAdults] = useState("2")
   const [children, setChildren] = useState("0")
   const [roomType, setRoomType] = useState("standard")
@@ -27,10 +48,15 @@ export default function BookingForm() {
   const [telephone, setTelephone] = useState("")
   const [email, setEmail] = useState("")
   const [localisation, setLocalisation] = useState("")
-  const [moyenPaiement, setMoyenPaiement] = useState("cash")
+  const [moyenPaiement, setMoyenPaiement] = useState("mobile money")
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const { user } = useAuth()
+  const [clientId, setClientId] = useState<string | null>(null)
+  const [chambreId, setChambreId] = useState<string | null>(null)
+  const [mobileMoneyPhone, setMobileMoneyPhone] = useState("")
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [stripePromise, setStripePromise] = useState<any>(null)
+  const [clientSecret, setClientSecret] = useState("")
+  const [conversionRate, setConversionRate] = useState(1) // 1 USD to local currency
 
   useEffect(() => {
     if (user) {
@@ -63,11 +89,255 @@ export default function BookingForm() {
 
       fetchUserData()
     }
-  }, [user])
+  }, [user, supabase])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Update Redux state when local state changes
+  useEffect(() => {
+    if (checkIn || checkOut) {
+      dispatch(
+        setAvailabilityDates({
+          checkIn: checkIn ? checkIn.toISOString() : null,
+          checkOut: checkOut ? checkOut.toISOString() : null,
+        }),
+      )
+    }
+  }, [checkIn, checkOut, dispatch])
+
+  // Récupérer l'ID de la chambre en fonction du type sélectionné
+  useEffect(() => {
+    const fetchChambreId = async () => {
+      try {
+        // Format the room type name to match database format
+        let roomTypeName = ""
+        if (roomType === "standard") {
+          roomTypeName = "Chambre Standard"
+        } else if (roomType === "deluxe") {
+          roomTypeName = "Chambre De Luxe"
+        } else if (roomType === "vip") {
+          roomTypeName = "Chambre VIP"
+        }
+
+        // Query without using .single() to handle multiple or no results
+        const { data, error } = await supabase.from("chambres").select("id").eq("nom", roomTypeName)
+
+        if (error) {
+          console.error("Error fetching chambre id:", error)
+          return
+        }
+
+        if (data && data.length > 0) {
+          // Take the first matching room if multiple exist
+          setChambreId(data[0].id)
+        } else {
+          console.log(`No chamber found with name: ${roomTypeName}`)
+          setChambreId(null)
+        }
+      } catch (error) {
+        console.error("Error:", error)
+      }
+    }
+
+    if (roomType) {
+      fetchChambreId()
+    }
+  }, [roomType, supabase])
+
+  // Initialize Stripe
+  useEffect(() => {
+    // Only load Stripe when payment method is selected as carte-visa
+    if (moyenPaiement === "carte-visa") {
+      // Load Stripe
+      const loadStripeInstance = async () => {
+        try {
+          // In a real app, this would come from an environment variable
+          const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_TYooMQauvdEDq54NiTphI7jx"
+          const stripeInstance = await loadStripe(stripePublicKey)
+          setStripePromise(stripeInstance)
+
+          // Get client secret from server
+          try {
+            const response = await fetch("/api/create-payment-intent", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                amount: 100, // This would be the actual amount in USD
+                currency: "usd",
+              }),
+            })
+
+            if (!response.ok) {
+              throw new Error(`Server responded with status: ${response.status}`)
+            }
+
+            const data = await response.json()
+            if (data.clientSecret) {
+              setClientSecret(data.clientSecret)
+            } else {
+              throw new Error("No client secret received from server")
+            }
+          } catch (error) {
+            console.error("Error creating payment intent:", error)
+            toast({
+              title: "Erreur de paiement",
+              description:
+                "Le système de paiement par carte n'est pas disponible pour le moment. Veuillez choisir un autre mode de paiement.",
+              variant: "destructive",
+            })
+            // Reset payment method to mobile money as fallback
+            setMoyenPaiement("mobile money")
+          }
+
+          // Get conversion rate (in a real app, this would use a currency API)
+          setConversionRate(2000) // Example: 1 USD = 2000 local currency
+        } catch (error) {
+          console.error("Error initializing Stripe:", error)
+          toast({
+            title: "Erreur de paiement",
+            description:
+              "Le système de paiement par carte n'est pas disponible pour le moment. Veuillez choisir un autre mode de paiement.",
+            variant: "destructive",
+          })
+          // Reset payment method to mobile money as fallback
+          setMoyenPaiement("mobile money")
+        }
+      }
+
+      loadStripeInstance()
+    }
+  }, [moyenPaiement, toast])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true)
 
+    try {
+      // Vérifier si les dates sont sélectionnées
+      if (!checkIn || !checkOut) {
+        toast({
+          title: "Erreur",
+          description: "Veuillez sélectionner les dates d'arrivée et de départ",
+          variant: "destructive",
+        })
+        setIsSubmitting(false)
+        return
+      }
+
+      // Validate payment method specific fields
+      if (moyenPaiement === "mobile money" && !mobileMoneyPhone) {
+        toast({
+          title: "Erreur",
+          description: "Veuillez entrer le numéro de téléphone pour le paiement Mobile Money",
+          variant: "destructive",
+        })
+        setIsSubmitting(false)
+        return
+      }
+
+      // For carte-visa, handle the Stripe payment
+      if (moyenPaiement === "carte-visa") {
+        if (!stripePromise || !clientSecret) {
+          toast({
+            title: "Erreur",
+            description: "Le système de paiement par carte n'est pas disponible pour le moment",
+            variant: "destructive",
+          })
+          setIsSubmitting(false)
+          return
+        }
+
+        // We'll handle Stripe payment after creating the reservation
+      }
+
+      // Instead of directly inserting into the database, use the API endpoint
+      // to create or find a client
+      const clientResponse = await fetch("/api/clients", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nom_complet: nom,
+          email: email,
+          telephone: `${countryCode}${telephone}`,
+        }),
+      })
+
+      if (!clientResponse.ok) {
+        const errorData = await clientResponse.json()
+        throw new Error(errorData.error || "Erreur lors de la création du client")
+      }
+
+      const clientData = await clientResponse.json()
+      const existingClientId = clientData.id
+
+      // Créer la réservation
+      if (existingClientId && chambreId) {
+        const reservationData = {
+          client_id: existingClientId,
+          chambre_id: chambreId,
+          date_arrivee: checkIn.toISOString(),
+          date_depart: checkOut.toISOString(),
+          mode_paiement: moyenPaiement,
+        }
+
+        const response = await fetch("/api/reservations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reservationData),
+        })
+
+        const result = await response.json()
+
+        if (!response.ok) {
+          throw new Error(result.error || "Erreur lors de la création de la réservation")
+        }
+
+        // If using Stripe, process the payment now
+        if (moyenPaiement === "carte-visa" && stripePromise && stripePromise && elements) {
+          const stripeInstance = await stripePromise
+          // Get a reference to the Stripe elements
+          const stripeElements = elements
+
+          // Confirm the payment
+          const paymentResult = await stripeInstance.confirmPayment({
+            elements: stripeElements,
+            confirmParams: {
+              return_url: `${window.location.origin}/payment-confirmation?reservation_id=${result.reservation.id}`,
+            },
+            redirect: "if_required",
+          })
+
+          if (paymentResult.error) {
+            throw new Error(paymentResult.error.message || "Erreur lors du paiement")
+          }
+        }
+
+        toast({
+          title: "Réservation créée",
+          description: "Votre réservation a été créée avec succès. Un email de confirmation vous a été envoyé.",
+        })
+
+        // Rediriger vers la page de détails de la réservation
+        router.push(`/reservations/${result.reservation.id}`)
+      }
+    } catch (error) {
+      console.error("Error submitting reservation:", error)
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Une erreur est survenue. Veuillez réessayer.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Fonction pour le bouton WhatsApp (alternative)
+  const handleWhatsAppSubmit = () => {
     // Format dates for WhatsApp message
     const formattedCheckIn = checkIn ? format(checkIn, "dd/MM/yyyy", { locale: fr }) : ""
     const formattedCheckOut = checkOut ? format(checkOut, "dd/MM/yyyy", { locale: fr }) : ""
@@ -76,10 +346,10 @@ export default function BookingForm() {
     const roomTypeLabel =
       roomType === "standard"
         ? "Chambre Standard"
-        : roomType === "family"
-          ? "Chambre Familiale"
-          : roomType === "premium"
-            ? "Chambre Premium"
+        : roomType === "deluxe"
+          ? "Chambre De Luxe"
+          : roomType === "vip"
+            ? "Chambre VIP"
             : ""
 
     // Format the full phone number with country code
@@ -100,7 +370,7 @@ Arrivée: ${formattedCheckIn}
 Départ: ${formattedCheckOut}
 Type de chambre: ${roomTypeLabel}
 Voyageurs: ${adults} adulte(s), ${children} enfant(s)
-Moyen de paiement préféré: ${moyenPaiement === "cash" ? "Cash" : moyenPaiement === "mobile" ? "Mobile Money" : "Carte bancaire"}
+Moyen de paiement préféré: ${moyenPaiement === "cash" ? "Cash" : moyenPaiement === "mobile money" ? "Mobile Money" : moyenPaiement === "carte-visa" ? "Carte Visa" : "PayPal"}
 
 Merci de confirmer la disponibilité et les détails de ma réservation.
 `
@@ -109,7 +379,7 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
     const encodedMessage = encodeURIComponent(message)
 
     // WhatsApp number from contact page
-    const whatsappNumber = "243998691478"
+    const whatsappNumber = "243997163443"
 
     // Create WhatsApp URL
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
@@ -118,8 +388,49 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
     window.open(whatsappUrl, "_blank")
   }
 
+  function StripePaymentForm() {
+    const stripe = useStripe()
+    const elements = useElements()
+    const [error, setError] = useState<string | null>(null)
+    const [processing, setProcessing] = useState(false)
+
+    // This function will be called by the parent form's submit handler
+    const handlePayment = async () => {
+      if (!stripe || !elements) {
+        return { success: false, error: "Stripe not initialized" }
+      }
+
+      setProcessing(true)
+
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.origin + "/payment-confirmation",
+        },
+        redirect: "if_required",
+      })
+
+      if (result.error) {
+        setError(result.error.message || "Une erreur est survenue lors du paiement.")
+        setProcessing(false)
+        return { success: false, error: result.error.message }
+      }
+
+      setProcessing(false)
+      return { success: true }
+    }
+
+    return (
+      <div>
+        <PaymentElement />
+        {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+        {/* No button here - the parent form will handle submission */}
+      </div>
+    )
+  }
+
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="nom">Nom complet</Label>
@@ -166,8 +477,15 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email (optionnel)</Label>
-          <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="votre@email.com" />
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder="votre.email@exemple.com"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="localisation">Ville d'origine</Label>
@@ -181,7 +499,7 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-2">
           <label className="text-sm font-medium flex items-center gap-2">
             <CalendarIcon className="h-4 w-4 text-slate-800" />
@@ -201,7 +519,14 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar mode="single" selected={checkIn} onSelect={setCheckIn} initialFocus locale={fr} />
+              <Calendar
+                mode="single"
+                selected={checkIn}
+                onSelect={setCheckIn}
+                initialFocus
+                locale={fr}
+                disabled={(date) => date < new Date()}
+              />
             </PopoverContent>
           </Popover>
         </div>
@@ -248,87 +573,76 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="standard">Chambre Standard</SelectItem>
-              <SelectItem value="family">Chambre Familiale</SelectItem>
-              <SelectItem value="premium">Chambre Premium</SelectItem>
+              <SelectItem value="deluxe">Chambre De Luxe</SelectItem>
+              <SelectItem value="vip">Chambre VIP</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium flex items-center gap-2">
-            <Users className="h-4 w-4 text-slate-800" />
-            Voyageurs
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            <Select value={adults} onValueChange={setAdults}>
-              <SelectTrigger className="transition-all hover:border-slate-800">
-                <SelectValue placeholder="Adultes" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4].map((num) => (
-                  <SelectItem key={num} value={num.toString()}>
-                    {num} {num === 1 ? "Adulte" : "Adultes"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={children} onValueChange={setChildren}>
-              <SelectTrigger className="transition-all hover:border-slate-800">
-                <SelectValue placeholder="Enfants" />
-              </SelectTrigger>
-              <SelectContent>
-                {[0, 1, 2, 3].map((num) => (
-                  <SelectItem key={num} value={num.toString()}>
-                    {num} {num === 1 ? "Enfant" : "Enfants"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
       </div>
 
       <div className="space-y-2">
         <label className="text-sm font-medium flex items-center gap-2">
           <CreditCard className="h-4 w-4 text-slate-800" />
-          Moyen de paiement
+          Mode de paiement
         </label>
         <Select value={moyenPaiement} onValueChange={setMoyenPaiement}>
           <SelectTrigger className="transition-all hover:border-slate-800">
             <SelectValue placeholder="Sélectionner" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="cash">Cash</SelectItem>
-            <SelectItem value="mobile">Mobile Money</SelectItem>
-            <SelectItem value="card">Carte bancaire</SelectItem>
+            <SelectItem value="mobile money">Mobile Money</SelectItem>
+            <SelectItem value="carte-visa">Carte Bancaire</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Payment method specific fields */}
+        {moyenPaiement === "mobile money" && (
+          <div className="mt-4 space-y-2 p-4 border rounded-md bg-slate-50">
+            <h3 className="font-medium">Détails Mobile Money</h3>
+            <div className="space-y-2">
+              <Label htmlFor="mobileMoneyPhone">Numéro de téléphone pour le paiement</Label>
+              <Input
+                id="mobileMoneyPhone"
+                value={mobileMoneyPhone}
+                onChange={(e) => setMobileMoneyPhone(e.target.value)}
+                placeholder="Ex: 0991234567"
+                required={moyenPaiement === "mobile money"}
+              />
+              <p className="text-xs text-slate-500">
+                Le montant sera débité de ce numéro. Assurez-vous qu'il est correctement enregistré et dispose de fonds
+                suffisants.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {moyenPaiement === "carte-visa" && clientSecret && stripePromise && (
+          <div className="mt-4 space-y-2 p-4 border rounded-md bg-slate-50">
+            <h3 className="font-medium">Paiement par Carte Bancaire</h3>
+            <div className="mb-2">
+              <p className="text-sm">
+                Montant à payer: <span className="font-bold">${(100).toFixed(2)} USD</span>
+                <span className="text-xs text-slate-500 ml-2">
+                  (≈ {(100 * conversionRate).toLocaleString()} monnaie locale)
+                </span>
+              </p>
+            </div>
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <StripePaymentForm />
+            </Elements>
+          </div>
+        )}
       </div>
 
-      <Button
-        type="button"
-        onClick={handleSubmit}
-        className="w-full bg-primary hover:bg-primary/90 transition-all duration-300 hover:shadow-md flex items-center justify-center gap-2"
-        disabled={isSubmitting || !checkIn || !checkOut || !nom || !telephone || !localisation}
-      >
-        {isSubmitting ? (
-          "Traitement en cours..."
-        ) : (
-          <>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="#ffffff"
-              className="mr-1"
-            >
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-            Réserver via WhatsApp
-          </>
-        )}
-      </Button>
+      <div className="flex">
+        <Button
+          type="submit"
+          className="w-full bg-primary hover:bg-primary/90 transition-all duration-300 hover:shadow-md"
+          disabled={isSubmitting || !checkIn || !checkOut || !nom || !telephone || !email || !localisation}
+        >
+          {isSubmitting ? "Traitement en cours..." : "Réserver maintenant"}
+        </Button>
+      </div>
     </form>
   )
 }

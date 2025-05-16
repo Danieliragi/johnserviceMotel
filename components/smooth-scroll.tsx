@@ -1,8 +1,19 @@
 "use client"
 
 import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export default function SmoothScroll() {
+  const pathname = usePathname()
+
+  useEffect(() => {
+    // Scroll to top when pathname changes (page navigation)
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    })
+  }, [pathname])
+
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement

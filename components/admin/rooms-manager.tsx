@@ -1,496 +1,332 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import type React from "react"
+
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { MoreHorizontal, Search, Edit, Trash2, Plus, ImageIcon, BedDouble } from "lucide-react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { toast } from "@/components/ui/use-toast"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { supabase } from "@/lib/supabase"
+import { useAppDispatch } from "@/lib/redux/hooks"
+import { showToast } from "@/lib/redux/slices/uiSlice"
+import { useGetRoomsQuery, useCreateRoomMutation, useUpdateRoomMutation, useDeleteRoomMutation } from "@/lib/redux/api"
 
-type Room = {
-  id: string
-  nom: string
-  description: string
-  prix: number
-  capacite: number
-  disponible: boolean
-  photo_url: string
-}
+export default function RoomsManager() {
+  const dispatch = useAppDispatch()
+  const { data: rooms, isLoading, refetch } = useGetRoomsQuery()
+  const [createRoom, { isLoading: isCreating }] = useCreateRoomMutation()
+  const [updateRoom, { isLoading: isUpdating }] = useUpdateRoomMutation()
+  const [deleteRoom, { isLoading: isDeleting }] = useDeleteRoomMutation()
 
-const roomFormSchema = z.object({
-  nom: z.string().min(2, {
-    message: "Le nom doit contenir au moins 2 caractères.",
-  }),
-  description: z.string().min(10, {
-    message: "La description doit contenir au moins 10 caractères.",
-  }),
-  prix: z.coerce.number().min(1, {
-    message: "Le prix doit être supérieur à 0.",
-  }),
-  capacite: z.coerce.number().min(1, {
-    message: "La capacité doit être d'au moins 1 personne.",
-  }),
-  photo_url: z.string().url({
-    message: "Veuillez entrer une URL d'image valide.",
-  }),
-  disponible: z.boolean().default(true),
-})
-
-export function RoomsManager() {
-  const [rooms, setRooms] = useState<Room[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-
-  const form = useForm<z.infer<typeof roomFormSchema>>({
-    resolver: zodResolver(roomFormSchema),
-    defaultValues: {
-      nom: "",
-      description: "",
-      prix: 59,
-      capacite: 2,
-      photo_url: "",
-      disponible: true,
-    },
+  const [selectedRoom, setSelectedRoom] = useState<any>(null)
+  const [formData, setFormData] = useState({
+    room_number: "",
+    room_type: "",
+    price_per_night: "",
+    capacity: "",
+    description: "",
+    amenities: "",
+    status: "available",
   })
 
-  useEffect(() => {
-    async function fetchRooms() {
-      try {
-        setLoading(true)
-        const { data, error } = await supabase.from("chambres").select("*").order("prix", { ascending: true })
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
-        if (error) {
-          throw error
-        }
+  const handleSelectRoom = (room: any) => {
+    setSelectedRoom(room)
+    setFormData({
+      room_number: room.room_number,
+      room_type: room.room_type,
+      price_per_night: room.price_per_night.toString(),
+      capacity: room.capacity.toString(),
+      description: room.description || "",
+      amenities: room.amenities || "",
+      status: room.status,
+    })
+  }
 
-        setRooms(data || [])
-      } catch (error) {
-        console.error("Error fetching rooms:", error)
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les chambres. Veuillez réessayer.",
-          variant: "destructive",
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-    fetchRooms()
-  }, [])
-
-  useEffect(() => {
-    if (selectedRoom && isEditDialogOpen) {
-      form.reset({
-        nom: selectedRoom.nom,
-        description: selectedRoom.description,
-        prix: selectedRoom.prix,
-        capacite: selectedRoom.capacite,
-        photo_url: selectedRoom.photo_url,
-        disponible: selectedRoom.disponible,
-      })
-    }
-  }, [selectedRoom, isEditDialogOpen, form])
-
-  const filteredRooms = rooms.filter(
-    (room) =>
-      room.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      room.description.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
-
-  const onSubmit = async (values: z.infer<typeof roomFormSchema>) => {
     try {
-      if (isEditDialogOpen && selectedRoom) {
-        // Update existing room
-        const { data, error } = await supabase
-          .from("chambres")
-          .update({
-            nom: values.nom,
-            description: values.description,
-            prix: values.prix,
-            capacite: values.capacite,
-            photo_url: values.photo_url,
-            disponible: values.disponible,
-          })
-          .eq("id", selectedRoom.id)
-          .select()
+      const roomData = {
+        room_number: formData.room_number,
+        room_type: formData.room_type,
+        price_per_night: Number.parseFloat(formData.price_per_night),
+        capacity: Number.parseInt(formData.capacity),
+        description: formData.description,
+        amenities: formData.amenities,
+        status: formData.status,
+      }
 
-        if (error) {
-          throw error
-        }
-
-        setRooms(rooms.map((room) => (room.id === selectedRoom.id ? data[0] : room)))
-
-        toast({
-          title: "Chambre mise à jour",
-          description: `La chambre "${values.nom}" a été mise à jour avec succès.`,
-        })
-
-        setIsEditDialogOpen(false)
+      if (selectedRoom) {
+        await updateRoom({ id: selectedRoom.id, ...roomData }).unwrap()
+        dispatch(showToast({ message: "Chambre mise à jour avec succès", type: "success" }))
       } else {
-        // Add new room
-        const { data, error } = await supabase
-          .from("chambres")
-          .insert([
-            {
-              nom: values.nom,
-              description: values.description,
-              prix: values.prix,
-              capacite: values.capacite,
-              photo_url: values.photo_url,
-              disponible: values.disponible,
-            },
-          ])
-          .select()
+        await createRoom(roomData).unwrap()
+        dispatch(showToast({ message: "Chambre créée avec succès", type: "success" }))
+      }
 
-        if (error) {
-          throw error
+      // Reset form
+      setSelectedRoom(null)
+      setFormData({
+        room_number: "",
+        room_type: "",
+        price_per_night: "",
+        capacity: "",
+        description: "",
+        amenities: "",
+        status: "available",
+      })
+
+      // Refresh rooms list
+      refetch()
+    } catch (error) {
+      dispatch(
+        showToast({
+          message: "Erreur lors de l'enregistrement de la chambre",
+          type: "error",
+        }),
+      )
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette chambre?")) {
+      try {
+        await deleteRoom(id).unwrap()
+        dispatch(showToast({ message: "Chambre supprimée avec succès", type: "success" }))
+
+        // Reset selected room if it was deleted
+        if (selectedRoom && selectedRoom.id === id) {
+          setSelectedRoom(null)
+          setFormData({
+            room_number: "",
+            room_type: "",
+            price_per_night: "",
+            capacity: "",
+            description: "",
+            amenities: "",
+            status: "available",
+          })
         }
 
-        setRooms([...rooms, data[0]])
-
-        toast({
-          title: "Chambre ajoutée",
-          description: `La chambre "${values.nom}" a été ajoutée avec succès.`,
-        })
-
-        setIsAddDialogOpen(false)
+        // Refresh rooms list
+        refetch()
+      } catch (error) {
+        dispatch(
+          showToast({
+            message: "Erreur lors de la suppression de la chambre",
+            type: "error",
+          }),
+        )
       }
-
-      form.reset()
-    } catch (error) {
-      console.error("Error saving room:", error)
-      toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder la chambre. Veuillez réessayer.",
-        variant: "destructive",
-      })
     }
-  }
-
-  const deleteRoom = async (id: string) => {
-    try {
-      const { error } = await supabase.from("chambres").delete().eq("id", id)
-
-      if (error) {
-        throw error
-      }
-
-      setRooms(rooms.filter((room) => room.id !== id))
-
-      toast({
-        title: "Chambre supprimée",
-        description: `La chambre a été supprimée avec succès.`,
-      })
-    } catch (error) {
-      console.error("Error deleting room:", error)
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer la chambre. Veuillez réessayer.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsDeleteDialogOpen(false)
-    }
-  }
-
-  const getAvailabilityBadge = (isAvailable: boolean) => {
-    return isAvailable ? (
-      <Badge className="bg-green-500">Disponible</Badge>
-    ) : (
-      <Badge className="bg-red-500">Indisponible</Badge>
-    )
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Rechercher par nom, description..."
-            className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <Button
-          onClick={() => {
-            form.reset()
-            setIsAddDialogOpen(true)
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Ajouter une chambre
-        </Button>
-      </div>
-
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <p>Chargement des chambres...</p>
-        </div>
-      ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Nom</TableHead>
-                <TableHead>Prix</TableHead>
-                <TableHead>Capacité</TableHead>
-                <TableHead>Disponibilité</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredRooms.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
-                    Aucune chambre trouvée.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredRooms.map((room) => (
-                  <TableRow key={room.id}>
-                    <TableCell className="font-medium">{room.id.substring(0, 8)}...</TableCell>
-                    <TableCell>{room.nom}</TableCell>
-                    <TableCell>${room.prix}</TableCell>
-                    <TableCell>{room.capacite} pers.</TableCell>
-                    <TableCell>{getAvailabilityBadge(room.disponible)}</TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Ouvrir le menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedRoom(room)
-                              setIsEditDialogOpen(true)
-                            }}
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Modifier
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedRoom(room)
-                              setIsDeleteDialogOpen(true)
-                            }}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Supprimer
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-
-      {/* Add/Edit Room Dialog */}
-      <Dialog
-        open={isAddDialogOpen || isEditDialogOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            setIsAddDialogOpen(false)
-            setIsEditDialogOpen(false)
-          }
-        }}
-      >
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>{isEditDialogOpen ? "Modifier la chambre" : "Ajouter une nouvelle chambre"}</DialogTitle>
-            <DialogDescription>
-              {isEditDialogOpen
-                ? "Modifiez les détails de la chambre ci-dessous."
-                : "Remplissez les informations pour ajouter une nouvelle chambre."}
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="nom"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Chambre Standard 101" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="prix"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prix par nuit ($)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="capacite"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Capacité (personnes)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="photo_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL de l'image</FormLabel>
-                      <FormControl>
-                        <div className="flex gap-2">
-                          <Input placeholder="https://example.com/image.jpg" {...field} />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => {
-                              // In a real implementation, this would open a media library
-                              toast({
-                                title: "Fonctionnalité à venir",
-                                description: "La bibliothèque de médias sera disponible prochainement.",
-                              })
-                            }}
-                          >
-                            <ImageIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2">
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Description détaillée de la chambre..."
-                          className="min-h-[100px]"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="disponible"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                      <div className="space-y-0.5">
-                        <FormLabel>Disponibilité</FormLabel>
-                        <FormDescription>Définir si la chambre est disponible à la réservation.</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                    </FormItem>
-                  )}
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>{selectedRoom ? "Modifier la chambre" : "Ajouter une chambre"}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="room_number">Numéro de chambre</Label>
+                <Input
+                  id="room_number"
+                  name="room_number"
+                  value={formData.room_number}
+                  onChange={handleInputChange}
+                  required
                 />
               </div>
-              <DialogFooter>
+              <div className="space-y-2">
+                <Label htmlFor="room_type">Type de chambre</Label>
+                <select
+                  id="room_type"
+                  name="room_type"
+                  value={formData.room_type}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded"
+                  required
+                >
+                  <option value="">Sélectionner un type</option>
+                  <option value="standard">Standard</option>
+                  <option value="deluxe">Deluxe</option>
+                  <option value="vip">VIP</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="price_per_night">Prix par nuit (€)</Label>
+                <Input
+                  id="price_per_night"
+                  name="price_per_night"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData.price_per_night}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="capacity">Capacité</Label>
+                <Input
+                  id="capacity"
+                  name="capacity"
+                  type="number"
+                  min="1"
+                  value={formData.capacity}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  rows={3}
+                  value={formData.description}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="amenities">Équipements</Label>
+                <Textarea
+                  id="amenities"
+                  name="amenities"
+                  rows={2}
+                  value={formData.amenities}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Statut</Label>
+                <select
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded"
+                  required
+                >
+                  <option value="available">Disponible</option>
+                  <option value="occupied">Occupée</option>
+                  <option value="maintenance">En maintenance</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-2">
+              {selectedRoom && (
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => {
-                    setIsAddDialogOpen(false)
-                    setIsEditDialogOpen(false)
+                    setSelectedRoom(null)
+                    setFormData({
+                      room_number: "",
+                      room_type: "",
+                      price_per_night: "",
+                      capacity: "",
+                      description: "",
+                      amenities: "",
+                      status: "available",
+                    })
                   }}
                 >
                   Annuler
                 </Button>
-                <Button type="submit">{isEditDialogOpen ? "Mettre à jour" : "Ajouter"}</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+              )}
+              <Button type="submit" disabled={isCreating || isUpdating}>
+                {selectedRoom
+                  ? isUpdating
+                    ? "Mise à jour..."
+                    : "Mettre à jour"
+                  : isCreating
+                    ? "Création..."
+                    : "Ajouter"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
 
-      {/* Delete Room Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Supprimer la chambre</DialogTitle>
-            <DialogDescription>Êtes-vous sûr de vouloir supprimer cette chambre ?</DialogDescription>
-          </DialogHeader>
-          <div className="flex items-center gap-2 py-3">
-            <BedDouble className="h-6 w-6 text-red-500" />
-            <p>
-              La chambre "{selectedRoom?.nom}" (ID: {selectedRoom?.id.substring(0, 8)}...) sera définitivement
-              supprimée. Cette action est irréversible.
-            </p>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Annuler
-            </Button>
-            <Button onClick={() => selectedRoom && deleteRoom(selectedRoom.id)} variant="destructive">
-              Supprimer
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Card>
+        <CardHeader>
+          <CardTitle>Liste des chambres</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <p>Chargement des chambres...</p>
+          ) : rooms && rooms.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="p-2 text-left">Numéro</th>
+                    <th className="p-2 text-left">Type</th>
+                    <th className="p-2 text-left">Prix</th>
+                    <th className="p-2 text-left">Capacité</th>
+                    <th className="p-2 text-left">Statut</th>
+                    <th className="p-2 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rooms.map((room) => (
+                    <tr key={room.id} className="border-t">
+                      <td className="p-2">{room.room_number}</td>
+                      <td className="p-2">{room.room_type}</td>
+                      <td className="p-2">{room.price_per_night}€</td>
+                      <td className="p-2">{room.capacity}</td>
+                      <td className="p-2">
+                        <span
+                          className={`px-2 py-1 rounded text-xs ${
+                            room.status === "available"
+                              ? "bg-green-100 text-green-800"
+                              : room.status === "occupied"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {room.status === "available"
+                            ? "Disponible"
+                            : room.status === "occupied"
+                              ? "Occupée"
+                              : "Maintenance"}
+                        </span>
+                      </td>
+                      <td className="p-2">
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline" onClick={() => handleSelectRoom(room)}>
+                            Modifier
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(room.id)}
+                            disabled={isDeleting}
+                          >
+                            Supprimer
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>Aucune chambre trouvée.</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

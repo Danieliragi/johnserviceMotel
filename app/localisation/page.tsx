@@ -55,9 +55,9 @@ export default function LocalisationPage() {
                       <div>
                         <h3 className="text-lg font-semibold text-slate-800">Adresse</h3>
                         <p className="text-slate-600">
-                          123 Avenue Patrice Lumumba
+                          Quartier: Le volcan, AV. Le messager, N° 13B
                           <br />
-                          Bukavu, Sud-Kivu
+                          Goma, Nord-kivu
                           <br />
                           République Démocratique du Congo
                         </p>
@@ -79,9 +79,9 @@ export default function LocalisationPage() {
                       <div>
                         <h3 className="text-lg font-semibold text-slate-800">Contact</h3>
                         <p className="text-slate-600">
-                          Téléphone: +243 998 691 478
+                          Téléphone: +243 997 163 443
                           <br />
-                          Email: info@johnservicemotel.com
+                          Email: johnservicesmotel@gmail.com
                         </p>
                       </div>
                     </div>

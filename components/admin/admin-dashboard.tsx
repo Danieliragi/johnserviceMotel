@@ -7,7 +7,7 @@ import { UpcomingReservations } from "@/components/admin/upcoming-reservations"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function AdminDashboard() {
+export function AdminDashboard() {
   return (
     <div className="container mx-auto py-6 space-y-8">
       <AdminGreeting />

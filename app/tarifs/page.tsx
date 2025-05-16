@@ -89,12 +89,12 @@ export default function TarifsPage() {
                 </div>
                 <CardHeader className="bg-primary/10 rounded-t-lg">
                   <CardTitle className="flex items-center justify-between">
-                    Chambre Familiale
+                    Chambre De Luxe
                     <Badge variant="outline" className="bg-primary/20">
                       À partir de
                     </Badge>
                   </CardTitle>
-                  <CardDescription>Idéal pour les familles jusqu'à 4 personnes</CardDescription>
+                  <CardDescription>Confort supérieur et prestations haut de gamme</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="text-4xl font-bold text-center mb-4 flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function TarifsPage() {
                   <ul className="space-y-2">
                     <li className="flex items-center">
                       <Check className="h-5 w-5 text-green-500 mr-2" />
-                      <span>2 lits doubles</span>
+                      <span>Lit Queen Size premium</span>
                     </li>
                     <li className="flex items-center">
                       <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -135,7 +135,7 @@ export default function TarifsPage() {
               <Card className="border-2 hover:shadow-lg transition-all duration-300">
                 <CardHeader className="bg-slate-800 text-white rounded-t-lg">
                   <CardTitle className="flex items-center justify-between">
-                    Chambre Premium
+                    Chambre VIP
                     <Badge variant="outline" className="bg-white/20 text-white">
                       À partir de
                     </Badge>
@@ -198,8 +198,8 @@ export default function TarifsPage() {
             <ScrollAnimation direction="up" delay={200}>
               <TabsList className="grid w-full grid-cols-3 mb-8">
                 <TabsTrigger value="standard">Standard</TabsTrigger>
-                <TabsTrigger value="familiale">Familiale</TabsTrigger>
-                <TabsTrigger value="premium">Premium</TabsTrigger>
+                <TabsTrigger value="deluxe">De Luxe</TabsTrigger>
+                <TabsTrigger value="vip">VIP</TabsTrigger>
               </TabsList>
             </ScrollAnimation>
 
@@ -255,7 +255,7 @@ export default function TarifsPage() {
               </ScrollAnimation>
             </TabsContent>
 
-            <TabsContent value="familiale">
+            <TabsContent value="deluxe">
               <ScrollAnimation direction="up" delay={300}>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
@@ -307,7 +307,7 @@ export default function TarifsPage() {
               </ScrollAnimation>
             </TabsContent>
 
-            <TabsContent value="premium">
+            <TabsContent value="vip">
               <ScrollAnimation direction="up" delay={300}>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
@@ -394,10 +394,7 @@ export default function TarifsPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button
-                    variant="outline"
-                    className="w-full border-white/50 text-white hover:bg-white/20 hover:text-white"
-                  >
+                  <Button className="w-full bg-primary text-white border border-primary hover:bg-primary/90">
                     Réserver avec ce code: EARLY15
                   </Button>
                 </CardFooter>
@@ -421,10 +418,7 @@ export default function TarifsPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button
-                    variant="outline"
-                    className="w-full border-white/50 text-white hover:bg-white/20 hover:text-white"
-                  >
+                  <Button className="w-full bg-primary text-white border border-primary hover:bg-primary/90">
                     Réserver avec ce code: STAY20
                   </Button>
                 </CardFooter>
@@ -448,81 +442,11 @@ export default function TarifsPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button
-                    variant="outline"
-                    className="w-full border-white/50 text-white hover:bg-white/20 hover:text-white"
-                  >
+                  <Button className="w-full bg-primary text-white border border-primary hover:bg-primary/90">
                     Réserver avec ce code: FAMILY25
                   </Button>
                 </CardFooter>
               </Card>
-            </ScrollAnimation>
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Services */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <ScrollAnimation direction="up">
-            <h2 className="text-center mb-2">Services Additionnels</h2>
-          </ScrollAnimation>
-          <ScrollAnimation direction="up" delay={100}>
-            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Personnalisez votre séjour avec nos services à la carte
-            </p>
-          </ScrollAnimation>
-
-          <div className="max-w-4xl mx-auto">
-            <ScrollAnimation direction="up" delay={200}>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100">
-                      <th className="border p-3 text-left">Service</th>
-                      <th className="border p-3 text-left">Description</th>
-                      <th className="border p-3 text-left">Prix</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Petit-déjeuner continental</td>
-                      <td className="border p-3">Buffet continental avec boissons chaudes, jus, viennoiseries</td>
-                      <td className="border p-3">$10 par personne</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Petit-déjeuner américain</td>
-                      <td className="border p-3">Buffet complet avec plats chauds, œufs, bacon, pancakes</td>
-                      <td className="border p-3">$15 par personne</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Lit supplémentaire</td>
-                      <td className="border p-3">Lit d'appoint pour un invité supplémentaire</td>
-                      <td className="border p-3">$20 par nuit</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Parking sécurisé</td>
-                      <td className="border p-3">Stationnement surveillé avec caméras</td>
-                      <td className="border p-3">$8 par jour</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Service de blanchisserie</td>
-                      <td className="border p-3">Lavage et repassage de vos vêtements</td>
-                      <td className="border p-3">À partir de $15</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Navette aéroport</td>
-                      <td className="border p-3">Transport aller-retour vers l'aéroport</td>
-                      <td className="border p-3">$30 par trajet</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="border p-3 font-medium">Animaux de compagnie</td>
-                      <td className="border p-3">Supplément pour accueillir votre animal</td>
-                      <td className="border p-3">$15 par nuit</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
             </ScrollAnimation>
           </div>
         </div>
@@ -709,8 +633,9 @@ export default function TarifsPage() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/20 hover:text-white"
+                variant="default"
+                className="bg-primary border-2 border-white hover:bg-primary/80"
+                asChild
               >
                 <Link href="/contact">Nous contacter</Link>
               </Button>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Wifi, Tv, Bath, Snowflake, Search } from "lucide-react"
@@ -8,22 +7,15 @@ import { Input } from "@/components/ui/input"
 import RoomCard from "@/components/room-card"
 
 export const metadata: Metadata = {
-  title: "Nos Chambres - JohnService Motel",
-  description: "Découvrez nos chambres confortables et abordables pour votre séjour au JohnService Motel.",
+  title: "Nos Chambres - John Services Motel",
+  description: "Découvrez nos chambres confortables et abordables pour votre séjour au John Services Motel.",
 }
 
 export default function ChambresPage() {
   return (
     <main className="flex min-h-screen flex-col">
       {/* Hero Section */}
-      <section className="relative h-[40vh] w-full overflow-hidden">
-        <Image
-          src="/comfortable-motel-beds.png"
-          alt="Chambres du JohnService Motel"
-          fill
-          className="object-cover brightness-[0.7] scale-105"
-          priority
-        />
+      <section className="relative h-[40vh] w-full overflow-hidden hero-gradient">
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
           <div className="animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-md">Nos Chambres</h1>
@@ -70,11 +62,11 @@ export default function ChambresPage() {
             <TabsTrigger value="standard" className="text-sm md:text-base">
               Standard
             </TabsTrigger>
-            <TabsTrigger value="family" className="text-sm md:text-base">
-              Familiale
+            <TabsTrigger value="deluxe" className="text-sm md:text-base">
+              De Luxe
             </TabsTrigger>
-            <TabsTrigger value="premium" className="text-sm md:text-base">
-              Premium
+            <TabsTrigger value="vip" className="text-sm md:text-base">
+              VIP
             </TabsTrigger>
           </TabsList>
 
@@ -84,7 +76,7 @@ export default function ChambresPage() {
                 name="Chambre Standard"
                 description="Chambre confortable avec lit queen size et salle de bain privée."
                 price={59}
-                image="/standard-motel-room.png"
+                image="/standard7.jpeg"
                 rating={3}
                 type="standard"
                 capacity={2}
@@ -93,65 +85,28 @@ export default function ChambresPage() {
               />
 
               <RoomCard
-                name="Chambre Familiale"
-                description="Spacieuse chambre familiale avec un lit queen size et deux lits simples."
+                name="Chambre De Luxe"
+                description="Spacieuse chambre de luxe avec un lit double confortable et coin salon."
                 price={89}
-                image="/family-motel-room.png"
+                image="/deluxe-room-1.jpeg"
                 rating={4}
-                type="family"
-                capacity={4}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain spacieuse", "Réfrigérateur"]}
-                slug="familiale"
+                type="deluxe"
+                capacity={2}
+                features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec fauteuil", "Décoration élégante"]}
+                slug="deluxe"
                 popular={true}
               />
 
               <RoomCard
-                name="Chambre Premium"
-                description="Chambre premium avec lit king size, coin salon et minibar."
+                name="Chambre VIP"
+                description="Chambre VIP élégante avec lit double, coin salon et décoration soignée."
                 price={99}
-                image="/premium-motel-room.png"
+                image="/vip-swan1.jpeg"
                 rating={5}
-                type="premium"
+                type="vip"
                 capacity={2}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée", "Minibar", "Coin salon"]}
-                slug="premium"
-              />
-
-              <RoomCard
-                name="Chambre Standard Twin"
-                description="Chambre standard avec deux lits simples, idéale pour les voyageurs d'affaires ou amis."
-                price={65}
-                image="/standard-motel-room.png"
-                rating={3}
-                type="standard"
-                capacity={2}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée", "Bureau"]}
-                slug="standard-twin"
-              />
-
-              <RoomCard
-                name="Suite Familiale"
-                description="Suite spacieuse avec chambre séparée pour les enfants et coin salon."
-                price={119}
-                image="/family-motel-room.png"
-                rating={5}
-                type="family"
-                capacity={5}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain spacieuse", "Réfrigérateur", "Espace séparé"]}
-                slug="suite-familiale"
-              />
-
-              <RoomCard
-                name="Chambre Premium Deluxe"
-                description="Notre meilleure chambre avec lit king size, baignoire et vue dégagée."
-                price={129}
-                image="/premium-motel-room.png"
-                rating={5}
-                type="premium"
-                capacity={2}
-                features={["Wi-Fi", "TV", "Climatisation", "Baignoire", "Minibar", "Coin salon", "Vue dégagée"]}
-                slug="premium-deluxe"
-                popular={true}
+                features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec table", "Service de chambre"]}
+                slug="vip"
               />
             </div>
           </TabsContent>
@@ -162,82 +117,45 @@ export default function ChambresPage() {
                 name="Chambre Standard"
                 description="Chambre confortable avec lit queen size et salle de bain privée."
                 price={59}
-                image="/standard-motel-room.png"
+                image="/standard7.jpeg"
                 rating={3}
                 type="standard"
                 capacity={2}
                 features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée"]}
                 slug="standard"
               />
-
-              <RoomCard
-                name="Chambre Standard Twin"
-                description="Chambre standard avec deux lits simples, idéale pour les voyageurs d'affaires ou amis."
-                price={65}
-                image="/standard-motel-room.png"
-                rating={3}
-                type="standard"
-                capacity={2}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée", "Bureau"]}
-                slug="standard-twin"
-              />
             </div>
           </TabsContent>
 
-          <TabsContent value="family" className="mt-0">
+          <TabsContent value="deluxe" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <RoomCard
-                name="Chambre Familiale"
-                description="Spacieuse chambre familiale avec un lit queen size et deux lits simples."
+                name="Chambre De Luxe"
+                description="Spacieuse chambre de luxe avec un lit double confortable et coin salon."
                 price={89}
-                image="/family-motel-room.png"
+                image="/deluxe-room-1.jpeg"
                 rating={4}
-                type="family"
-                capacity={4}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain spacieuse", "Réfrigérateur"]}
-                slug="familiale"
+                type="deluxe"
+                capacity={2}
+                features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec fauteuil", "Décoration élégante"]}
+                slug="deluxe"
                 popular={true}
-              />
-
-              <RoomCard
-                name="Suite Familiale"
-                description="Suite spacieuse avec chambre séparée pour les enfants et coin salon."
-                price={119}
-                image="/family-motel-room.png"
-                rating={5}
-                type="family"
-                capacity={5}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain spacieuse", "Réfrigérateur", "Espace séparé"]}
-                slug="suite-familiale"
               />
             </div>
           </TabsContent>
 
-          <TabsContent value="premium" className="mt-0">
+          <TabsContent value="vip" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <RoomCard
-                name="Chambre Premium"
-                description="Chambre premium avec lit king size, coin salon et minibar."
+                name="Chambre VIP"
+                description="Chambre VIP élégante avec lit double, coin salon et décoration soignée."
                 price={99}
-                image="/premium-motel-room.png"
+                image="/vip-swan1.jpeg"
                 rating={5}
-                type="premium"
+                type="vip"
                 capacity={2}
-                features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée", "Minibar", "Coin salon"]}
-                slug="premium"
-              />
-
-              <RoomCard
-                name="Chambre Premium Deluxe"
-                description="Notre meilleure chambre avec lit king size, baignoire et vue dégagée."
-                price={129}
-                image="/premium-motel-room.png"
-                rating={5}
-                type="premium"
-                capacity={2}
-                features={["Wi-Fi", "TV", "Climatisation", "Baignoire", "Minibar", "Coin salon", "Vue dégagée"]}
-                slug="premium-deluxe"
-                popular={true}
+                features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec table", "Service de chambre"]}
+                slug="vip"
               />
             </div>
           </TabsContent>

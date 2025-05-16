@@ -17,9 +17,6 @@ import {
   Check,
   X,
   ChevronRight,
-  BedDouble,
-  Users,
-  Clock,
   CalendarRange,
   Heart,
   Share2,
@@ -57,23 +54,35 @@ Merci de me confirmer la disponibilité.`
     window.open(whatsappUrl, "_blank")
   }
 
-  // Images for the room gallery
+  // Images for the room gallery - Updated with new images
   const roomImages = [
     {
-      src: "/standard-motel-room.png",
+      src: "/standard-room-1.jpeg",
       alt: "Vue d'ensemble de la chambre Standard",
     },
     {
-      src: "/standard-motel-bathroom.png",
-      alt: "Salle de bain de la chambre Standard",
+      src: "/standard-room-2.jpeg",
+      alt: "Vue de la chambre Standard avec lit confortable",
     },
     {
-      src: "/standard-motel-desk.png",
-      alt: "Espace bureau de la chambre Standard",
+      src: "/standard-room-3.jpeg",
+      alt: "Vue latérale de la chambre Standard",
     },
     {
-      src: "/standard-motel-detail.png",
-      alt: "Détails de la chambre Standard",
+      src: "/standard-room-4.jpeg",
+      alt: "Vue du lit de la chambre Standard",
+    },
+    {
+      src: "/standard-room-5.jpeg",
+      alt: "Vue détaillée de la chambre Standard",
+    },
+    {
+      src: "/standard-room-6.jpeg",
+      alt: "Détails de la décoration de la chambre Standard",
+    },
+    {
+      src: "/standard-room-7.jpeg",
+      alt: "Vue supplémentaire de la chambre Standard",
     },
   ]
 
@@ -89,23 +98,6 @@ Merci de me confirmer la disponibilité.`
 
   return (
     <main className="flex min-h-screen flex-col">
-      {/* Breadcrumb */}
-      <div className="bg-gray-100 py-3 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center text-sm text-gray-600">
-            <Link href="/" className="hover:text-slate-800 transition-colors">
-              Accueil
-            </Link>
-            <ChevronRight className="h-4 w-4 mx-2" />
-            <Link href="/chambres" className="hover:text-slate-800 transition-colors">
-              Chambres
-            </Link>
-            <ChevronRight className="h-4 w-4 mx-2" />
-            <span className="text-slate-800 font-medium">Chambre Standard</span>
-          </div>
-        </div>
-      </div>
-
       {/* Room Details Section */}
       <section className="py-8 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -121,21 +113,6 @@ Merci de me confirmer la disponibilité.`
               <Badge className="bg-blue-500">Standard</Badge>
             </div>
 
-            <div className="flex items-center gap-6 mb-6">
-              <div className="flex items-center gap-2">
-                <BedDouble className="h-5 w-5 text-slate-800" />
-                <span>Lit Queen Size</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-slate-800" />
-                <span>2 personnes</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-slate-800" />
-                <span>20m²</span>
-              </div>
-            </div>
-
             <p className="text-gray-700 mb-6">
               Notre chambre Standard offre tout le confort nécessaire pour un séjour agréable. Équipée d'un lit queen
               size confortable, d'une salle de bain privée et de toutes les commodités essentielles, elle est idéale
@@ -144,10 +121,10 @@ Merci de me confirmer la disponibilité.`
 
             <div className="flex items-center gap-2 mb-6">
               <CalendarRange className="h-5 w-5 text-slate-800" />
-              <span className="font-medium">Check-in: 14h00</span>
+              <span className="font-medium">Check-in: 24h/24</span>
               <span className="mx-2">|</span>
               <CalendarRange className="h-5 w-5 text-slate-800" />
-              <span className="font-medium">Check-out: 11h00</span>
+              <span className="font-medium">Check-out: 10h00</span>
             </div>
 
             <div className="flex gap-4 mb-6">
@@ -180,7 +157,7 @@ Merci de me confirmer la disponibilité.`
                     fill="currentColor"
                     viewBox="0 0 16 16"
                   >
-                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a7.29.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
                   </svg>
                   Réserver maintenant
                 </Button>
@@ -314,17 +291,15 @@ Merci de me confirmer la disponibilité.`
                           <CalendarRange className="h-5 w-5 text-slate-800" />
                           <span className="font-medium">Check-in</span>
                         </div>
-                        <p>De 14h00 à 22h00</p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Arrivée tardive possible (prévenir la réception à l'avance)
-                        </p>
+                        <p>24h/24</p>
+                        <p className="text-sm text-gray-600 mt-1">Arrivée possible à toute heure</p>
                       </div>
                       <div className="p-4 bg-white rounded-lg shadow-sm border border-slate-100">
                         <div className="flex items-center gap-2 mb-2">
                           <CalendarRange className="h-5 w-5 text-slate-800" />
                           <span className="font-medium">Check-out</span>
                         </div>
-                        <p>Jusqu'à 11h00</p>
+                        <p>Jusqu'à 10h00</p>
                         <p className="text-sm text-gray-600 mt-1">
                           Départ tardif possible avec supplément (selon disponibilité)
                         </p>
@@ -476,16 +451,16 @@ Merci de me confirmer la disponibilité.`
                   <tr className="bg-white border-b border-gray-200">
                     <td className="p-4 font-medium">
                       <div className="flex items-center gap-2">
-                        <Badge className="bg-green-500">Familiale</Badge>
-                        Chambre Familiale
+                        <Badge className="bg-green-500">De Luxe</Badge>
+                        Chambre De Luxe
                       </div>
                     </td>
-                    <td className="p-4 text-center">30m²</td>
-                    <td className="p-4 text-center">4 personnes</td>
-                    <td className="p-4 text-center">1 lit Queen + 2 lits simples</td>
+                    <td className="p-4 text-center">25m²</td>
+                    <td className="p-4 text-center">2 personnes</td>
+                    <td className="p-4 text-center">1 lit Double</td>
                     <td className="p-4 text-center font-bold">$89</td>
                     <td className="p-4 text-center">
-                      <Link href="/chambres/familiale">
+                      <Link href="/chambres/deluxe">
                         <Button size="sm" variant="outline" className="w-full">
                           Voir
                         </Button>
@@ -495,16 +470,16 @@ Merci de me confirmer la disponibilité.`
                   <tr className="bg-white rounded-b-xl">
                     <td className="p-4 font-medium rounded-bl-xl">
                       <div className="flex items-center gap-2">
-                        <Badge className="bg-purple-500">Premium</Badge>
-                        Chambre Premium
+                        <Badge className="bg-purple-500">VIP</Badge>
+                        Chambre VIP
                       </div>
                     </td>
-                    <td className="p-4 text-center">25m²</td>
+                    <td className="p-4 text-center">20m²</td>
                     <td className="p-4 text-center">2 personnes</td>
-                    <td className="p-4 text-center">1 lit King Size</td>
+                    <td className="p-4 text-center">1 lit Double</td>
                     <td className="p-4 text-center font-bold">$99</td>
                     <td className="p-4 text-center rounded-br-xl">
-                      <Link href="/chambres/premium">
+                      <Link href="/chambres/vip">
                         <Button size="sm" variant="outline" className="w-full">
                           Voir
                         </Button>
@@ -548,8 +523,8 @@ Merci de me confirmer la disponibilité.`
                 <Card className="overflow-hidden card-hover border-gray-200">
                   <div className="relative h-64 overflow-hidden">
                     <Image
-                      src="/family-motel-room.png"
-                      alt="Chambre Familiale"
+                      src="/deluxe-room-1.jpeg"
+                      alt="Chambre De Luxe"
                       fill
                       className="object-cover transition-transform duration-700 hover:scale-110"
                     />
@@ -557,13 +532,13 @@ Merci de me confirmer la disponibilité.`
                   </div>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-bold">Chambre Familiale</h3>
+                      <h3 className="text-xl font-bold">Chambre De Luxe</h3>
                       <p className="font-bold text-slate-800">À partir de $89</p>
                     </div>
                     <p className="text-gray-600 mb-4">
-                      Spacieuse chambre familiale avec un lit queen size et deux lits simples, idéale pour les familles.
+                      Chambre de luxe avec lit double confortable et coin salon avec fauteuil en rotin.
                     </p>
-                    <Link href="/chambres/familiale" className="w-full">
+                    <Link href="/chambres/deluxe" className="w-full">
                       <Button className="w-full">Voir les détails</Button>
                     </Link>
                   </CardContent>
@@ -574,21 +549,21 @@ Merci de me confirmer la disponibilité.`
                 <Card className="overflow-hidden card-hover border-gray-200">
                   <div className="relative h-64 overflow-hidden">
                     <Image
-                      src="/premium-motel-room.png"
-                      alt="Chambre Premium"
+                      src="/vip1.jpeg"
+                      alt="Chambre VIP"
                       fill
                       className="object-cover transition-transform duration-700 hover:scale-110"
                     />
                   </div>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-bold">Chambre Premium</h3>
+                      <h3 className="text-xl font-bold">Chambre VIP</h3>
                       <p className="font-bold text-slate-800">À partir de $99</p>
                     </div>
                     <p className="text-gray-600 mb-4">
-                      Chambre premium avec lit king size, coin salon et minibar pour un séjour plus luxueux.
+                      Chambre VIP avec lit double, coin salon et décoration élégante pour un séjour raffiné.
                     </p>
-                    <Link href="/chambres/premium" className="w-full">
+                    <Link href="/chambres/vip" className="w-full">
                       <Button className="w-full">Voir les détails</Button>
                     </Link>
                   </CardContent>

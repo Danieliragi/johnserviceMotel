@@ -7,67 +7,74 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 
 export default function ResetPasswordForm() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState<{
+    type: "success" | "error"
+    text: string
+  } | null>(null)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
+    setMessage(null)
 
+    // Validate passwords
     if (password !== confirmPassword) {
-      toast({
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas.",
-        variant: "destructive",
+      setMessage({
+        type: "error",
+        text: "Les mots de passe ne correspondent pas.",
       })
+      setIsLoading(false)
       return
     }
 
     if (password.length < 6) {
-      toast({
-        title: "Erreur",
-        description: "Le mot de passe doit contenir au moins 6 caractères.",
-        variant: "destructive",
+      setMessage({
+        type: "error",
+        text: "Le mot de passe doit contenir au moins 6 caractères.",
       })
+      setIsLoading(false)
       return
     }
 
-    setIsLoading(true)
-
     try {
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        throw new Error("Supabase client is not initialized")
+      }
+
+      // Update password
       const { error } = await supabase.auth.updateUser({
         password,
       })
 
       if (error) {
-        toast({
-          title: "Erreur",
-          description: error.message || "Une erreur s'est produite. Veuillez réessayer.",
-          variant: "destructive",
-        })
-        return
+        throw error
       }
 
-      toast({
-        title: "Mot de passe mis à jour",
-        description: "Votre mot de passe a été réinitialisé avec succès.",
+      setMessage({
+        type: "success",
+        text: "Votre mot de passe a été réinitialisé avec succès. Vous allez être redirigé vers la page de connexion.",
       })
 
-      // Redirect to login page
-      router.push("/auth/login")
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        router.push("/auth/login")
+      }, 3000)
     } catch (error) {
       console.error("Password reset error:", error)
-      toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
-        variant: "destructive",
+      setMessage({
+        type: "error",
+        text: "Une erreur s'est produite lors de la réinitialisation du mot de passe. Veuillez réessayer.",
       })
     } finally {
       setIsLoading(false)
@@ -112,11 +119,17 @@ export default function ResetPasswordForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
+      {message && (
+        <Alert variant={message.type === "error" ? "destructive" : "default"}>
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
+      )}
+
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Mise à jour en cours...
+            Réinitialisation en cours...
           </>
         ) : (
           "Réinitialiser le mot de passe"

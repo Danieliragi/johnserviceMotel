@@ -1,24 +1,24 @@
 import type React from "react"
+import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { ReduxProvider } from "@/components/providers/redux-provider"
+import { SessionProvider } from "@/components/auth/session-provider"
+import { AuthProvider } from "@/contexts/auth-context"
+import { Toaster } from "@/components/ui/toaster"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import SmoothScroll from "@/components/smooth-scroll"
-import { AuthProvider } from "@/contexts/auth-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "John Services Motel - Votre hébergement idéal sur la route",
-  description:
-    "Découvrez le John Services Motel, idéalement situé pour vos étapes sur la route. Chambres confortables, parking gratuit et Wi-Fi haut débit.",
+  title: "John Services Motel",
+  description: "Votre séjour confortable et abordable",
   manifest: "/manifest.json",
-  themeColor: "#000000",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "JohnService Motel",
+  icons: [{ rel: "icon", url: "/john-services-logo.jpeg" }],
+  openGraph: {
+    images: ["/john-services-logo.jpeg"],
   },
     generator: 'v0.dev'
 }
@@ -29,22 +29,22 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="fr">
-      <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="JohnService Motel" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#000000" />
-      </head>
+    <html lang="fr" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-          <Header />
-          {children}
-          <Footer />
-          <SmoothScroll />
-        </AuthProvider>
+        <ReduxProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <SessionProvider>
+              <AuthProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex-grow pt-16">{children}</main>
+                  <Footer />
+                </div>
+                <Toaster />
+              </AuthProvider>
+            </SessionProvider>
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   )

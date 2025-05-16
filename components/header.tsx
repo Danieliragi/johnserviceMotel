@@ -15,7 +15,23 @@ export default function Header() {
   const [activeItem, setActiveItem] = useState("/")
   const [scrollProgress, setScrollProgress] = useState(0)
 
-  const { user, signOut } = useAuth()
+  // Add a try-catch to handle the case when auth context is not available
+  const auth = useAuth()
+  let user = null
+  let signOut = async () => {}
+  let profile = null
+
+  try {
+    user = auth.user
+    signOut = auth.signOut
+    profile = auth.profile
+  } catch (error) {
+    console.error("Auth context not available:", error)
+    // Provide fallback values
+    user = null
+    signOut = async () => {}
+    profile = null
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +49,8 @@ export default function Header() {
 
     // Set active item based on current path and update it when the path changes
     const updateActivePath = () => {
-      setActiveItem(window.location.pathname)
+      const path = window.location.pathname
+      setActiveItem(path)
     }
 
     updateActivePath()
@@ -54,13 +71,14 @@ export default function Header() {
       label: "Chambres",
       href: "/chambres",
       dropdown: [
-        { label: "Standard", href: "/chambres/standard" },
-        { label: "Familiale", href: "/chambres/familiale" },
-        { label: "Premium", href: "/chambres/premium" },
+        { label: "Chambre Standard", href: "/chambres/standard" },
+        { label: "Chambre De Luxe", href: "/chambres/deluxe" },
+        { label: "Chambre VIP", href: "/chambres/vip" },
       ],
     },
     { label: "Services", href: "/services" },
     { label: "Tarifs", href: "/tarifs" },
+    { label: "Avis", href: "/avis" },
     { label: "Localisation", href: "/localisation" },
     { label: "Contact", href: "/contact" },
   ]
@@ -72,12 +90,17 @@ export default function Header() {
       }`}
     >
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="relative h-12 w-12 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-110 border border-gray-200 shadow-sm">
-            <Image src="/john-services-sign.png" alt="John Services Motel Logo" fill className="object-cover" />
+        <Link href="/" className="flex items-center gap-2 group" onClick={() => window.scrollTo(0, 0)}>
+          <div className="relative h-12 w-12 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-110 border border-gray-200 shadow-sm bg-primary p-1">
+            <Image
+              src="/john-services-logo.jpeg"
+              alt="John Services Motel Logo"
+              fill
+              className="object-contain rounded-full"
+            />
           </div>
           <span className="font-bold text-xl transition-colors duration-300 group-hover:text-slate-800">
-            JohnService Motel
+            John Services Motel
           </span>
         </Link>
 
@@ -87,7 +110,11 @@ export default function Header() {
             item.dropdown ? (
               <DropdownMenu key={item.href}>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-1 text-sm font-medium hover:text-slate-800 transition-colors">
+                  <button
+                    className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                      activeItem.startsWith(item.href) ? "text-slate-800" : "hover:text-slate-800"
+                    }`}
+                  >
                     {item.label}
                     <ChevronDown className="h-4 w-4" />
                   </button>
@@ -95,7 +122,7 @@ export default function Header() {
                 <DropdownMenuContent align="center" className="w-48">
                   {item.dropdown.map((subItem) => (
                     <DropdownMenuItem key={subItem.href} asChild>
-                      <Link href={subItem.href} className="w-full cursor-pointer">
+                      <Link href={subItem.href} className="w-full cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
                         {subItem.label}
                       </Link>
                     </DropdownMenuItem>
@@ -107,11 +134,14 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition-colors relative ${
-                  activeItem === item.href ? "text-slate-800" : "hover:text-slate-800"
+                  (item.href === "/" && activeItem === "/") || (item.href !== "/" && activeItem === item.href)
+                    ? "text-slate-800"
+                    : "hover:text-slate-800"
                 }`}
+                onClick={() => window.scrollTo(0, 0)}
               >
                 {item.label}
-                {activeItem === item.href && (
+                {((item.href === "/" && activeItem === "/") || (item.href !== "/" && activeItem === item.href)) && (
                   <span className="absolute -bottom-1 left-0 w-full h-1 bg-primary rounded-sm transition-all duration-300" />
                 )}
               </Link>
@@ -125,7 +155,7 @@ export default function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-2">
                   <User className="h-4 w-4" />
-                  <span className="hidden md:inline">Mon compte</span>
+                  <span className="hidden md:inline">{profile?.nom_complet || "Mon compte"}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -134,7 +164,7 @@ export default function Header() {
                     Mon profil
                   </Link>
                 </DropdownMenuItem>
-                {(user.user_metadata?.role === "admin" || user.email === "admin@johnservice.com") && (
+                {(profile?.role === "admin" || user.email === "admin@johnservice.com") && (
                   <DropdownMenuItem asChild>
                     <Link href="/admin/dashboard" className="w-full cursor-pointer">
                       Administration
@@ -170,16 +200,23 @@ export default function Header() {
             <SheetContent side="right" className="w-[80vw] sm:w-[350px]">
               <div className="flex flex-col h-full overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
-                  <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative h-12 w-12 rounded-full overflow-hidden border border-gray-200 shadow-sm">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      setIsMenuOpen(false)
+                      window.scrollTo(0, 0)
+                    }}
+                  >
+                    <div className="relative h-12 w-12 rounded-full overflow-hidden border border-gray-200 shadow-sm bg-primary p-1">
                       <Image
-                        src="/john-services-sign.png"
+                        src="/john-services-logo.jpeg"
                         alt="John Services Motel Logo"
                         fill
-                        className="object-cover"
+                        className="object-contain rounded-full"
                       />
                     </div>
-                    <span className="font-bold text-xl">JohnService Motel</span>
+                    <span className="font-bold text-xl">John Services Motel</span>
                   </Link>
                 </div>
                 <nav className="flex flex-col">
@@ -197,7 +234,10 @@ export default function Header() {
                                 key={subItem.href}
                                 href={subItem.href}
                                 className="flex items-center gap-2 py-2 px-3 text-base text-gray-600 hover:text-slate-800 hover:bg-gray-100 rounded-md transition-all duration-200"
-                                onClick={() => setIsMenuOpen(false)}
+                                onClick={() => {
+                                  setIsMenuOpen(false)
+                                  window.scrollTo(0, 0)
+                                }}
                               >
                                 <span className="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
                                 {subItem.label}
@@ -215,7 +255,10 @@ export default function Header() {
                                 ? "bg-slate-800 text-white font-medium"
                                 : "text-gray-700 hover:bg-gray-100 hover:text-slate-800"
                             }`}
-                            onClick={() => setIsMenuOpen(false)}
+                            onClick={() => {
+                              setIsMenuOpen(false)
+                              window.scrollTo(0, 0)
+                            }}
                           >
                             {item.href === "/" && <Home className="h-5 w-5" />}
                             {item.href === "/chambres" && <BedDouble className="h-5 w-5" />}

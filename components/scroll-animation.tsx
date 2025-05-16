@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
+import { Check, X } from "lucide-react"
 
 interface ScrollAnimationProps {
   children: React.ReactNode
@@ -13,6 +14,8 @@ interface ScrollAnimationProps {
   direction?: "up" | "down" | "left" | "right" | "fade"
   once?: boolean
   rootMargin?: string
+  showIcon?: boolean
+  isValid?: boolean
 }
 
 export default function ScrollAnimation({
@@ -23,6 +26,8 @@ export default function ScrollAnimation({
   direction = "up",
   once = true,
   rootMargin = "0px",
+  showIcon = false,
+  isValid = true,
 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
@@ -85,6 +90,11 @@ export default function ScrollAnimation({
       )}
       style={{ transitionDelay: `${delay}ms` }}
     >
+      {showIcon && (
+        <div className="absolute top-2 right-2">
+          {isValid ? <Check className="h-6 w-6 text-green-500" /> : <X className="h-6 w-6 text-red-500" />}
+        </div>
+      )}
       {children}
     </div>
   )

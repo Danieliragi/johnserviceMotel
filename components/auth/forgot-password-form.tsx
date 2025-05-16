@@ -6,60 +6,51 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [message, setMessage] = useState<{
+    type: "success" | "error"
+    text: string
+  } | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setMessage(null)
 
     try {
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        throw new Error("Supabase client is not initialized")
+      }
+
+      // Send password reset email
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/reset-password`,
       })
 
       if (error) {
-        toast({
-          title: "Erreur",
-          description: error.message || "Une erreur s'est produite. Veuillez réessayer.",
-          variant: "destructive",
-        })
-        return
+        throw error
       }
 
-      setIsSubmitted(true)
-      toast({
-        title: "Email envoyé",
-        description: "Si un compte existe avec cette adresse email, vous recevrez un lien de réinitialisation.",
+      setMessage({
+        type: "success",
+        text: "Un email de réinitialisation a été envoyé à votre adresse email.",
       })
     } catch (error) {
       console.error("Password reset error:", error)
-      toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
-        variant: "destructive",
+      setMessage({
+        type: "error",
+        text: "Une erreur s'est produite. Veuillez vérifier votre email et réessayer.",
       })
     } finally {
       setIsLoading(false)
     }
-  }
-
-  if (isSubmitted) {
-    return (
-      <div className="text-center p-6 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-medium mb-2">Vérifiez votre email</h3>
-        <p className="text-gray-600">
-          Nous avons envoyé un lien de réinitialisation à <strong>{email}</strong>. Veuillez vérifier votre boîte de
-          réception et suivre les instructions.
-        </p>
-      </div>
-    )
   }
 
   return (
@@ -77,14 +68,20 @@ export default function ForgotPasswordForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
+      {message && (
+        <Alert variant={message.type === "error" ? "destructive" : "default"}>
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
+      )}
+
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Envoi en cours...
           </>
         ) : (
-          "Envoyer le lien de réinitialisation"
+          "Réinitialiser le mot de passe"
         )}
       </Button>
     </form>

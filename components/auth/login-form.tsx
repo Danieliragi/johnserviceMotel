@@ -3,43 +3,70 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import Link from "next/link"
+import { Loader2, AlertCircle } from "lucide-react"
 
 export function LoginForm() {
-  const [telephone, setTelephone] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState<{
-    type: "success" | "error"
-    text: string
-  } | null>(null)
-  const { login } = useAuth()
+  const { signIn } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirectTo") || "/"
 
+  // Validate form
+  const validateForm = () => {
+    if (!email.trim()) {
+      setError("L'adresse email est requise")
+      return false
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("L'adresse email n'est pas valide")
+      return false
+    }
+
+    if (!password) {
+      setError("Le mot de passe est requis")
+      return false
+    }
+
+    setError(null)
+    return true
+  }
+
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    setMessage(null)
+
+    if (!validateForm()) {
+      return
+    }
 
     try {
-      const result = await login(telephone)
+      setIsSubmitting(true)
+      setError(null)
 
-      if (result.success) {
-        setMessage({ type: "success", text: "Connexion réussie! Redirection..." })
-        setTimeout(() => {
-          router.push("/")
-        }, 1500)
-      } else {
-        setMessage({ type: "error", text: result.message })
+      const { success, error } = await signIn(email, password)
+
+      if (!success) {
+        setError(error || "Erreur lors de la connexion")
+        return
       }
-    } catch (error) {
-      setMessage({ type: "error", text: "Une erreur est survenue lors de la connexion" })
+
+      router.push(redirectTo)
+    } catch (err: any) {
+      console.error("Login error:", err)
+      setError(err.message || "Une erreur s'est produite lors de la connexion")
     } finally {
       setIsSubmitting(false)
     }
@@ -48,49 +75,72 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-2xl">Connexion</CardTitle>
-        <CardDescription>Entrez votre numéro de téléphone pour vous connecter</CardDescription>
+        <CardTitle className="text-2xl font-bold text-center">Connexion</CardTitle>
+        <CardDescription className="text-center">Entrez vos identifiants pour accéder à votre compte</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="telephone">Numéro de téléphone</Label>
-            <Input
-              id="telephone"
-              placeholder="+243XXXXXXXXX"
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-              required
-            />
-            <p className="text-xs text-gray-500">Format: +243 suivi de 9 chiffres</p>
-          </div>
-
-          {message && (
-            <Alert variant={message.type === "error" ? "destructive" : "default"}>
-              <AlertDescription>{message.text}</AlertDescription>
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="votre@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubmitting}
+              required
+              autoComplete="email"
+              className="w-full"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Mot de passe</Label>
+              <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+                Mot de passe oublié?
+              </Link>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isSubmitting}
+              required
+              autoComplete="current-password"
+              className="w-full"
+            />
+          </div>
+
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Connexion en cours..." : "Se connecter"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Connexion en cours...
+              </>
+            ) : (
+              "Se connecter"
+            )}
           </Button>
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-2">
-        <div className="text-sm text-center">
-          <Link href="/auth/forgot-password" className="text-primary hover:underline">
-            Mot de passe oublié?
-          </Link>
-        </div>
-        <div className="text-sm text-center">
-          Pas encore de compte?{" "}
+      <CardFooter className="flex flex-col space-y-4">
+        <div className="text-center text-sm">
+          Vous n'avez pas de compte?{" "}
           <Link href="/auth/register" className="text-primary hover:underline">
-            S'inscrire
+            Créer un compte
           </Link>
         </div>
       </CardFooter>
     </Card>
   )
 }
-
-export default LoginForm

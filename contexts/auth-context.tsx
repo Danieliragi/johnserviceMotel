@@ -1,106 +1,401 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { getSupabaseClient } from "@/lib/supabase"
+import type React from "react"
+import { createContext, useContext, useEffect, useState } from "react"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { useRouter } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { useAppDispatch } from "@/lib/redux/hooks"
+import { setUser as setReduxUser, clearUser } from "@/lib/redux/slices/authSlice"
 
 type User = {
   id: string
-  role: string
-  telephone: string
-  nom_complet: string | null
+  email?: string
+  user_metadata?: {
+    role?: string
+  }
+}
+
+type Profile = {
+  id: string
+  nom_complet?: string
+  telephone?: string
+  email?: string
+  role?: string
+  date_creation?: string
 }
 
 type AuthContextType = {
   user: User | null
+  profile: Profile | null
   loading: boolean
-  error: string | null
-  login: (telephone: string) => Promise<{ success: boolean; message: string }>
-  logout: () => Promise<void>
-  isAuthenticated: boolean
+  signUp: (email: string, password: string, userData: any) => Promise<{ success: boolean; error?: string }>
+  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
+  signOut: () => Promise<void>
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>
+  updatePassword: (password: string) => Promise<{ success: boolean; error?: string }>
+  updateProfile: (data: Partial<Profile>) => Promise<{ success: boolean; error?: string }>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const supabase = createClientComponentClient()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    // Check for user in localStorage on initial load
-    const checkUser = () => {
+    const fetchSession = async () => {
       try {
-        const storedUser = localStorage.getItem("user")
-        if (storedUser) {
-          setUser(JSON.parse(storedUser))
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+
+        if (session?.user) {
+          setUser(session.user)
+          dispatch(setReduxUser(session.user))
+          await fetchUserProfile(session.user.id)
         }
-      } catch (err) {
-        console.error("Error checking authentication:", err)
+      } catch (error) {
+        console.error("Error fetching session:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    checkUser()
-  }, [])
+    fetchSession()
 
-  const login = async (telephone: string): Promise<{ success: boolean; message: string }> => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const supabase = getSupabaseClient()
-      if (!supabase) {
-        throw new Error("Supabase client is not initialized")
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUser(session.user)
+        dispatch(setReduxUser(session.user))
+        await fetchUserProfile(session.user.id)
+      } else {
+        setUser(null)
+        setProfile(null)
+        dispatch(clearUser())
       }
+      setLoading(false)
+    })
 
-      // Validate phone format
-      const phoneRegex = /^\+243[0-9]{9}$/
-      if (!phoneRegex.test(telephone)) {
-        return {
-          success: false,
-          message: "Le format du numéro de téléphone doit être +243 suivi de 9 chiffres",
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase, dispatch])
+
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      // First try to find by auth_id
+      let { data, error } = await supabase.from("utilisateurs").select("*").eq("auth_id", userId).single()
+
+      // If not found, try to find by email
+      if (error || !data) {
+        const { data: userData } = await supabase.auth.getUser(userId)
+        if (userData?.user?.email) {
+          const { data: emailData } = await supabase
+            .from("utilisateurs")
+            .select("*")
+            .eq("email", userData.user.email)
+            .single()
+
+          if (emailData) {
+            // Update the auth_id if found by email
+            await supabase.from("utilisateurs").update({ auth_id: userId }).eq("id", emailData.id)
+
+            data = emailData
+          }
         }
       }
 
-      // Find user by telephone
-      const { data, error } = await supabase.from("utilisateurs").select("*").eq("telephone", telephone).single()
+      if (data) {
+        setProfile(data)
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error)
+    }
+  }
 
-      if (error || !data) {
-        return { success: false, message: "Utilisateur non trouvé" }
+  const signUp = async (email: string, password: string, userData: any) => {
+    try {
+      setLoading(true)
+
+      // Check if email already exists in auth
+      const { data: existingUsers, error: emailCheckError } = await supabase
+        .from("utilisateurs")
+        .select("email")
+        .eq("email", email)
+        .limit(1)
+
+      if (emailCheckError) {
+        console.error("Error checking existing email:", emailCheckError)
+      } else if (existingUsers && existingUsers.length > 0) {
+        return {
+          success: false,
+          error: "Cette adresse email est déjà utilisée. Veuillez vous connecter ou utiliser une autre adresse.",
+        }
       }
 
-      // Update last login
-      await supabase.from("utilisateurs").update({ derniere_connexion: new Date().toISOString() }).eq("id", data.id)
+      // First create the profile in the database
+      const profileData = {
+        email: email,
+        nom_complet: userData.nom_complet,
+        telephone: userData.telephone,
+        role: "user",
+        date_creation: new Date().toISOString(),
+        derniere_connexion: new Date().toISOString(),
+      }
 
-      // Set user in state and localStorage
-      setUser(data)
-      localStorage.setItem("user", JSON.stringify(data))
+      const { data: newProfile, error: profileError } = await supabase.from("utilisateurs").insert(profileData).select()
 
-      return { success: true, message: "Connexion réussie" }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Une erreur est survenue lors de la connexion"
-      setError(errorMessage)
-      return { success: false, message: errorMessage }
+      if (profileError) {
+        console.error("Error creating profile:", profileError)
+        return {
+          success: false,
+          error: `Erreur lors de la création du profil: ${profileError.message}`,
+        }
+      }
+
+      // Then create auth user
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            nom_complet: userData.nom_complet,
+            telephone: userData.telephone,
+            profile_id: newProfile?.[0]?.id,
+          },
+        },
+      })
+
+      if (error) {
+        console.error("Error creating auth user:", error)
+
+        // If auth user creation fails, delete the profile
+        if (newProfile?.[0]?.id) {
+          await supabase.from("utilisateurs").delete().eq("id", newProfile[0].id)
+        }
+
+        throw error
+      }
+
+      if (data.user && newProfile?.[0]?.id) {
+        // Update the profile with the auth_id
+        const { error: updateError } = await supabase
+          .from("utilisateurs")
+          .update({ auth_id: data.user.id })
+          .eq("id", newProfile[0].id)
+
+        if (updateError) {
+          console.error("Error updating profile with auth_id:", updateError)
+        }
+
+        toast({
+          title: "Compte créé avec succès",
+          description: "Vous pouvez maintenant vous connecter",
+          variant: "default",
+        })
+
+        return { success: true }
+      }
+
+      return { success: false, error: "Erreur lors de la création du compte" }
+    } catch (error: any) {
+      console.error("Error signing up:", error)
+      toast({
+        title: "Erreur lors de la création du compte",
+        description: error.message || "Veuillez réessayer plus tard",
+        variant: "destructive",
+      })
+      return { success: false, error: error.message }
     } finally {
       setLoading(false)
     }
   }
 
-  const logout = async (): Promise<void> => {
-    setUser(null)
-    localStorage.removeItem("user")
+  const signIn = async (email: string, password: string) => {
+    try {
+      setLoading(true)
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      if (data.user) {
+        await fetchUserProfile(data.user.id)
+
+        toast({
+          title: "Connexion réussie",
+          description: "Bienvenue sur JohnService Motel",
+          variant: "default",
+        })
+
+        router.push("/")
+        return { success: true }
+      }
+
+      return { success: false, error: "Erreur lors de la connexion" }
+    } catch (error: any) {
+      console.error("Error signing in:", error)
+      toast({
+        title: "Erreur lors de la connexion",
+        description: error.message || "Identifiants invalides",
+        variant: "destructive",
+      })
+      return { success: false, error: error.message }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const signOut = async () => {
+    try {
+      setLoading(true)
+      await supabase.auth.signOut()
+      setUser(null)
+      setProfile(null)
+      dispatch(clearUser())
+      router.push("/")
+      toast({
+        title: "Déconnexion réussie",
+        description: "À bientôt !",
+        variant: "default",
+      })
+    } catch (error: any) {
+      console.error("Error signing out:", error)
+      toast({
+        title: "Erreur lors de la déconnexion",
+        description: error.message || "Veuillez réessayer plus tard",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const resetPassword = async (email: string) => {
+    try {
+      setLoading(true)
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      toast({
+        title: "Email envoyé",
+        description: "Vérifiez votre boîte de réception pour réinitialiser votre mot de passe",
+        variant: "default",
+      })
+
+      return { success: true }
+    } catch (error: any) {
+      console.error("Error resetting password:", error)
+      toast({
+        title: "Erreur lors de la réinitialisation",
+        description: error.message || "Veuillez réessayer plus tard",
+        variant: "destructive",
+      })
+      return { success: false, error: error.message }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updatePassword = async (password: string) => {
+    try {
+      setLoading(true)
+
+      const { error } = await supabase.auth.updateUser({
+        password,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      toast({
+        title: "Mot de passe mis à jour",
+        description: "Votre mot de passe a été modifié avec succès",
+        variant: "default",
+      })
+
+      return { success: true }
+    } catch (error: any) {
+      console.error("Error updating password:", error)
+      toast({
+        title: "Erreur lors de la mise à jour",
+        description: error.message || "Veuillez réessayer plus tard",
+        variant: "destructive",
+      })
+      return { success: false, error: error.message }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateProfile = async (data: Partial<Profile>) => {
+    try {
+      setLoading(true)
+
+      if (!profile?.id) {
+        throw new Error("Profil non trouvé")
+      }
+
+      const { error } = await supabase.from("utilisateurs").update(data).eq("id", profile.id)
+
+      if (error) {
+        throw error
+      }
+
+      // Refresh profile
+      await fetchUserProfile(user?.id || "")
+
+      toast({
+        title: "Profil mis à jour",
+        description: "Vos informations ont été mises à jour avec succès",
+        variant: "default",
+      })
+
+      return { success: true }
+    } catch (error: any) {
+      console.error("Error updating profile:", error)
+      toast({
+        title: "Erreur lors de la mise à jour",
+        description: error.message || "Veuillez réessayer plus tard",
+        variant: "destructive",
+      })
+      return { success: false, error: error.message }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        profile,
         loading,
-        error,
-        login,
-        logout,
-        isAuthenticated: !!user,
+        signUp,
+        signIn,
+        signOut,
+        resetPassword,
+        updatePassword,
+        updateProfile,
       }}
     >
       {children}

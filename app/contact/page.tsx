@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
-import { Phone, Mail, MapPin, Clock, Send, MessageSquare } from "lucide-react"
+import { Phone, Mail, MessageSquare, MapPin, Clock } from "lucide-react"
 import ScrollAnimation from "@/components/scroll-animation"
+import ContactForm from "@/components/contact-form"
 
 export const metadata: Metadata = {
   title: "Contact - John Services Motel",
@@ -29,7 +30,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <ScrollAnimation direction="left">
               <div className="bg-slate-50 p-8 rounded-lg shadow-md">
-                <h2 className="text-3xl font-bold mb-6 text-slate-800">Nos Coordonnées</h2>
+                <h2 className="text-2xl font-bold mb-6 text-slate-800">Nos Coordonnées</h2>
 
                 <div className="space-y-6">
                   <div className="flex items-start">
@@ -37,9 +38,8 @@ export default function ContactPage() {
                       <Phone className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800">Téléphone</h3>
-                      <p className="text-slate-600">+243 970 000 000</p>
-                      <p className="text-slate-600">+243 810 000 000</p>
+                      <h3 className="font-semibold text-slate-800 text-sm">Téléphone</h3>
+                      <p className="text-slate-600 text-sm">+243 997 163 443</p>
                     </div>
                   </div>
 
@@ -48,15 +48,15 @@ export default function ContactPage() {
                       <MessageSquare className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800">WhatsApp</h3>
-                      <p className="text-slate-600">
+                      <h3 className="font-semibold text-slate-800 text-sm">WhatsApp</h3>
+                      <p className="text-slate-600 text-sm">
                         <a
-                          href="https://wa.me/243998691478"
+                          href="https://wa.me/243997163443"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-primary transition-colors"
                         >
-                          +243 998 691 478
+                          +243 997 163 443
                         </a>
                       </p>
                     </div>
@@ -67,9 +67,8 @@ export default function ContactPage() {
                       <Mail className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800">Email</h3>
-                      <p className="text-slate-600">info@johnservicesmotel.com</p>
-                      <p className="text-slate-600">reservations@johnservicesmotel.com</p>
+                      <h3 className="font-semibold text-slate-800 text-sm">Email</h3>
+                      <p className="text-slate-600 text-sm">johnservicesmotel@gmail.com</p>
                     </div>
                   </div>
 
@@ -78,9 +77,9 @@ export default function ContactPage() {
                       <MapPin className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800">Adresse</h3>
-                      <p className="text-slate-600">42 Avenue Himbi, Quartier Les Volcans</p>
-                      <p className="text-slate-600">Goma, Nord-Kivu, RDC</p>
+                      <h3 className="font-semibold text-slate-800 text-sm">Adresse</h3>
+                      <p className="text-slate-600 text-sm">Quartier: Le volcan, AV. Le messagé, N° 13B</p>
+                      <p className="text-slate-600 text-sm">Goma, Nord-Kivu, RDC</p>
                     </div>
                   </div>
 
@@ -89,17 +88,22 @@ export default function ContactPage() {
                       <Clock className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800">Heures d&apos;ouverture</h3>
-                      <p className="text-slate-600">Réception: 24h/24, 7j/7</p>
-                      <p className="text-slate-600">Check-in: 14h00 - Check-out: 11h00</p>
+                      <h3 className="font-semibold text-slate-800 text-sm">Heures d&apos;ouverture</h3>
+                      <p className="text-slate-600 text-sm">Réception: 24h/24, 7j/7</p>
+                      <p className="text-slate-600 text-sm">check-in: 24h/24 -check-out: 10h</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-8">
-                  <h3 className="font-semibold text-slate-800 mb-4">Suivez-nous</h3>
+                  <h3 className="font-semibold text-slate-800 text-sm mb-4">Suivez-nous</h3>
                   <div className="flex space-x-4">
-                    <a href="#" className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors">
+                    <a
+                      href="https://www.facebook.com/profile.php?id=61575803102763"
+                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <svg
                         className="h-5 w-5 text-slate-700"
                         fill="currentColor"
@@ -112,8 +116,14 @@ export default function ContactPage() {
                           clipRule="evenodd"
                         />
                       </svg>
+                      <span className="sr-only">Facebook</span>
                     </a>
-                    <a href="#" className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors">
+                    <a
+                      href="https://www.instagram.com/john_services_motel?utm_source=qr&igsh=MWV6OWxoN3Z2NWJ5cw=="
+                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <svg
                         className="h-5 w-5 text-slate-700"
                         fill="currentColor"
@@ -126,8 +136,14 @@ export default function ContactPage() {
                           clipRule="evenodd"
                         />
                       </svg>
+                      <span className="sr-only">Instagram</span>
                     </a>
-                    <a href="#" className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors">
+                    <a
+                      href="https://x.com/John_SMotel?t=Muvk4gx1RnrOxsCFjVlH1A&s=09"
+                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <svg
                         className="h-5 w-5 text-slate-700"
                         fill="currentColor"
@@ -136,6 +152,48 @@ export default function ContactPage() {
                       >
                         <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
                       </svg>
+                      <span className="sr-only">X (Twitter)</span>
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/company/john-services-motel/"
+                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <svg
+                        className="h-5 w-5 text-slate-700"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                      <span className="sr-only">LinkedIn</span>
+                    </a>
+                    <a
+                      href="https://www.tiktok.com/@john.services.motel?_t=ZM-8wLpXpOkfaw&_r=1"
+                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-5 w-5 text-slate-700"
+                      >
+                        <path d="M9 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
+                        <path d="M15 8a4 4 0 0 0 0 8" />
+                        <path d="M15 8a4 4 0 0 1 4 4" />
+                        <path d="M19 8h-4V4" />
+                      </svg>
+                      <span className="sr-only">TikTok</span>
                     </a>
                   </div>
                 </div>
@@ -145,72 +203,7 @@ export default function ContactPage() {
             <ScrollAnimation direction="right">
               <div className="bg-slate-50 p-8 rounded-lg shadow-md">
                 <h2 className="text-3xl font-bold mb-6 text-slate-800">Envoyez-nous un message</h2>
-
-                <form className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-                      Nom complet
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Votre nom"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="votre@email.com"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-slate-700 mb-1">
-                      Sujet
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Sujet de votre message"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Votre message..."
-                      required
-                    ></textarea>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center"
-                  >
-                    <Send className="h-5 w-5 mr-2" />
-                    Envoyer le message
-                  </button>
-                </form>
+                <ContactForm />
               </div>
             </ScrollAnimation>
           </div>

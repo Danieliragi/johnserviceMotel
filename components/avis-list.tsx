@@ -3,13 +3,16 @@
 import { useEffect, useState } from "react"
 import TestimonialCard from "./testimonial-card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Avis = {
   id: string
   client_id: string
+  service_type: string // Nouveau champ
   note: number
   commentaire: string
   date: string
+  statut: string // Nouveau champ
   clients: {
     nom: string
   }
@@ -18,6 +21,7 @@ type Avis = {
 export default function AvisList() {
   const [avis, setAvis] = useState<Avis[]>([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("all")
 
   useEffect(() => {
     async function fetchAvis() {
@@ -37,6 +41,9 @@ export default function AvisList() {
 
     fetchAvis()
   }, [])
+
+  // Filtrer les avis selon le type de service sélectionné
+  const filteredAvis = activeTab === "all" ? avis : avis.filter((item) => item.service_type === activeTab)
 
   if (loading) {
     return (
@@ -62,16 +69,28 @@ export default function AvisList() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {avis.map((item) => (
-        <TestimonialCard
-          key={item.id}
-          name={item.clients.nom}
-          date={new Date(item.date).toLocaleDateString("fr-FR")}
-          rating={item.note}
-          text={item.commentaire}
-        />
-      ))}
+    <div className="space-y-6">
+      <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
+        <TabsList className="mb-8">
+          <TabsTrigger value="all">Tous les avis</TabsTrigger>
+          <TabsTrigger value="chambre">Chambres</TabsTrigger>
+          <TabsTrigger value="restaurant">Restaurant</TabsTrigger>
+          <TabsTrigger value="salle de reunion">Salles de réunion</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {filteredAvis.map((item) => (
+          <TestimonialCard
+            key={item.id}
+            name={item.clients.nom}
+            date={new Date(item.date).toLocaleDateString("fr-FR")}
+            rating={item.note}
+            text={item.commentaire}
+            serviceType={item.service_type} // Nouveau prop
+          />
+        ))}
+      </div>
     </div>
   )
 }

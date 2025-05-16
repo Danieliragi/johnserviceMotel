@@ -1,0 +1,225 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export interface Database {
+  public: {
+    Tables: {
+      chambres: {
+        Row: {
+          id: string
+          nom: string
+          prix: number
+          capacite: number
+          disponible: boolean
+          description: string
+          photo_url: string
+        }
+        Insert: {
+          id?: string
+          nom: string
+          prix: number
+          capacite: number
+          disponible?: boolean
+          description: string
+          photo_url: string
+        }
+        Update: {
+          id?: string
+          nom?: string
+          prix?: number
+          capacite?: number
+          disponible?: boolean
+          description?: string
+          photo_url?: string
+        }
+      }
+      reservations: {
+        Row: {
+          id: string
+          client_id: string
+          chambre_id: string
+          date_arrivee: string
+          date_depart: string
+          statut: string
+          code_reservation: string
+          mode_paiement: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          client_id: string
+          chambre_id: string
+          date_arrivee: string
+          date_depart: string
+          statut?: string
+          code_reservation: string
+          mode_paiement: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          client_id?: string
+          chambre_id?: string
+          date_arrivee?: string
+          date_depart?: string
+          statut?: string
+          code_reservation?: string
+          mode_paiement?: string
+          created_at?: string
+        }
+      }
+      utilisateurs: {
+        Row: {
+          id: string
+          role: string
+          telephone: string
+          nom_complet: string | null
+          email: string | null
+          date_creation: string
+          derniere_connexion: string | null
+          auth_id: string | null
+        }
+        Insert: {
+          id?: string
+          role?: string
+          telephone: string
+          nom_complet?: string | null
+          email?: string | null
+          date_creation?: string
+          derniere_connexion?: string | null
+          auth_id?: string | null
+        }
+        Update: {
+          id?: string
+          role?: string
+          telephone?: string
+          nom_complet?: string | null
+          email?: string | null
+          date_creation?: string
+          derniere_connexion?: string | null
+          auth_id?: string | null
+        }
+      }
+      clients: {
+        Row: {
+          id: string
+          nom_complet: string
+          email: string
+          telephone: string
+          mot_de_passe: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nom_complet: string
+          email: string
+          telephone: string
+          mot_de_passe?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nom_complet?: string
+          email?: string
+          telephone?: string
+          mot_de_passe?: string | null
+          created_at?: string
+        }
+      }
+      services: {
+        Row: {
+          id: string
+          nom: string
+          prix: number
+          disponible: boolean
+        }
+        Insert: {
+          id?: string
+          nom: string
+          prix: number
+          disponible?: boolean
+        }
+        Update: {
+          id?: string
+          nom?: string
+          prix?: number
+          disponible?: boolean
+        }
+      }
+      avis: {
+        Row: {
+          id: string
+          client_id: string
+          service_type: string
+          note: number
+          commentaire: string
+          date: string
+          statut: string
+        }
+        Insert: {
+          id?: string
+          client_id: string
+          service_type: string
+          note: number
+          commentaire: string
+          date?: string
+          statut?: string
+        }
+        Update: {
+          id?: string
+          client_id?: string
+          service_type?: string
+          note?: number
+          commentaire?: string
+          date?: string
+          statut?: string
+        }
+      }
+      paiements: {
+        Row: {
+          id: string
+          client_id: string
+          reservation_id: string
+          type: string
+          montant: number
+          mode_paiement: string
+          date_paiement: string
+        }
+        Insert: {
+          id?: string
+          client_id: string
+          reservation_id: string
+          type: string
+          montant: number
+          mode_paiement: string
+          date_paiement?: string
+        }
+        Update: {
+          id?: string
+          client_id?: string
+          reservation_id?: string
+          type?: string
+          montant?: number
+          mode_paiement?: string
+          date_paiement?: string
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+  }
+}
+
+export {};

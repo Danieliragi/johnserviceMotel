@@ -1,14 +1,19 @@
-import Image from "next/image"
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { MapPinIcon, StarIcon, WifiIcon, CarIcon, CoffeeIcon, ChevronRight } from "lucide-react"
+import { MapPinIcon, WifiIcon, CarIcon, CoffeeIcon, ChevronRight } from "lucide-react"
 import BookingForm from "@/components/booking-form"
 import TestimonialCard from "@/components/testimonial-card"
 import MapLocation from "@/components/map-location"
 import ScrollAnimation from "@/components/scroll-animation"
 import CountUp from "@/components/count-up"
+import OptimizedImage from "@/components/optimized-image"
+import HeroCarousel from "@/components/hero-carousel"
+import Image from "next/image"
+import ParallaxEffect from "@/components/parallax-effect"
 
 export default function Home() {
   return (
@@ -16,13 +21,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-[80vh] w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/cozy-motel-room.png"
-            alt="JohnService Motel"
-            fill
-            className="object-cover brightness-[0.65] scale-105 animate-slow-zoom"
-            priority
-          />
+          <HeroCarousel />
         </div>
         <div
           className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10"
@@ -33,7 +32,7 @@ export default function Home() {
           id="parallax-hero"
         >
           <div className="animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-md">JohnService Motel</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-md">John Services Motel</h1>
             <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl drop-shadow-md">
               Votre hébergement idéal pour une étape confortable sur la route
             </p>
@@ -41,16 +40,24 @@ export default function Home() {
               <Button
                 size="lg"
                 className="bg-slate-800 hover:bg-slate-900 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => {
+                  const bookingSection = document.getElementById("booking-section")
+                  if (bookingSection) {
+                    bookingSection.scrollIntoView({ behavior: "smooth", block: "center" })
+                  }
+                }}
               >
                 Réserver maintenant
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white/20 shadow-lg transition-all duration-300"
-              >
-                Découvrir nos chambres
-              </Button>
+              <Link href="/chambres">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white/20 shadow-lg transition-all duration-300"
+                >
+                  Découvrir nos chambres
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -58,7 +65,7 @@ export default function Home() {
       </section>
 
       {/* Booking Section */}
-      <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
+      <section id="booking-section" className="py-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <div className="bg-white rounded-xl shadow-xl -mt-20 relative z-10 p-6 md:p-8 border border-gray-100 animate-slide-up">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <span className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center mr-3 text-lg">
@@ -149,9 +156,6 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <ScrollAnimation>
             <div className="text-center mb-12">
-              <span className="inline-block px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-sm font-medium mb-3">
-                Nos Services
-              </span>
               <h2 className="text-3xl font-bold">Tout pour votre confort</h2>
               <div className="w-20 h-1 bg-slate-800 mx-auto mt-4 rounded-full"></div>
             </div>
@@ -204,7 +208,7 @@ export default function Home() {
             <Card className="overflow-hidden card-hover border-gray-200">
               <div className="relative h-64 overflow-hidden group">
                 <Image
-                  src="/standard-motel-room.png"
+                  src="/standard-room-1.jpeg"
                   alt="Chambre Standard"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -219,13 +223,6 @@ export default function Home() {
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre Standard</h3>
                   <p className="font-bold text-slate-800">À partir de $59</p>
-                </div>
-                <div className="flex items-center gap-1 mb-4">
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-gray-300 fill-gray-300" />
-                  <StarIcon className="h-4 w-4 text-gray-300 fill-gray-300" />
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
@@ -254,8 +251,8 @@ export default function Home() {
             <Card className="overflow-hidden card-hover border-gray-200">
               <div className="relative h-64 overflow-hidden group">
                 <Image
-                  src="/family-motel-room.png"
-                  alt="Chambre Familiale"
+                  src="/deluxe-room-1.jpeg"
+                  alt="Chambre De Luxe"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -268,19 +265,12 @@ export default function Home() {
               </div>
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold">Chambre Familiale</h3>
+                  <h3 className="text-xl font-bold">Chambre De Luxe</h3>
                   <p className="font-bold text-slate-800">À partir de $89</p>
-                </div>
-                <div className="flex items-center gap-1 mb-4">
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-gray-300 fill-gray-300" />
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>1 Lit Queen + 2 Lits Simples
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>1 Lit Double confortable
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
@@ -292,7 +282,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Salle de bain spacieuse
+                    Coin salon avec fauteuil
                   </li>
                 </ul>
                 <Button className="w-full btn-primary">Réserver</Button>
@@ -303,10 +293,11 @@ export default function Home() {
           <ScrollAnimation direction="left" delay={300}>
             <Card className="overflow-hidden card-hover border-gray-200">
               <div className="relative h-64 overflow-hidden group">
-                <Image
-                  src="/premium-motel-room.png"
-                  alt="Chambre Premium"
+                <OptimizedImage
+                  src="/vip1.jpeg"
+                  alt="Chambre VIP avec décoration en serviettes"
                   fill
+                  fallbackSrc="/vip2.jpeg"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
@@ -317,32 +308,25 @@ export default function Home() {
               </div>
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold">Chambre Premium</h3>
+                  <h3 className="text-xl font-bold">Chambre VIP</h3>
                   <p className="font-bold text-slate-800">À partir de $99</p>
-                </div>
-                <div className="flex items-center gap-1 mb-4">
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <StarIcon className="h-4 w-4 text-amber-500 fill-amber-500" />
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Lit King Size
+                    Lit Double confortable
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Coin salon
+                    Coin salon avec table
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Minibar
+                    Décoration élégante
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Douche à l'italienne
+                    Service de chambre
                   </li>
                 </ul>
                 <Button className="w-full btn-primary">Réserver</Button>
@@ -362,7 +346,7 @@ export default function Home() {
             <ScrollAnimation direction="right">
               <h3 className="text-xl font-bold mb-4">Idéalement situé</h3>
               <p className="text-gray-600 mb-6">
-                Le JohnService Motel est situé en ville pres de la rond en face de la maison orange. Notre emplacement
+                Le John Services Motel est situé en ville pres de la rond en face de la maison orange. Notre emplacement
                 stratégique vous permet de rejoindre rapidement:
               </p>
               <ul className="space-y-3 mb-6">
@@ -437,7 +421,7 @@ export default function Home() {
         <ScrollAnimation delay={400}>
           <div className="text-center mt-8">
             <Link href="#" className="text-slate-800 hover:underline font-medium inline-flex items-center group">
-              <span>Voir tous les avis sur TripAdvisor</span>
+              <span>Voir tous les avis</span>
               <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -452,7 +436,7 @@ export default function Home() {
               <span className="inline-block px-3 py-1 bg-white/10 text-white rounded-full text-sm font-medium mb-3">
                 Nos chiffres
               </span>
-              <h2 className="text-3xl font-bold text-white">JohnService Motel en chiffres</h2>
+              <h2 className="text-3xl font-bold text-white">John Services Motel en chiffres</h2>
             </div>
           </ScrollAnimation>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -500,37 +484,28 @@ export default function Home() {
             Profitez de nos tarifs avantageux et de notre emplacement idéal pour votre prochain voyage
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-slate-800 hover:bg-gray-100">
+            <Button
+              size="lg"
+              className="bg-white text-slate-800 hover:bg-gray-100"
+              onClick={() => {
+                const bookingSection = document.getElementById("booking-section")
+                if (bookingSection) {
+                  bookingSection.scrollIntoView({ behavior: "smooth", block: "center" })
+                }
+              }}
+            >
               Réserver maintenant
             </Button>
             <Button
               size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-slate-700 transition-all duration-300"
+              className="bg-slate-800 text-white border-2 border-white hover:bg-slate-700 transition-all duration-300"
             >
               Contactez-nous
             </Button>
           </div>
         </div>
       </section>
-
-      {/* Parallax Effect Script */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            document.addEventListener('DOMContentLoaded', function() {
-              const parallaxHero = document.getElementById('parallax-hero');
-              
-              window.addEventListener('scroll', function() {
-                const scrollPosition = window.scrollY;
-                if (parallaxHero && scrollPosition < window.innerHeight) {
-                  parallaxHero.style.transform = 'translateY(' + scrollPosition * 0.4 + 'px)';
-                }
-              });
-            });
-          `,
-        }}
-      />
+      <ParallaxEffect />
     </main>
   )
 }

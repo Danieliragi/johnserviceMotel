@@ -17,6 +17,9 @@ self.addEventListener("install", async (event) => {
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js")
 
+// Declare workbox after importing scripts
+const { workbox } = self
+
 if (workbox && workbox.navigationPreload && workbox.navigationPreload.isSupported()) {
   workbox.navigationPreload.enable()
 }

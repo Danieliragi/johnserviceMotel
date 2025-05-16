@@ -8,11 +8,28 @@ interface TestimonialCardProps {
   rating: number
   text: string
   avatar?: string
+  serviceType?: string // Nouveau prop
 }
 
-export default function TestimonialCard({ name, date, rating, text, avatar }: TestimonialCardProps) {
+export default function TestimonialCard({ name, date, rating, text, avatar, serviceType }: TestimonialCardProps) {
+  // Fonction pour obtenir le libellé du type de service
+  const getServiceTypeLabel = (type?: string) => {
+    if (!type) return null
+
+    switch (type) {
+      case "chambre":
+        return "Chambre"
+      case "restaurant":
+        return "Restaurant"
+      case "salle de reunion":
+        return "Salle de réunion"
+      default:
+        return type
+    }
+  }
+
   return (
-    <Card className="card-hover border-gray-200">
+    <Card className="card-hover border-gray-200 h-full transition-all duration-300 hover:shadow-md">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -30,15 +47,25 @@ export default function TestimonialCard({ name, date, rating, text, avatar }: Te
               <p className="text-sm text-gray-500">{date}</p>
             </div>
           </div>
-          <div className="flex">
+          <div className="flex" aria-label={`Note: ${rating} sur 5 étoiles`}>
             {[...Array(5)].map((_, i) => (
               <StarIcon
                 key={i}
                 className={`h-4 w-4 ${i < rating ? "text-amber-500 fill-amber-500" : "text-gray-300 fill-gray-300"}`}
+                aria-hidden="true"
               />
             ))}
           </div>
         </div>
+
+        {serviceType && (
+          <div className="mb-3">
+            <span className="inline-block px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-full font-medium">
+              {getServiceTypeLabel(serviceType)}
+            </span>
+          </div>
+        )}
+
         <div className="relative">
           <span className="absolute -top-2 -left-1 text-4xl text-slate-200">"</span>
           <p className="text-gray-600 relative z-10 pl-3">{text}</p>
