@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { requireAdmin } from "@/lib/auth-utils"
 import { AdminDashboard } from "@/components/admin/admin-dashboard"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: "Tableau de bord | Admin",
   description: "Tableau de bord d'administration",
