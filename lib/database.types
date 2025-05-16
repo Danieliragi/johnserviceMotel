@@ -209,6 +209,44 @@ export interface Database {
           date_paiement?: string
         }
       }
+      factures: {
+        Row: {
+          id: string
+          paiement_id: string
+          numero_facture: string
+          date_emission: string
+          montant_total: number
+          devise: string
+          type_service: string
+          client_id: string
+          statut: string
+          lien_pdf: string | null
+        }
+        Insert: {
+          id?: string
+          paiement_id: string
+          numero_facture: string
+          date_emission?: string
+          montant_total: number
+          devise: string
+          type_service: string
+          client_id: string
+          statut?: string
+          lien_pdf?: string | null
+        }
+        Update: {
+          id?: string
+          paiement_id?: string
+          numero_facture?: string
+          date_emission?: string
+          montant_total?: number
+          devise?: string
+          type_service?: string
+          client_id?: string
+          statut?: string
+          lien_pdf?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never

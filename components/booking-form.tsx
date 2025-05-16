@@ -150,7 +150,19 @@ export default function BookingForm() {
       const loadStripeInstance = async () => {
         try {
           // In a real app, this would come from an environment variable
-          const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_TYooMQauvdEDq54NiTphI7jx"
+          const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
+          if (!stripePublicKey) {
+            console.error("Missing Stripe public key")
+            toast({
+              title: "Configuration error",
+              description: "Payment system is not properly configured. Please contact support.",
+              variant: "destructive",
+            })
+            setMoyenPaiement("mobile money")
+            return
+          }
+
           const stripeInstance = await loadStripe(stripePublicKey)
           setStripePromise(stripeInstance)
 
@@ -168,7 +180,9 @@ export default function BookingForm() {
             })
 
             if (!response.ok) {
-              throw new Error(`Server responded with status: ${response.status}`)
+              const errorText = await response.text()
+              console.error(`Server error: ${response.status}`, errorText)
+              throw new Error(`Payment service unavailable (${response.status})`)
             }
 
             const data = await response.json()
@@ -297,23 +311,12 @@ export default function BookingForm() {
         }
 
         // If using Stripe, process the payment now
-        if (moyenPaiement === "carte-visa" && stripePromise && stripePromise && elements) {
-          const stripeInstance = await stripePromise
-          // Get a reference to the Stripe elements
-          const stripeElements = elements
-
-          // Confirm the payment
-          const paymentResult = await stripeInstance.confirmPayment({
-            elements: stripeElements,
-            confirmParams: {
-              return_url: `${window.location.origin}/payment-confirmation?reservation_id=${result.reservation.id}`,
-            },
-            redirect: "if_required",
-          })
-
-          if (paymentResult.error) {
-            throw new Error(paymentResult.error.message || "Erreur lors du paiement")
-          }
+        // If using Stripe, we'll redirect to payment confirmation
+        // The actual payment processing will happen in the StripePaymentForm
+        if (moyenPaiement === "carte-visa") {
+          // Just redirect to payment confirmation with the reservation ID
+          router.push(`/payment-confirmation?reservation_id=${result.reservation.id}`)
+          return
         }
 
         toast({
@@ -393,38 +396,28 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
     const elements = useElements()
     const [error, setError] = useState<string | null>(null)
     const [processing, setProcessing] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
-    // This function will be called by the parent form's submit handler
-    const handlePayment = async () => {
-      if (!stripe || !elements) {
-        return { success: false, error: "Stripe not initialized" }
+    useEffect(() => {
+      // Set loading to false once Stripe Elements are ready
+      if (stripe && elements) {
+        setIsLoading(false)
       }
+    }, [stripe, elements])
 
-      setProcessing(true)
-
-      const result = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: window.location.origin + "/payment-confirmation",
-        },
-        redirect: "if_required",
-      })
-
-      if (result.error) {
-        setError(result.error.message || "Une erreur est survenue lors du paiement.")
-        setProcessing(false)
-        return { success: false, error: result.error.message }
-      }
-
-      setProcessing(false)
-      return { success: true }
+    if (isLoading) {
+      return (
+        <div className="py-4 text-center">
+          <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+          <p className="mt-2 text-sm text-slate-600">Chargement du formulaire de paiement...</p>
+        </div>
+      )
     }
 
     return (
       <div>
         <PaymentElement />
         {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
-        {/* No button here - the parent form will handle submission */}
       </div>
     )
   }
@@ -616,20 +609,37 @@ Merci de confirmer la disponibilité et les détails de ma réservation.
           </div>
         )}
 
-        {moyenPaiement === "carte-visa" && clientSecret && stripePromise && (
+        {moyenPaiement === "carte-visa" && (
           <div className="mt-4 space-y-2 p-4 border rounded-md bg-slate-50">
             <h3 className="font-medium">Paiement par Carte Bancaire</h3>
-            <div className="mb-2">
-              <p className="text-sm">
-                Montant à payer: <span className="font-bold">${(100).toFixed(2)} USD</span>
-                <span className="text-xs text-slate-500 ml-2">
-                  (≈ {(100 * conversionRate).toLocaleString()} monnaie locale)
-                </span>
-              </p>
-            </div>
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <StripePaymentForm />
-            </Elements>
+
+            {!clientSecret || !stripePromise ? (
+              <div className="py-4">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                  <p className="text-sm text-slate-600">Chargement du système de paiement...</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="mb-2">
+                  <p className="text-sm">
+                    Montant à payer: <span className="font-bold">${(100).toFixed(2)} USD</span>
+                    <span className="text-xs text-slate-500 ml-2">
+                      (≈ {(100 * conversionRate).toLocaleString()} monnaie locale)
+                    </span>
+                  </p>
+                </div>
+                <Elements stripe={stripePromise} options={{ clientSecret, loader: "auto" }}>
+                  <StripePaymentForm />
+                </Elements>
+              </>
+            )}
+
+            <p className="text-xs text-slate-500 mt-2">
+              Si le formulaire de paiement ne s'affiche pas, veuillez rafraîchir la page ou choisir un autre mode de
+              paiement.
+            </p>
           </div>
         )}
       </div>
