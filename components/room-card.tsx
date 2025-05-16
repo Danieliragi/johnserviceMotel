@@ -81,6 +81,7 @@ export default function RoomCard({
             console.log(`Image originale non trouvée: ${image}, utilisation du placeholder à la place`)
           }}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={85}
           priority={popular} // Prioritize loading popular room images
         />
         {popular && <Badge className="absolute top-3 right-3 bg-amber-500">Populaire</Badge>}

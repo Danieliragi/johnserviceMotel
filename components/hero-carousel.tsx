@@ -22,6 +22,7 @@ export default function HeroCarousel() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
+  const [imageError, setImageError] = useState(false)
 
   useEffect(() => {
     if (isPaused) return
@@ -55,6 +56,8 @@ export default function HeroCarousel() {
             fill
             className="object-cover brightness-[0.65]"
             priority={index === 0}
+            sizes="100vw" // This tells Next.js how to optimize the image based on viewport
+            quality={85} // Adjust quality (default is 75)
           />
           {image.isNight && (
             <div className="absolute top-6 right-6 z-10">

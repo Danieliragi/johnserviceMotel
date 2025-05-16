@@ -119,6 +119,8 @@ export default function RoomGallery({ images }: RoomGalleryProps) {
           fill
           className="object-cover cursor-pointer transition-opacity duration-300"
           priority
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={90}
           onClick={() => setIsFullscreen(true)}
         />
         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -169,6 +171,7 @@ export default function RoomGallery({ images }: RoomGalleryProps) {
                 className="object-cover transition-transform duration-500"
                 sizes="(max-width: 768px) 25vw, 100px"
                 priority={index < 4}
+                quality={80}
               />
               <div className="absolute inset-0 bg-black/10 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <Maximize2
