@@ -50,3 +50,34 @@ export async function createServerSupabaseClient() {
     cookies: () => cookieStore,
   })
 }
+
+// Fonction pour récupérer une chambre par son nom
+export async function getChamberByName(name: string) {
+  try {
+    const { data, error } = await supabaseClient.from("chambres").select("*").ilike("nom", `%${name}%`).single()
+
+    if (error) {
+      console.error("Erreur lors de la récupération de la chambre:", error)
+      return null
+    }
+
+    if (!data) {
+      console.warn(`Aucune chambre trouvée avec le nom: ${name}`)
+      // Retourner des données par défaut pour éviter les erreurs
+      return {
+        id: "default-standard",
+        nom: "Chambre Standard",
+        prix: 59,
+        capacite: 2,
+        disponible: true,
+        description: "Chambre standard confortable",
+        photo_url: "/standard-room-1.jpeg",
+      }
+    }
+
+    return data
+  } catch (error) {
+    console.error("Exception lors de la récupération de la chambre:", error)
+    return null
+  }
+}

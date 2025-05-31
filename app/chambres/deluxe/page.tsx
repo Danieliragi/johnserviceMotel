@@ -441,135 +441,6 @@ export default function DeluxeRoomPage() {
         </ScrollAnimation>
       </section>
 
-      {/* Room Benefits Section */}
-      <section className="py-12 px-4 md:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <ScrollAnimation>
-            <h2 className="text-2xl font-bold mb-8">Avantages de la chambre De Luxe</h2>
-          </ScrollAnimation>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ScrollAnimation direction="up" delay={0.1}>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-100">
-                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                  <Tv className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Divertissement</h3>
-                <p className="text-gray-600">
-                  Télévision à écran plat avec chaînes internationales. Connexion Wi-Fi haut débit gratuite pour tous
-                  vos appareils.
-                </p>
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={0.2}>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-100">
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-                  <Coffee className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Confort</h3>
-                <p className="text-gray-600">
-                  Literie de qualité, oreillers moelleux et linge de lit en coton doux. Climatisation individuelle pour
-                  votre confort.
-                </p>
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={0.3}>
-              <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 border border-gray-100">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4">
-                  <ParkingCircle className="h-6 w-6 text-amber-600" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Services</h3>
-                <p className="text-gray-600">
-                  Parking gratuit, service de réveil personnalisé et réception 24h/24. Petit-déjeuner continental
-                  disponible en option.
-                </p>
-              </div>
-            </ScrollAnimation>
-          </div>
-        </div>
-      </section>
-
-      {/* Room Comparison */}
-      <section className="py-12 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          <ScrollAnimation>
-            <h2 className="text-2xl font-bold mb-8">Comparez nos chambres</h2>
-          </ScrollAnimation>
-          <ScrollAnimation delay={0.1}>
-            <div className="overflow-x-auto bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-slate-800 text-white">
-                    <th className="p-4 text-left rounded-tl-lg">Type de chambre</th>
-                    <th className="p-4 text-center">Taille</th>
-                    <th className="p-4 text-center">Capacité</th>
-                    <th className="p-4 text-center">Lit</th>
-                    <th className="p-4 text-center">Prix</th>
-                    <th className="p-4 text-center rounded-tr-lg">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                    <td className="p-4 font-medium">
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-blue-500">Standard</Badge>
-                        Chambre Standard
-                      </div>
-                    </td>
-                    <td className="p-4 text-center">20m²</td>
-                    <td className="p-4 text-center">2 personnes</td>
-                    <td className="p-4 text-center">1 lit Queen Size</td>
-                    <td className="p-4 text-center font-bold">$59</td>
-                    <td className="p-4 text-center">
-                      <Link href="/chambres/standard">
-                        <Button size="sm" variant="outline" className="w-full">
-                          Voir
-                        </Button>
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <td className="p-4 font-medium">
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-green-500">De Luxe</Badge>
-                        Chambre De Luxe
-                      </div>
-                    </td>
-                    <td className="p-4 text-center">25m²</td>
-                    <td className="p-4 text-center">2 personnes</td>
-                    <td className="p-4 text-center">1 lit Double</td>
-                    <td className="p-4 text-center font-bold">$89</td>
-                    <td className="p-4 text-center">
-                      <Button size="sm" className="w-full">
-                        Sélectionner
-                      </Button>
-                    </td>
-                  </tr>
-                  <tr className="bg-white hover:bg-gray-50 transition-colors">
-                    <td className="p-4 font-medium rounded-bl-lg">
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-purple-500">VIP</Badge>
-                        Chambre VIP
-                      </div>
-                    </td>
-                    <td className="p-4 text-center">25m²</td>
-                    <td className="p-4 text-center">2 personnes</td>
-                    <td className="p-4 text-center">1 lit King Size</td>
-                    <td className="p-4 text-center font-bold">$99</td>
-                    <td className="p-4 text-center rounded-br-lg">
-                      <Link href="/chambres/vip">
-                        <Button size="sm" variant="outline" className="w-full">
-                          Voir
-                        </Button>
-                      </Link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </ScrollAnimation>
-        </div>
-      </section>
-
       {/* Booking Section */}
       <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
         <ScrollAnimation direction="up">
@@ -603,7 +474,7 @@ export default function DeluxeRoomPage() {
               <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200">
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src="/standard-motel-room.png"
+                    src="/standard-room-1.jpeg"
                     alt="Chambre Standard"
                     fill
                     className="object-cover transition-transform duration-700 hover:scale-110"
@@ -628,11 +499,12 @@ export default function DeluxeRoomPage() {
               <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200">
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src="/premium-motel-room.png"
+                    src="/vip1.jpeg"
                     alt="Chambre VIP"
                     fill
                     className="object-cover transition-transform duration-700 hover:scale-110"
                   />
+                  <Badge className="absolute top-3 right-3 bg-purple-500">Premium</Badge>
                 </div>
                 <CardContent className="p-6">
                   <div className="flex justify-between items-center mb-4">
@@ -640,7 +512,7 @@ export default function DeluxeRoomPage() {
                     <p className="font-bold text-slate-800">À partir de $99</p>
                   </div>
                   <p className="text-gray-600 mb-4">
-                    Chambre VIP avec lit king size, coin salon et minibar pour un séjour plus luxueux.
+                    Chambre VIP avec lit king size, coin salon et petit-déjeuner inclus pour un séjour luxueux.
                   </p>
                   <Link href="/chambres/vip" className="w-full">
                     <Button className="w-full">Voir les détails</Button>

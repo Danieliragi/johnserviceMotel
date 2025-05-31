@@ -60,7 +60,7 @@ export default function TestimonialCard({ name, date, rating, text, avatar, serv
 
         {serviceType && (
           <div className="mb-3">
-            <span className="inline-block px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-full font-medium">
+            <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium border border-primary/20">
               {getServiceTypeLabel(serviceType)}
             </span>
           </div>

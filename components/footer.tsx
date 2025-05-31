@@ -27,7 +27,7 @@ export default function Footer() {
   )
 
   return (
-    <footer className="bg-gray-900 text-gray-200">
+    <footer className="bg-primary-950 text-gray-200">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
@@ -45,35 +45,35 @@ export default function Footer() {
             <div className="flex gap-4">
               <Link
                 href="https://www.facebook.com/profile.php?id=61575803102763"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-700 transition-colors"
               >
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link
                 href="https://www.instagram.com/john_services_motel?utm_source=qr&igsh=MWV6OWxoN3Z2NWJ5cw=="
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-700 transition-colors"
               >
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link
                 href="https://x.com/John_SMotel?t=Muvk4gx1RnrOxsCFjVlH1A&s=09"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-700 transition-colors"
               >
                 <X className="h-5 w-5" />
                 <span className="sr-only">X (Twitter)</span>
               </Link>
               <Link
                 href="https://www.linkedin.com/company/john-services-motel/"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-700 transition-colors"
               >
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
               <Link
                 href="https://www.tiktok.com/@john.services.motel?_t=ZM-8wLpXpOkfaw&_r=1"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-700 transition-colors"
               >
                 <TikTokIcon />
                 <span className="sr-only">TikTok</span>
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-lg mb-4 border-b border-gray-800 pb-2">Liens rapides</h3>
+            <h3 className="font-bold text-white text-lg mb-4 border-b border-primary-800 pb-2">Liens rapides</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-gray-400 hover:text-white transition-colors flex items-center group">
@@ -136,22 +136,22 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-lg mb-4 border-b border-gray-800 pb-2">Contact</h3>
+            <h3 className="font-bold text-white text-lg mb-4 border-b border-primary-800 pb-2">Contact</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2 group hover-scale">
-                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors mt-0.5 flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-primary-700 group-hover:text-white transition-colors mt-0.5 flex-shrink-0">
                   <MapPin className="h-4 w-4" />
                 </span>
                 <span className="text-gray-400">Quartier: Le volcan, AV. Le messager, N° 13B</span>
               </li>
               <li className="flex items-center gap-2 group hover-scale">
-                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-primary-700 group-hover:text-white transition-colors flex-shrink-0">
                   <Phone className="h-4 w-4" />
                 </span>
                 <span className="text-gray-400">+243 997 163 443</span>
               </li>
               <li className="flex items-center gap-2 group hover-scale">
-                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-primary-700 group-hover:text-white transition-colors flex-shrink-0">
                   <Mail className="h-4 w-4" />
                 </span>
                 <a
@@ -165,7 +165,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-lg mb-4 border-b border-gray-800 pb-2">Newsletter</h3>
+            <h3 className="font-bold text-white text-lg mb-4 border-b border-primary-800 pb-2">Newsletter</h3>
             <p className="text-gray-400 mb-4">
               Inscrivez-vous pour recevoir nos offres spéciales et promotions exclusives.
             </p>
@@ -174,9 +174,9 @@ export default function Footer() {
                 <Input
                   type="email"
                   placeholder="Votre email"
-                  className="rounded-r-none bg-gray-800 border-gray-700 text-white focus:border-slate-500"
+                  className="rounded-r-none bg-gray-800 border-gray-700 text-white focus:border-primary-600"
                 />
-                <Button type="submit" className="rounded-l-none bg-slate-800 hover:bg-slate-700">
+                <Button type="submit" className="rounded-l-none bg-primary-600 hover:bg-primary-700">
                   OK
                 </Button>
               </div>
@@ -187,7 +187,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-primary-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} John Services Motel. Tous droits réservés.
           </p>

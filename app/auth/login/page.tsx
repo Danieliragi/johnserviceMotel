@@ -1,65 +1,53 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card"
+import GoogleAuthButton from "@/components/auth/google-auth-button"
+import LoginForm from "@/components/auth/login-form"
 
 export const metadata: Metadata = {
-  title: "Connexion - JohnService Motel",
+  title: "Connexion - John Services Motel",
   description: "Connectez-vous à votre compte JohnService Motel",
 }
 
 export default function LoginPage() {
   return (
     <div className="container mx-auto py-16 px-4">
-      <Card className="max-w-md mx-auto border shadow-lg">
-        <CardHeader className="text-center pb-2">
-          <h1 className="text-3xl font-bold">Connexion</h1>
-          <p className="text-gray-600 mt-2">Connectez-vous avec votre email et mot de passe</p>
-        </CardHeader>
+      <div className="max-w-md mx-auto relative">
+        <div className="absolute left-1/2 -top-20 transform -translate-x-1/2 z-10">
+          <div className="bg-white rounded-full p-3 shadow-md">
+            <Image
+              src="/john-services-logo.jpeg"
+              alt="JohnService Motel Logo"
+              width={100}
+              height={100}
+              className="rounded-full"
+              priority
+            />
+          </div>
+        </div>
+        <Card className="max-w-md mx-auto border shadow-lg mt-14">
+          <CardHeader className="text-center pb-2 pt-12">
+            <h1 className="text-3xl font-bold">Connexion</h1>
+            <p className="text-gray-600 mt-2">Connectez-vous avec votre email ou Google</p>
+          </CardHeader>
 
-        <CardContent className="pt-4">
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="votre@email.com"
-                className="w-full p-2 border rounded-md"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Mot de passe
-              </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="w-full p-2 border rounded-md"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/90 transition-colors"
-            >
-              Se connecter
-            </button>
-          </form>
-        </CardContent>
+          <CardContent className="pt-4">
+            <LoginForm />
 
-        <CardFooter className="flex justify-center pb-6 pt-2">
-          <p className="text-sm text-gray-600">
-            Vous n&apos;avez pas de compte ?{" "}
-            <Link href="/auth/register" className="text-primary hover:underline font-medium">
-              Créer un compte
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t"></span>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-gray-500">Ou</span>
+              </div>
+            </div>
+
+            <GoogleAuthButton mode="signin" />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

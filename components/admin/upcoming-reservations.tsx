@@ -69,13 +69,9 @@ const mockReservations: Reservation[] = [
 function getStatusBadge(status: string) {
   switch (status) {
     case "confirmed":
-      return <Badge className="bg-green-500">Confirmée</Badge>
+      return <Badge className="bg-primary text-primary-foreground">Confirmée</Badge>
     case "pending":
-      return (
-        <Badge variant="outline" className="border-yellow-200 bg-yellow-50 text-yellow-700">
-          En attente
-        </Badge>
-      )
+      return <Badge variant="warning">En attente</Badge>
     case "cancelled":
       return <Badge variant="destructive">Annulée</Badge>
     default:
@@ -153,7 +149,11 @@ export function UpcomingReservations() {
                 <Button variant="outline" size="sm">
                   Contacter
                 </Button>
-                {reservation.status === "pending" && <Button size="sm">Confirmer</Button>}
+                {reservation.status === "pending" && (
+                  <Button size="sm" className="bg-primary hover:bg-primary/90">
+                    Confirmer
+                  </Button>
+                )}
               </div>
               <hr className="my-2" />
             </div>

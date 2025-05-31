@@ -118,16 +118,12 @@ function getActivityBadge(type: string) {
   switch (type) {
     case "reservation":
       return (
-        <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">
+        <Badge variant="outline" className="border-primary/20 bg-primary/10 text-primary">
           Réservation
         </Badge>
       )
     case "payment":
-      return (
-        <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
-          Paiement
-        </Badge>
-      )
+      return <Badge variant="success">Paiement</Badge>
     case "checkin":
       return (
         <Badge variant="outline" className="border-purple-200 bg-purple-50 text-purple-700">
@@ -142,7 +138,7 @@ function getActivityBadge(type: string) {
       )
     case "message":
       return (
-        <Badge variant="outline" className="border-indigo-200 bg-indigo-50 text-indigo-700">
+        <Badge variant="outline" className="border-primary/30 bg-primary/20 text-primary">
           Message
         </Badge>
       )

@@ -28,12 +28,12 @@ const formSchema = z
     email: z.string().email({
       message: "Veuillez entrer une adresse email valide.",
     }),
-    mot_de_passe: z.string().min(8, {
+    password: z.string().min(8, {
       message: "Le mot de passe doit contenir au moins 8 caractères.",
     }),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.mot_de_passe === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas.",
     path: ["confirmPassword"],
   })
@@ -51,7 +51,7 @@ export default function ClientRegisterForm() {
       nom_complet: "",
       telephone: "+243",
       email: "",
-      mot_de_passe: "",
+      password: "",
       confirmPassword: "",
     },
   })
@@ -62,17 +62,17 @@ export default function ClientRegisterForm() {
       setSuccessMessage(null)
       setIsLoading(true)
 
-      // Envoyer les données à l'API
-      const response = await fetch("/api/clients", {
+      // Use the API route
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nom_complet: values.nom_complet,
           email: values.email,
+          password: values.password,
+          nom_complet: values.nom_complet,
           telephone: values.telephone,
-          mot_de_passe: values.mot_de_passe, // Idéalement, ce mot de passe devrait être hashé côté serveur
         }),
       })
 
@@ -82,14 +82,14 @@ export default function ClientRegisterForm() {
         throw new Error(data.error || "Une erreur est survenue lors de la création du compte")
       }
 
-      // Succès
-      setSuccessMessage("Compte créé avec succès. Vous pouvez maintenant vous connecter.")
+      // Success
+      setSuccessMessage(data.message || "Compte créé avec succès. Vous pouvez maintenant vous connecter.")
       toast({
         title: "Compte créé avec succès",
         description: "Vous pouvez maintenant vous connecter",
       })
 
-      // Redirection après un court délai
+      // Redirect after a short delay
       setTimeout(() => {
         router.push("/auth/login")
       }, 2000)
@@ -109,7 +109,7 @@ export default function ClientRegisterForm() {
   return (
     <>
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Créer un compte client</h1>
+        <h1 className="text-3xl font-bold">Créer un compte</h1>
         <p className="text-gray-500">Entrez vos informations pour créer un compte</p>
       </div>
 
@@ -168,7 +168,7 @@ export default function ClientRegisterForm() {
           />
           <FormField
             control={form.control}
-            name="mot_de_passe"
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Mot de passe</FormLabel>

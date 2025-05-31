@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   // Get the pathname
   const pathname = request.nextUrl.pathname
 
-  // Public routes that don't require authentication
+  // Modifier la liste des routes publiques pour inclure les pages de services spécifiques
   const publicRoutes = [
     "/",
     "/auth/login",
@@ -23,7 +23,13 @@ export async function middleware(request: NextRequest) {
     "/auth/forgot-password",
     "/auth/reset-password",
     "/chambres",
+    "/chambres/standard",
+    "/chambres/deluxe",
+    "/chambres/vip",
     "/services",
+    "/services/hebergement",
+    "/services/restaurant",
+    "/services/salles-reunion",
     "/tarifs",
     "/localisation",
     "/contact",
@@ -66,10 +72,16 @@ export async function middleware(request: NextRequest) {
   responseHeaders.set("X-Frame-Options", "DENY")
   responseHeaders.set("X-XSS-Protection", "1; mode=block")
   responseHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin")
+
+  // For debugging purposes only, you can temporarily use a more permissive CSP:
+
   responseHeaders.set(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co",
+    "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';",
   )
+
+  // Note: This is NOT recommended for production use. Once you've confirmed the authentication works,
+  // you should revert to a more restrictive policy that only allows the specific domains you need.
 
   return res
 }

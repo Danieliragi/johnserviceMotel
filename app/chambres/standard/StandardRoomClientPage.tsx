@@ -25,9 +25,28 @@ import BookingForm from "@/components/booking-form"
 import RoomGallery from "@/components/room-gallery"
 import TestimonialCard from "@/components/testimonial-card"
 import ScrollAnimation from "@/components/scroll-animation"
+import { useEffect } from "react"
 
 export default function StandardRoomClientPage() {
   const router = useRouter()
+
+  // Gestionnaire d'erreur pour capturer les problèmes de données
+  useEffect(() => {
+    const handleError = () => {
+      console.error("Erreur lors du chargement des données de la chambre Standard")
+      // Vous pouvez ajouter ici une notification à l'utilisateur si nécessaire
+    }
+
+    try {
+      // Vérifier si les données nécessaires sont disponibles
+      if (!roomImages || roomImages.length === 0) {
+        handleError()
+      }
+    } catch (error) {
+      console.error("Erreur dans StandardRoomClientPage:", error)
+      handleError()
+    }
+  }, [])
 
   // Function to handle booking via WhatsApp
   const handleBookNow = () => {
@@ -62,29 +81,24 @@ Merci de me confirmer la disponibilité.`
     },
     {
       src: "/standard-room-2.jpeg",
-      alt: "Vue de la chambre Standard avec lit confortable",
+      alt: "Lit confortable de la chambre Standard",
     },
     {
       src: "/standard-room-3.jpeg",
-      alt: "Vue latérale de la chambre Standard",
+      alt: "Salle de bain de la chambre Standard",
     },
     {
       src: "/standard-room-4.jpeg",
-      alt: "Vue du lit de la chambre Standard",
+      alt: "Bureau de la chambre Standard",
     },
     {
       src: "/standard-room-5.jpeg",
-      alt: "Vue détaillée de la chambre Standard",
-    },
-    {
-      src: "/standard-room-6.jpeg",
-      alt: "Détails de la décoration de la chambre Standard",
-    },
-    {
-      src: "/standard-room-7.jpeg",
-      alt: "Vue supplémentaire de la chambre Standard",
+      alt: "Vue latérale de la chambre Standard",
     },
   ]
+
+  // Log pour déboguer
+  console.log("Images de chambre chargées:", roomImages)
 
   // Amenities included in the room
   const amenities = [

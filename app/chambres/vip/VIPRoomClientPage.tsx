@@ -22,7 +22,6 @@ import {
   Dumbbell,
 } from "lucide-react"
 import Link from "next/link"
-import BookingForm from "@/components/booking-form"
 import RoomGallery from "@/components/room-gallery"
 import TestimonialCard from "@/components/testimonial-card"
 import Refrigerator from "@/components/icons/refrigerator"
@@ -33,27 +32,31 @@ export default function VIPRoomClientPage() {
   const roomImages = [
     {
       src: "/vip1.jpeg",
-      alt: "Chambre VIP avec lit confortable et décoration élégante",
+      alt: "Vue d'ensemble de la chambre VIP",
     },
     {
       src: "/vip2.jpeg",
-      alt: "Vue d'ensemble de la chambre VIP avec lit et coin salon",
+      alt: "Lit king size de la chambre VIP",
     },
     {
       src: "/vip3.jpeg",
-      alt: "Chambre VIP avec lit et décoration soignée",
+      alt: "Coin salon de la chambre VIP",
     },
     {
       src: "/vip4.jpeg",
-      alt: "Chambre VIP avec lit et coin salon élégant",
+      alt: "Salle de bain de la chambre VIP",
     },
     {
       src: "/vip5.jpeg",
-      alt: "Chambre VIP avec lit et décoration de qualité",
+      alt: "Minibar de la chambre VIP",
     },
     {
       src: "/vip6.jpeg",
-      alt: "Vue d'ensemble de la chambre VIP avec lit et espace de détente",
+      alt: "Vue latérale de la chambre VIP",
+    },
+    {
+      src: "/vip7.jpeg",
+      alt: "Détail de la décoration de la chambre VIP",
     },
   ]
 
@@ -549,14 +552,6 @@ export default function VIPRoomClientPage() {
               </CardContent>
             </Card>
           </div>
-        </div>
-      </section>
-
-      {/* Booking Section */}
-      <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
-        <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-200">
-          <h2 className="text-2xl font-bold mb-6">Réservez votre chambre VIP</h2>
-          <BookingForm />
         </div>
       </section>
 

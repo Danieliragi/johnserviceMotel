@@ -1,25 +1,27 @@
 import { NextResponse } from "next/server"
-import { getSupabaseClient } from "@/lib/supabase"
+import { createClient } from "@supabase/supabase-js"
+import { v4 as uuidv4 } from "uuid"
 
 export async function POST(request: Request) {
   try {
     const userData = await request.json()
-    const { email, password, nom_complet, telephone } = userData
+    const { email } = userData
 
     // Validate required fields
-    if (!email || !password || !nom_complet || !telephone) {
-      return NextResponse.json({ success: false, error: "Tous les champs sont requis" }, { status: 400 })
+    if (!email) {
+      return NextResponse.json({ success: false, error: "L'email est requis" }, { status: 400 })
     }
 
-    // Get the Supabase client
-    const supabase = getSupabaseClient()
-
-    if (!supabase) {
-      return NextResponse.json({ success: false, error: "Service d'authentification non disponible" }, { status: 500 })
-    }
+    // Create a Supabase client with admin privileges
+    const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    })
 
     // Check if user already exists by email
-    const { data: existingUsersByEmail, error: emailCheckError } = await supabase
+    const { data: existingUsersByEmail, error: emailCheckError } = await supabaseAdmin
       .from("utilisateurs")
       .select("id")
       .eq("email", email)
@@ -34,58 +36,21 @@ export async function POST(request: Request) {
     }
 
     if (existingUsersByEmail) {
-      return NextResponse.json({ success: false, error: "Cette adresse email est déjà utilisée" }, { status: 400 })
+      // If user exists, just send a magic link via client-side code
+      return NextResponse.json({
+        success: true,
+        message: "Utilisateur existant, lien de connexion envoyé",
+        userExists: true,
+      })
     }
 
-    // Check if user already exists by phone
-    const { data: existingUsersByPhone, error: phoneCheckError } = await supabase
-      .from("utilisateurs")
-      .select("id")
-      .eq("telephone", telephone)
-      .maybeSingle()
+    // Generate a UUID for the user profile
+    const profileId = uuidv4()
 
-    if (phoneCheckError) {
-      console.error("Error checking existing user by phone:", phoneCheckError)
-      return NextResponse.json(
-        { success: false, error: `Erreur lors de la vérification du téléphone: ${phoneCheckError.message}` },
-        { status: 500 },
-      )
-    }
-
-    if (existingUsersByPhone) {
-      return NextResponse.json({ success: false, error: "Ce numéro de téléphone est déjà utilisé" }, { status: 400 })
-    }
-
-    // Sign up the user
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    // Create user profile with the admin client
+    const { error: profileError } = await supabaseAdmin.from("utilisateurs").insert({
+      id: profileId,
       email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/login`,
-      },
-    })
-
-    if (signUpError) {
-      console.error("Error signing up:", signUpError)
-      return NextResponse.json(
-        { success: false, error: `Erreur lors de l'inscription: ${signUpError.message}` },
-        { status: 500 },
-      )
-    }
-
-    if (!authData.user) {
-      return NextResponse.json(
-        { success: false, error: "Erreur lors de la création du compte: Aucun utilisateur créé" },
-        { status: 500 },
-      )
-    }
-
-    // Create user profile
-    const { error: profileError } = await supabase.from("utilisateurs").insert({
-      auth_id: authData.user.id,
-      email,
-      nom_complet,
-      telephone,
       role: "user",
       date_creation: new Date().toISOString(),
     })
@@ -100,7 +65,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Compte créé avec succès. Vous pouvez maintenant vous connecter.",
+      message: "Profil créé avec succès. Vérifiez votre email pour vous connecter.",
     })
   } catch (error: any) {
     console.error("Registration error:", error)
