@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createClient } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { useAppDispatch } from "@/lib/redux/hooks"
@@ -44,12 +44,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClientComponentClient()
   const dispatch = useAppDispatch()
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // Create a conditional supabase client
+  const supabase =
+    supabaseUrl && supabaseAnonKey
+      ? createClient(supabaseUrl, supabaseAnonKey, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
+          },
+        })
+      : null
 
   useEffect(() => {
     const fetchSession = async () => {
       try {
+        if (!supabase) {
+          console.warn("Supabase client not initialized - missing environment variables")
+          setLoading(false)
+          return
+        }
+
         const {
           data: { session },
         } = await supabase.auth.getSession()
@@ -68,28 +88,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     fetchSession()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        setUser(session.user)
-        dispatch(setReduxUser(session.user))
-        await fetchUserProfile(session.user.id)
-      } else {
-        setUser(null)
-        setProfile(null)
-        dispatch(clearUser())
-      }
-      setLoading(false)
-    })
+    // Only set up auth state change listener if supabase client exists
+    if (supabase) {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user) {
+          setUser(session.user)
+          dispatch(setReduxUser(session.user))
+          await fetchUserProfile(session.user.id)
+        } else {
+          setUser(null)
+          setProfile(null)
+          dispatch(clearUser())
+        }
+        setLoading(false)
+      })
 
-    return () => {
-      subscription.unsubscribe()
+      return () => {
+        subscription.unsubscribe()
+      }
+    } else {
+      setLoading(false)
     }
   }, [supabase, dispatch])
 
   const fetchUserProfile = async (userId: string) => {
     try {
+      if (!supabase) {
+        console.warn("Supabase client not initialized - cannot fetch user profile")
+        return
+      }
+
       // First try to find by auth_id
       let { data, error } = await supabase.from("utilisateurs").select("*").eq("auth_id", userId).single()
 
@@ -106,7 +136,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (emailData) {
             // Update the auth_id if found by email
             await supabase.from("utilisateurs").update({ auth_id: userId }).eq("id", emailData.id)
-
             data = emailData
           }
         }
@@ -122,6 +151,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, userData: any) => {
     try {
+      if (!supabase) {
+        toast({
+          title: "Service indisponible",
+          description: "Le service d'authentification n'est pas configuré",
+          variant: "destructive",
+        })
+        return { success: false, error: "Service d'authentification non configuré" }
+      }
+
       setLoading(true)
 
       // Check if email already exists in auth
@@ -220,6 +258,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
+      if (!supabase) {
+        toast({
+          title: "Service indisponible",
+          description: "Le service d'authentification n'est pas configuré",
+          variant: "destructive",
+        })
+        return { success: false, error: "Service d'authentification non configuré" }
+      }
+
       setLoading(true)
 
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -260,6 +307,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
+      if (!supabase) {
+        toast({
+          title: "Service indisponible",
+          description: "Le service d'authentification n'est pas configuré",
+          variant: "destructive",
+        })
+        return
+      }
+
       setLoading(true)
       await supabase.auth.signOut()
       setUser(null)
@@ -285,6 +341,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const resetPassword = async (email: string) => {
     try {
+      if (!supabase) {
+        toast({
+          title: "Service indisponible",
+          description: "Le service d'authentification n'est pas configuré",
+          variant: "destructive",
+        })
+        return { success: false, error: "Service d'authentification non configuré" }
+      }
+
       setLoading(true)
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -317,6 +382,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updatePassword = async (password: string) => {
     try {
+      if (!supabase) {
+        toast({
+          title: "Service indisponible",
+          description: "Le service d'authentification n'est pas configuré",
+          variant: "destructive",
+        })
+        return { success: false, error: "Service d'authentification non configuré" }
+      }
+
       setLoading(true)
 
       const { error } = await supabase.auth.updateUser({
@@ -349,6 +423,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updateProfile = async (data: Partial<Profile>) => {
     try {
+      if (!supabase) {
+        toast({
+          title: "Service indisponible",
+          description: "Le service d'authentification n'est pas configuré",
+          variant: "destructive",
+        })
+        return { success: false, error: "Service d'authentification non configuré" }
+      }
+
       setLoading(true)
 
       if (!profile?.id) {
