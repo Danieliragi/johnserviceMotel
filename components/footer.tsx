@@ -27,15 +27,18 @@ export default function Footer() {
   )
 
   return (
-    <footer className="bg-gray-900 text-gray-200">
+    <footer className="bg-primary-950 text-gray-200">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <div className="relative h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-110">
-                <Image src="/john-services-logo.jpeg" alt="John Services Motel Logo" fill className="object-contain" />
+              <div className="relative h-10 w-10 overflow-hidden transition-transform duration-300 group-hover:scale-110">
+                <Image src="/logo-motel-john.png" alt="John Services Motel Logo" fill className="object-contain" />
               </div>
-              <span className="font-bold text-xl text-white">John Services Motel</span>
+              <span className="flex flex-col items-center leading-tight font-bold text-xl transition-colors duration-300 group-hover:text-slate-800">
+                <span className="text-2xl">John</span>
+                <span className="text-sm font-medium font-['Poppins']">Services Motel</span>
+              </span>
             </Link>
             <p className="text-gray-400 mb-4">
               Votre hébergement idéal pour une étape confortable sur la route. Il est situé à l'adresse suivante : Si
@@ -45,35 +48,35 @@ export default function Footer() {
             <div className="flex gap-4">
               <Link
                 href="https://www.facebook.com/profile.php?id=61575803102763"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white hover:bg-primary-500 transition-colors"
               >
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link
                 href="https://www.instagram.com/john_services_motel?utm_source=qr&igsh=MWV6OWxoN3Z2NWJ5cw=="
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white hover:bg-primary-500 transition-colors"
               >
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link
                 href="https://x.com/John_SMotel?t=Muvk4gx1RnrOxsCFjVlH1A&s=09"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white hover:bg-primary-500 transition-colors"
               >
                 <X className="h-5 w-5" />
                 <span className="sr-only">X (Twitter)</span>
               </Link>
               <Link
                 href="https://www.linkedin.com/company/john-services-motel/"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white hover:bg-primary-500 transition-colors"
               >
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
               <Link
                 href="https://www.tiktok.com/@john.services.motel?_t=ZM-8wLpXpOkfaw&_r=1"
-                className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white hover:bg-primary-500 transition-colors"
               >
                 <TikTokIcon />
                 <span className="sr-only">TikTok</span>
@@ -82,7 +85,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-lg mb-4 border-b border-gray-800 pb-2">Liens rapides</h3>
+            <h3 className="font-bold text-white text-lg mb-4 border-b border-primary-800 pb-2">Liens rapides</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-gray-400 hover:text-white transition-colors flex items-center group">
@@ -92,11 +95,38 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/chambres"
+                  href="/about"
                   className="text-gray-400 hover:text-white transition-colors flex items-center group"
                 >
                   <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
-                  Nos chambres
+                  À propos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about/documentation"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center group"
+                >
+                  <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about/gallery"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center group"
+                >
+                  <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  Galerie
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tarifs"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center group"
+                >
+                  <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  Tarifs
                 </Link>
               </li>
               <li>
@@ -110,17 +140,20 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/tarifs"
+                  href="/services/hebergement"
                   className="text-gray-400 hover:text-white transition-colors flex items-center group"
                 >
                   <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
-                  Tarifs et offres
+                  Hébergement
                 </Link>
               </li>
               <li>
-                <Link href="/avis" className="text-gray-400 hover:text-white transition-colors flex items-center group">
+                <Link
+                  href="/services/restaurant"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center group"
+                >
                   <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
-                  Avis clients
+                  Salle & Restaurant
                 </Link>
               </li>
               <li>
@@ -132,26 +165,44 @@ export default function Footer() {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/localisation"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center group"
+                >
+                  <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  Localisation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/chambres"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center group"
+                >
+                  <ChevronRight className="h-4 w-4 mr-1 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  Nos chambres
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-lg mb-4 border-b border-gray-800 pb-2">Contact</h3>
+            <h3 className="font-bold text-white text-lg mb-4 border-b border-primary-800 pb-2">Contact</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2 group hover-scale">
-                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors mt-0.5 flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white group-hover:bg-primary-500 transition-colors mt-0.5 flex-shrink-0">
                   <MapPin className="h-4 w-4" />
                 </span>
                 <span className="text-gray-400">Quartier: Le volcan, AV. Le messager, N° 13B</span>
               </li>
               <li className="flex items-center gap-2 group hover-scale">
-                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white group-hover:bg-primary-500 transition-colors flex-shrink-0">
                   <Phone className="h-4 w-4" />
                 </span>
                 <span className="text-gray-400">+243 997 163 443</span>
               </li>
               <li className="flex items-center gap-2 group hover-scale">
-                <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-slate-700 group-hover:text-white transition-colors flex-shrink-0">
+                <span className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white group-hover:bg-primary-500 transition-colors flex-shrink-0">
                   <Mail className="h-4 w-4" />
                 </span>
                 <a
@@ -165,7 +216,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-lg mb-4 border-b border-gray-800 pb-2">Newsletter</h3>
+            <h3 className="font-bold text-white text-lg mb-4 border-b border-primary-800 pb-2">Newsletter</h3>
             <p className="text-gray-400 mb-4">
               Inscrivez-vous pour recevoir nos offres spéciales et promotions exclusives.
             </p>
@@ -174,9 +225,9 @@ export default function Footer() {
                 <Input
                   type="email"
                   placeholder="Votre email"
-                  className="rounded-r-none bg-gray-800 border-gray-700 text-white focus:border-slate-500"
+                  className="rounded-r-none bg-primary-800 border-primary-700 text-white focus:border-primary-500 placeholder:text-gray-300"
                 />
-                <Button type="submit" className="rounded-l-none bg-slate-800 hover:bg-slate-700">
+                <Button type="submit" className="rounded-l-none bg-primary-600 hover:bg-primary-700">
                   OK
                 </Button>
               </div>
@@ -187,7 +238,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-primary-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} John Services Motel. Tous droits réservés.
           </p>

@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/auth-context"
 import { Toaster } from "@/components/ui/toaster"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import { LanguageProvider } from "@/contexts/language-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -32,18 +33,20 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={inter.className}>
         <ReduxProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <SessionProvider>
-              <AuthProvider>
-                <div className="flex min-h-screen flex-col">
-                  <Header />
-                  <main className="flex-grow pt-16">{children}</main>
-                  <Footer />
-                </div>
-                <Toaster />
-              </AuthProvider>
-            </SessionProvider>
-          </ThemeProvider>
+          <LanguageProvider>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+              <SessionProvider>
+                <AuthProvider>
+                  <div className="flex min-h-screen flex-col">
+                    <Header />
+                    <main className="flex-grow pt-4">{children}</main>
+                    <Footer />
+                  </div>
+                  <Toaster />
+                </AuthProvider>
+              </SessionProvider>
+            </ThemeProvider>
+          </LanguageProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -57,7 +57,7 @@ export interface Database {
           date_arrivee: string
           date_depart: string
           statut?: string
-          code_reservation: string
+          code_reservation?: string
           mode_paiement: string
           created_at?: string
         }
@@ -73,36 +73,105 @@ export interface Database {
           created_at?: string
         }
       }
-      utilisateurs: {
+      tables_restaurant: {
         Row: {
           id: string
-          role: string
-          telephone: string
-          nom_complet: string | null
-          email: string | null
-          date_creation: string
-          derniere_connexion: string | null
-          auth_id: string | null
+          nom: string
+          capacite: number
+          disponible: boolean
         }
         Insert: {
           id?: string
-          role?: string
-          telephone: string
-          nom_complet?: string | null
-          email?: string | null
-          date_creation?: string
-          derniere_connexion?: string | null
-          auth_id?: string | null
+          nom: string
+          capacite: number
+          disponible?: boolean
         }
         Update: {
           id?: string
-          role?: string
-          telephone?: string
-          nom_complet?: string | null
-          email?: string | null
-          date_creation?: string
-          derniere_connexion?: string | null
-          auth_id?: string | null
+          nom?: string
+          capacite?: number
+          disponible?: boolean
+        }
+      }
+      reservations_restaurant: {
+        Row: {
+          id: string
+          client_id: string
+          table_id: string
+          date: string
+          statut: string
+          nb_personnes: number
+        }
+        Insert: {
+          id?: string
+          client_id: string
+          table_id: string
+          date: string
+          statut?: string
+          nb_personnes: number
+        }
+        Update: {
+          id?: string
+          client_id?: string
+          table_id?: string
+          date?: string
+          statut?: string
+          nb_personnes?: number
+        }
+      }
+      salles_reunion: {
+        Row: {
+          id: string
+          nom: string
+          capacite: number
+          equipements: string
+          prix_heure: number
+          disponible: boolean
+        }
+        Insert: {
+          id?: string
+          nom: string
+          capacite: number
+          equipements: string
+          prix_heure: number
+          disponible?: boolean
+        }
+        Update: {
+          id?: string
+          nom?: string
+          capacite?: number
+          equipements?: string
+          prix_heure?: number
+          disponible?: boolean
+        }
+      }
+      reservations_reunion: {
+        Row: {
+          id: string
+          client_id: string
+          salle_id: string
+          date_debut: string
+          date_reservation: string
+          date_fin: string
+          statut: string
+        }
+        Insert: {
+          id?: string
+          client_id: string
+          salle_id: string
+          date_debut: string
+          date_reservation: string
+          date_fin: string
+          statut?: string
+        }
+        Update: {
+          id?: string
+          client_id?: string
+          salle_id?: string
+          date_debut?: string
+          date_reservation?: string
+          date_fin?: string
+          statut?: string
         }
       }
       clients: {
@@ -151,7 +220,7 @@ export interface Database {
           disponible?: boolean
         }
       }
-      avis: {
+       avis: {
         Row: {
           id: string
           client_id: string
@@ -178,6 +247,38 @@ export interface Database {
           commentaire?: string
           date?: string
           statut?: string
+        }
+      }
+      utilisateurs: {
+        Row: {
+          id: string
+          role: string
+          telephone: string
+          nom_complet: string | null
+          email: string | null
+          date_creation: string
+          derniere_connexion: string | null
+          auth_id: string | null
+        }
+        Insert: {
+          id?: string
+          role?: string
+          telephone: string
+          email?: string | null
+          nom_complet?: string | null
+          date_creation?: string
+          derniere_connexion?: string | null
+          auth_id?: string | null
+        }
+        Update: {
+          id?: string
+          role?: string
+          telephone?: string
+          email?: string | null
+          nom_complet?: string | null
+          date_creation?: string
+          derniere_connexion?: string | null
+          auth_id?: string | null
         }
       }
       paiements: {

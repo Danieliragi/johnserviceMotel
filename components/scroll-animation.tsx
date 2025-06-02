@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useEffect, useRef, useState } from "react"
-import { cn } from "@/lib/utils"
 import { Check, X } from "lucide-react"
 
 interface ScrollAnimationProps {
@@ -81,21 +80,13 @@ export default function ScrollAnimation({
   }
 
   return (
-    <div
-      ref={ref}
-      className={cn(
-        "transition-all duration-700 ease-out",
-        isVisible ? "opacity-100 transform-none" : `opacity-0 ${getAnimationClass()}`,
-        className,
-      )}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
+    <>
       {showIcon && (
         <div className="absolute top-2 right-2">
           {isValid ? <Check className="h-6 w-6 text-green-500" /> : <X className="h-6 w-6 text-red-500" />}
         </div>
       )}
       {children}
-    </div>
+    </>
   )
 }

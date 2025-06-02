@@ -13,8 +13,8 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="bg-gradient-to-r from-green-800 to-green-700 text-white py-20 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Contactez-Nous</h1>
             <p className="text-xl opacity-90">
@@ -25,12 +25,12 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Information */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="section-padding bg-background container-padding">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <ScrollAnimation direction="left">
-              <div className="bg-slate-50 p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-6 text-slate-800">Nos Coordonnées</h2>
+              <div className="bg-card p-8 rounded-lg shadow-md border">
+                <h2 className="text-2xl font-bold mb-6 text-foreground">Nos Coordonnées</h2>
 
                 <div className="space-y-6">
                   <div className="flex items-start">
@@ -38,8 +38,8 @@ export default function ContactPage() {
                       <Phone className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800 text-sm">Téléphone</h3>
-                      <p className="text-slate-600 text-sm">+243 997 163 443</p>
+                      <h3 className="font-semibold text-foreground text-sm">Téléphone</h3>
+                      <p className="text-muted-foreground text-sm">+243 997 163 443</p>
                     </div>
                   </div>
 
@@ -48,8 +48,8 @@ export default function ContactPage() {
                       <MessageSquare className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800 text-sm">WhatsApp</h3>
-                      <p className="text-slate-600 text-sm">
+                      <h3 className="font-semibold text-foreground text-sm">WhatsApp</h3>
+                      <p className="text-muted-foreground text-sm">
                         <a
                           href="https://wa.me/243997163443"
                           target="_blank"
@@ -67,8 +67,8 @@ export default function ContactPage() {
                       <Mail className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800 text-sm">Email</h3>
-                      <p className="text-slate-600 text-sm">johnservicesmotel@gmail.com</p>
+                      <h3 className="font-semibold text-foreground text-sm">Email</h3>
+                      <p className="text-muted-foreground text-sm">johnservicesmotel@gmail.com</p>
                     </div>
                   </div>
 
@@ -77,9 +77,9 @@ export default function ContactPage() {
                       <MapPin className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800 text-sm">Adresse</h3>
-                      <p className="text-slate-600 text-sm">Quartier: Le volcan, AV. Le messagé, N° 13B</p>
-                      <p className="text-slate-600 text-sm">Goma, Nord-Kivu, RDC</p>
+                      <h3 className="font-semibold text-foreground text-sm">Adresse</h3>
+                      <p className="text-muted-foreground text-sm">Quartier: Le volcan, AV. Le messagé, N° 13B</p>
+                      <p className="text-muted-foreground text-sm">Goma, Nord-Kivu, RDC</p>
                     </div>
                   </div>
 
@@ -88,24 +88,24 @@ export default function ContactPage() {
                       <Clock className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-800 text-sm">Heures d&apos;ouverture</h3>
-                      <p className="text-slate-600 text-sm">Réception: 24h/24, 7j/7</p>
-                      <p className="text-slate-600 text-sm">check-in: 24h/24 -check-out: 10h</p>
+                      <h3 className="font-semibold text-foreground text-sm">Heures d&apos;ouverture</h3>
+                      <p className="text-muted-foreground text-sm">Réception: 24h/24, 7j/7</p>
+                      <p className="text-muted-foreground text-sm">check-in: 24h/24 -check-out: 10h</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-8">
-                  <h3 className="font-semibold text-slate-800 text-sm mb-4">Suivez-nous</h3>
+                  <h3 className="font-semibold text-foreground text-sm mb-4">Suivez-nous</h3>
                   <div className="flex space-x-4">
                     <a
                       href="https://www.facebook.com/profile.php?id=61575803102763"
-                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      className="bg-muted hover:bg-muted/80 p-3 rounded-full transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <svg
-                        className="h-5 w-5 text-slate-700"
+                        className="h-5 w-5 text-muted-foreground"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -120,12 +120,12 @@ export default function ContactPage() {
                     </a>
                     <a
                       href="https://www.instagram.com/john_services_motel?utm_source=qr&igsh=MWV6OWxoN3Z2NWJ5cw=="
-                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      className="bg-muted hover:bg-muted/80 p-3 rounded-full transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <svg
-                        className="h-5 w-5 text-slate-700"
+                        className="h-5 w-5 text-muted-foreground"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -140,12 +140,12 @@ export default function ContactPage() {
                     </a>
                     <a
                       href="https://x.com/John_SMotel?t=Muvk4gx1RnrOxsCFjVlH1A&s=09"
-                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      className="bg-muted hover:bg-muted/80 p-3 rounded-full transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <svg
-                        className="h-5 w-5 text-slate-700"
+                        className="h-5 w-5 text-muted-foreground"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -156,12 +156,12 @@ export default function ContactPage() {
                     </a>
                     <a
                       href="https://www.linkedin.com/company/john-services-motel/"
-                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      className="bg-muted hover:bg-muted/80 p-3 rounded-full transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <svg
-                        className="h-5 w-5 text-slate-700"
+                        className="h-5 w-5 text-muted-foreground"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -172,7 +172,7 @@ export default function ContactPage() {
                     </a>
                     <a
                       href="https://www.tiktok.com/@john.services.motel?_t=ZM-8wLpXpOkfaw&_r=1"
-                      className="bg-slate-200 hover:bg-slate-300 p-3 rounded-full transition-colors"
+                      className="bg-muted hover:bg-muted/80 p-3 rounded-full transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -186,7 +186,7 @@ export default function ContactPage() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="h-5 w-5 text-slate-700"
+                        className="h-5 w-5 text-muted-foreground"
                       >
                         <path d="M9 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
                         <path d="M15 8a4 4 0 0 0 0 8" />
@@ -201,8 +201,8 @@ export default function ContactPage() {
             </ScrollAnimation>
 
             <ScrollAnimation direction="right">
-              <div className="bg-slate-50 p-8 rounded-lg shadow-md">
-                <h2 className="text-3xl font-bold mb-6 text-slate-800">Envoyez-nous un message</h2>
+              <div className="bg-card p-8 rounded-lg shadow-md border">
+                <h2 className="text-3xl font-bold mb-6 text-foreground">Envoyez-nous un message</h2>
                 <ContactForm />
               </div>
             </ScrollAnimation>
@@ -211,53 +211,55 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-slate-50">
-        <div className="container mx-auto px-4">
+      <section className="section-padding bg-muted/30 container-padding">
+        <div className="max-w-7xl mx-auto">
           <ScrollAnimation direction="up">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold mb-8 text-center text-slate-800">Questions Fréquentes</h2>
+              <h2 className="text-3xl font-bold mb-8 text-center text-foreground">Questions Fréquentes</h2>
 
               <div className="space-y-6">
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-2">
+                <div className="bg-card p-6 rounded-lg shadow-sm border">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     Quelles sont les heures d&apos;arrivée et de départ?
                   </h3>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     L&apos;heure d&apos;arrivée (check-in) est à partir de 14h00 et l&apos;heure de départ (check-out)
                     est jusqu&apos;à 11h00. Si vous avez besoin d&apos;arrangements spéciaux, veuillez nous contacter à
                     l&apos;avance.
                   </p>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-2">Comment puis-je réserver une chambre?</h3>
-                  <p className="text-slate-600">
+                <div className="bg-card p-6 rounded-lg shadow-sm border">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Comment puis-je réserver une chambre?</h3>
+                  <p className="text-muted-foreground">
                     Vous pouvez réserver une chambre directement sur notre site web, par téléphone, ou par email. Nous
                     recommandons de réserver à l&apos;avance pendant la haute saison pour garantir la disponibilité.
                   </p>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-2">Acceptez-vous les animaux de compagnie?</h3>
-                  <p className="text-slate-600">
+                <div className="bg-card p-6 rounded-lg shadow-sm border">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
+                    Acceptez-vous les animaux de compagnie?
+                  </h3>
+                  <p className="text-muted-foreground">
                     Nous n&apos;acceptons pas les animaux de compagnie dans notre établissement, à l&apos;exception des
                     chiens d&apos;assistance. Nous vous remercions de votre compréhension.
                   </p>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-2">Y a-t-il un restaurant sur place?</h3>
-                  <p className="text-slate-600">
+                <div className="bg-card p-6 rounded-lg shadow-sm border">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Y a-t-il un restaurant sur place?</h3>
+                  <p className="text-muted-foreground">
                     Oui, nous avons un restaurant sur place qui sert le petit-déjeuner, le déjeuner et le dîner. Nous
                     proposons une cuisine locale et internationale. Le service en chambre est également disponible.
                   </p>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-2">
+                <div className="bg-card p-6 rounded-lg shadow-sm border">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     Proposez-vous un service de navette depuis l&apos;aéroport?
                   </h3>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     Oui, nous proposons un service de navette depuis l&apos;aéroport moyennant des frais
                     supplémentaires. Veuillez nous informer de vos détails de vol à l&apos;avance pour que nous
                     puissions organiser votre transfert.
@@ -270,18 +272,15 @@ export default function ContactPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
-        <div className="container mx-auto px-4 text-center">
+      <section className="section-padding hero-gradient text-white container-padding">
+        <div className="max-w-7xl mx-auto text-center">
           <ScrollAnimation direction="up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à réserver votre séjour?</h2>
             <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
               Découvrez le confort et l&apos;hospitalité au John Services Motel. Réservez dès maintenant pour bénéficier
               de nos meilleurs tarifs.
             </p>
-            <a
-              href="/chambres"
-              className="inline-block bg-white text-slate-900 py-3 px-8 rounded-md font-semibold hover:bg-slate-100 transition-colors"
-            >
+            <a href="/chambres" className="btn-primary inline-block py-3 px-8 rounded-md font-semibold">
               Voir nos chambres
             </a>
           </ScrollAnimation>

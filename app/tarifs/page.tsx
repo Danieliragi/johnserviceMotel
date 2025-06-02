@@ -14,11 +14,11 @@ export default function TarifsPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-slate-900 text-white py-20">
+      <section className="relative bg-primary-950 text-white py-20">
         <div className="absolute inset-0 overflow-hidden opacity-20">
-          <Image src="/comfortable-motel-beds.png" alt="Motel beds" fill className="object-cover" priority />
+          <Image src="/family-motel-room.png" alt="Motel beds" fill className="object-cover" priority />
         </div>
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
           <ScrollAnimation direction="up">
             <h1 className="text-center mb-4">Nos Tarifs</h1>
           </ScrollAnimation>
@@ -31,8 +31,8 @@ export default function TarifsPage() {
       </section>
 
       {/* Price Highlights */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-gray-50 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
           <ScrollAnimation direction="up">
             <h2 className="text-center mb-12">Aperçu des Tarifs</h2>
           </ScrollAnimation>
@@ -133,14 +133,14 @@ export default function TarifsPage() {
 
             <ScrollAnimation direction="right" delay={300}>
               <Card className="border-2 hover:shadow-lg transition-all duration-300">
-                <CardHeader className="bg-slate-800 text-white rounded-t-lg">
+                <CardHeader className="bg-primary-800 text-white rounded-t-lg">
                   <CardTitle className="flex items-center justify-between">
                     Chambre VIP
                     <Badge variant="outline" className="bg-white/20 text-white">
                       À partir de
                     </Badge>
                   </CardTitle>
-                  <CardDescription className="text-slate-200">
+                  <CardDescription className="text-muted-foreground">
                     Expérience luxueuse pour les plus exigeants
                   </CardDescription>
                 </CardHeader>
@@ -183,8 +183,8 @@ export default function TarifsPage() {
       </section>
 
       {/* Seasonal Pricing */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-16 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
           <ScrollAnimation direction="up">
             <h2 className="text-center mb-2">Tarifs Saisonniers</h2>
           </ScrollAnimation>
@@ -208,7 +208,7 @@ export default function TarifsPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-slate-100">
+                      <tr className="bg-muted">
                         <th className="border p-3 text-left">Saison</th>
                         <th className="border p-3 text-left">Période</th>
                         <th className="border p-3 text-left">Prix/Nuit</th>
@@ -216,7 +216,7 @@ export default function TarifsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingDown className="h-5 w-5 text-green-500 mr-2" />
@@ -227,7 +227,7 @@ export default function TarifsPage() {
                         <td className="border p-3 font-semibold">$69</td>
                         <td className="border p-3 text-green-600">Élevée</td>
                       </tr>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingUp className="h-5 w-5 text-yellow-500 mr-2" />
@@ -238,7 +238,7 @@ export default function TarifsPage() {
                         <td className="border p-3 font-semibold">$79</td>
                         <td className="border p-3 text-yellow-600">Moyenne</td>
                       </tr>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingUp className="h-5 w-5 text-red-500 mr-2" />
@@ -260,7 +260,7 @@ export default function TarifsPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-slate-100">
+                      <tr className="bg-muted">
                         <th className="border p-3 text-left">Saison</th>
                         <th className="border p-3 text-left">Période</th>
                         <th className="border p-3 text-left">Prix/Nuit</th>
@@ -268,7 +268,7 @@ export default function TarifsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingDown className="h-5 w-5 text-green-500 mr-2" />
@@ -279,7 +279,7 @@ export default function TarifsPage() {
                         <td className="border p-3 font-semibold">$89</td>
                         <td className="border p-3 text-green-600">Élevée</td>
                       </tr>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingUp className="h-5 w-5 text-yellow-500 mr-2" />
@@ -290,7 +290,7 @@ export default function TarifsPage() {
                         <td className="border p-3 font-semibold">$109</td>
                         <td className="border p-3 text-yellow-600">Moyenne</td>
                       </tr>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingUp className="h-5 w-5 text-red-500 mr-2" />
@@ -312,7 +312,7 @@ export default function TarifsPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-slate-100">
+                      <tr className="bg-muted">
                         <th className="border p-3 text-left">Saison</th>
                         <th className="border p-3 text-left">Période</th>
                         <th className="border p-3 text-left">Prix/Nuit</th>
@@ -320,7 +320,7 @@ export default function TarifsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingDown className="h-5 w-5 text-green-500 mr-2" />
@@ -331,7 +331,7 @@ export default function TarifsPage() {
                         <td className="border p-3 font-semibold">$129</td>
                         <td className="border p-3 text-green-600">Élevée</td>
                       </tr>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingUp className="h-5 w-5 text-yellow-500 mr-2" />
@@ -342,7 +342,7 @@ export default function TarifsPage() {
                         <td className="border p-3 font-semibold">$149</td>
                         <td className="border p-3 text-yellow-600">Moyenne</td>
                       </tr>
-                      <tr className="hover:bg-slate-50">
+                      <tr className="hover:bg-muted/50">
                         <td className="border p-3">
                           <div className="flex items-center">
                             <TrendingUp className="h-5 w-5 text-red-500 mr-2" />
@@ -363,13 +363,13 @@ export default function TarifsPage() {
       </section>
 
       {/* Special Offers */}
-      <section className="py-16 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-gradient-to-r from-primary-900 to-primary-800 text-white px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
           <ScrollAnimation direction="up">
             <h2 className="text-center mb-2">Offres Spéciales</h2>
           </ScrollAnimation>
           <ScrollAnimation direction="up" delay={100}>
-            <p className="text-center text-slate-300 mb-12 max-w-2xl mx-auto">
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
               Profitez de nos promotions exclusives pour économiser sur votre prochain séjour
             </p>
           </ScrollAnimation>
@@ -380,7 +380,7 @@ export default function TarifsPage() {
                 <CardHeader>
                   <Badge className="self-start bg-yellow-500 text-white hover:bg-yellow-600">Économisez 15%</Badge>
                   <CardTitle className="mt-2">Réservation Anticipée</CardTitle>
-                  <CardDescription className="text-slate-300">
+                  <CardDescription className="text-muted-foreground">
                     Réservez 30 jours à l'avance et économisez
                   </CardDescription>
                 </CardHeader>
@@ -406,7 +406,9 @@ export default function TarifsPage() {
                 <CardHeader>
                   <Badge className="self-start bg-green-500 text-white hover:bg-green-600">Économisez 20%</Badge>
                   <CardTitle className="mt-2">Séjour Prolongé</CardTitle>
-                  <CardDescription className="text-slate-300">Restez plus longtemps, payez moins</CardDescription>
+                  <CardDescription className="text-muted-foreground">
+                    Restez plus longtemps, payez moins
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="mb-4">
@@ -430,7 +432,9 @@ export default function TarifsPage() {
                 <CardHeader>
                   <Badge className="self-start bg-blue-500 text-white hover:bg-blue-600">Offre Spéciale</Badge>
                   <CardTitle className="mt-2">Pack Famille</CardTitle>
-                  <CardDescription className="text-slate-300">Idéal pour les vacances en famille</CardDescription>
+                  <CardDescription className="text-muted-foreground">
+                    Idéal pour les vacances en famille
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="mb-4">
@@ -453,8 +457,8 @@ export default function TarifsPage() {
       </section>
 
       {/* Booking Policies */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-gray-50 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
           <ScrollAnimation direction="up">
             <h2 className="text-center mb-2">Politiques de Réservation</h2>
           </ScrollAnimation>
@@ -538,85 +542,9 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <ScrollAnimation direction="up">
-            <h2 className="text-center mb-2">Questions Fréquentes</h2>
-          </ScrollAnimation>
-          <ScrollAnimation direction="up" delay={100}>
-            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Réponses aux questions les plus courantes concernant nos tarifs
-            </p>
-          </ScrollAnimation>
-
-          <div className="max-w-3xl mx-auto space-y-4">
-            <ScrollAnimation direction="up" delay={200}>
-              <Card>
-                <CardHeader className="cursor-pointer" onClick={() => {}}>
-                  <CardTitle className="text-lg">Comment puis-je obtenir le meilleur tarif?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>
-                    Pour obtenir le meilleur tarif, nous vous recommandons de réserver directement sur notre site web,
-                    de planifier votre séjour à l'avance (au moins 30 jours) et de vérifier nos offres spéciales. Les
-                    séjours en semaine et en basse saison sont généralement moins chers.
-                  </p>
-                </CardContent>
-              </Card>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={300}>
-              <Card>
-                <CardHeader className="cursor-pointer" onClick={() => {}}>
-                  <CardTitle className="text-lg">Le petit-déjeuner est-il inclus dans le prix?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>
-                    Le petit-déjeuner est inclus dans le prix des chambres Familiales et Premium. Pour les chambres
-                    Standard, il est disponible en supplément à $10 par personne pour le continental et $15 pour
-                    l'américain.
-                  </p>
-                </CardContent>
-              </Card>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={400}>
-              <Card>
-                <CardHeader className="cursor-pointer" onClick={() => {}}>
-                  <CardTitle className="text-lg">Y a-t-il des frais supplémentaires non mentionnés?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>
-                    Tous nos tarifs affichés incluent les taxes. Les seuls frais supplémentaires concernent les services
-                    additionnels que vous pourriez choisir (petit-déjeuner, parking, etc.) et la taxe de séjour locale
-                    de $2 par personne et par nuit qui est collectée séparément.
-                  </p>
-                </CardContent>
-              </Card>
-            </ScrollAnimation>
-
-            <ScrollAnimation direction="up" delay={500}>
-              <Card>
-                <CardHeader className="cursor-pointer" onClick={() => {}}>
-                  <CardTitle className="text-lg">Proposez-vous des tarifs spéciaux pour les groupes?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>
-                    Oui, nous proposons des tarifs préférentiels pour les groupes de 5 chambres ou plus. Veuillez nous
-                    contacter directement par téléphone ou email pour obtenir un devis personnalisé en fonction de vos
-                    besoins spécifiques.
-                  </p>
-                </CardContent>
-              </Card>
-            </ScrollAnimation>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section className="py-16 bg-primary text-white">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-16 bg-primary text-white px-4 md:px-8">
+        <div className="max-w-7xl mx-auto text-center">
           <ScrollAnimation direction="up">
             <h2 className="mb-4">Prêt à réserver votre séjour?</h2>
           </ScrollAnimation>

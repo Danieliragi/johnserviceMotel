@@ -189,7 +189,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Restaurant Section */}
-      <section className="py-16 bg-slate-900 text-white">
+      <section className="py-16 bg-primary-950 text-white">
         <div className="container mx-auto px-4">
           <ScrollAnimation>
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -198,7 +198,7 @@ export default function ServicesPage() {
             </div>
           </ScrollAnimation>
           <ScrollAnimation delay={100}>
-            <p className="text-center text-slate-300 max-w-3xl mx-auto mb-12">
+            <p className="text-center text-primary-100 max-w-3xl mx-auto mb-12">
               Découvrez notre restaurant où nos chefs talentueux préparent des plats délicieux avec des ingrédients
               frais et locaux.
             </p>
@@ -213,42 +213,42 @@ export default function ServicesPage() {
 
             <ScrollAnimation direction="right">
               <div className="space-y-6">
-                <div className="bg-slate-800 p-6 rounded-lg">
+                <div className="bg-primary-900 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-white/10 p-3 rounded-full mr-4">
+                    <div className="bg-primary-800 p-3 rounded-full mr-4">
                       <Coffee className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold">Petit-déjeuner Continental</h3>
                   </div>
-                  <p className="text-slate-300 mb-2">
+                  <p className="text-primary-100 mb-2">
                     Commencez votre journée avec notre petit-déjeuner continental comprenant des viennoiseries fraîches,
                     des fruits de saison, des céréales, des yaourts, des jus frais et du café de qualité.
                   </p>
                   <p className="text-white font-medium">Servi de 6h30 à 10h30</p>
                 </div>
 
-                <div className="bg-slate-800 p-6 rounded-lg">
+                <div className="bg-primary-900 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-white/10 p-3 rounded-full mr-4">
+                    <div className="bg-primary-800 p-3 rounded-full mr-4">
                       <Utensils className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold">Restaurant Gastronomique</h3>
                   </div>
-                  <p className="text-slate-300 mb-2">
+                  <p className="text-primary-100 mb-2">
                     Notre restaurant propose une cuisine raffinée mettant en valeur les produits locaux et de saison.
                     Menu à la carte et formules du jour disponibles.
                   </p>
                   <p className="text-white font-medium">Déjeuner: 12h-14h30 | Dîner: 19h-22h30</p>
                 </div>
 
-                <div className="bg-slate-800 p-6 rounded-lg">
+                <div className="bg-primary-900 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
-                    <div className="bg-white/10 p-3 rounded-full mr-4">
+                    <div className="bg-primary-800 p-3 rounded-full mr-4">
                       <Clock className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold">Service en Chambre</h3>
                   </div>
-                  <p className="text-slate-300 mb-2">
+                  <p className="text-primary-100 mb-2">
                     Profitez de notre service en chambre pour savourer nos délicieux plats dans l'intimité de votre
                     chambre.
                   </p>

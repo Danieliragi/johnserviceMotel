@@ -175,8 +175,36 @@ export const AuthService = {
         }
       }
 
-      // Create profile first
+      // First create auth user
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            nom_complet: userData.nom_complet,
+            telephone: userData.telephone,
+          },
+        },
+      })
+
+      if (error) {
+        console.error("Error creating auth user:", error)
+        return {
+          success: false,
+          error: error.message,
+        }
+      }
+
+      if (!data.user) {
+        return {
+          success: false,
+          error: "Erreur lors de la création du compte",
+        }
+      }
+
+      // Then create profile with auth_id
       const profileData = {
+        auth_id: data.user.id,
         email: email,
         nom_complet: userData.nom_complet,
         telephone: userData.telephone,
@@ -184,7 +212,7 @@ export const AuthService = {
         date_creation: new Date().toISOString(),
       }
 
-      const { data: newProfile, error: profileError } = await supabase.from("utilisateurs").insert(profileData).select()
+      const { error: profileError } = await supabase.from("utilisateurs").insert(profileData)
 
       if (profileError) {
         console.error("Error creating profile:", profileError)
@@ -194,56 +222,13 @@ export const AuthService = {
         }
       }
 
-      // Create auth user
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            nom_complet: userData.nom_complet,
-            telephone: userData.telephone,
-            profile_id: newProfile?.[0]?.id,
-          },
-        },
+      toast({
+        title: "Compte créé avec succès",
+        description: "Vous pouvez maintenant vous connecter",
+        variant: "default",
       })
 
-      if (error) {
-        // Clean up profile if auth creation fails
-        if (newProfile?.[0]?.id) {
-          await supabase.from("utilisateurs").delete().eq("id", newProfile[0].id)
-        }
-
-        console.error("Error creating auth user:", error)
-        return {
-          success: false,
-          error: error.message,
-        }
-      }
-
-      if (data.user && newProfile?.[0]?.id) {
-        // Update profile with auth_id
-        const { error: updateError } = await supabase
-          .from("utilisateurs")
-          .update({ auth_id: data.user.id })
-          .eq("id", newProfile[0].id)
-
-        if (updateError) {
-          console.error("Error updating profile with auth_id:", updateError)
-        }
-
-        toast({
-          title: "Compte créé avec succès",
-          description: "Vous pouvez maintenant vous connecter",
-          variant: "default",
-        })
-
-        return { success: true }
-      }
-
-      return {
-        success: false,
-        error: "Erreur lors de la création du compte",
-      }
+      return { success: true }
     } catch (error: any) {
       console.error("Error signing up:", error)
 

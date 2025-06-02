@@ -1,6 +1,4 @@
 "use client"
-
-import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -67,22 +65,28 @@ export default function RoomCard({
     <Card className="overflow-hidden card-hover border-gray-200">
       <div className="relative h-64 overflow-hidden group">
         {/* Ajout d'un état de chargement */}
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-        <Image
-          src={imagePath || "/placeholder.svg"}
+        <img
+          src={imagePath || "/placeholder.svg?height=256&width=400&text=Room+Image"}
           alt={name}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-          onError={(e) => {
-            // Fallback to placeholder if image fails to load
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          onLoad={(e) => {
             const target = e.target as HTMLImageElement
-            // Créer un placeholder avec le nom de la chambre
-            target.src = `/placeholder.svg?text=${encodeURIComponent(name)}`
-            console.log(`Image originale non trouvée: ${image}, utilisation du placeholder à la place`)
+            target.style.opacity = "1"
           }}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          quality={85}
-          priority={popular} // Prioritize loading popular room images
+          onError={(e) => {
+            const target = e.target as HTMLImageElement
+            // Try fallback images based on room type
+            if (type === "standard" && !target.src.includes("standard-room-1")) {
+              target.src = "/standard-room-1.jpeg"
+            } else if (type === "deluxe" && !target.src.includes("deluxe-room-1")) {
+              target.src = "/deluxe-room-1.jpeg"
+            } else if (type === "vip" && !target.src.includes("vip1")) {
+              target.src = "/vip1.jpeg"
+            } else {
+              target.src = `/placeholder.svg?height=256&width=400&text=${encodeURIComponent(name)}`
+            }
+          }}
+          style={{ opacity: 0, transition: "opacity 0.3s ease-in-out" }}
         />
         {popular && <Badge className="absolute top-3 right-3 bg-amber-500">Populaire</Badge>}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">

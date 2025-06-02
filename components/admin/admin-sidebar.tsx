@@ -153,7 +153,7 @@ export function AdminSidebar({ className, collapsed = false }: SidebarNavProps) 
               href={route.href}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground",
-                pathname === route.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+                pathname === route.href ? "bg-primary text-primary-foreground" : "text-muted-foreground",
                 collapsed && "justify-center px-2",
               )}
               onClick={(e) => {

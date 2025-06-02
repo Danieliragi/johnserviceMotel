@@ -12,7 +12,7 @@ type HeroImage = {
 
 export default function HeroCarousel() {
   const heroImages: HeroImage[] = [
-    { src: "/motel-day-1.jpeg", alt: "John Services Motel - Vue extérieure", isNight: false },
+    { src: "/john-motel-service-home.jpeg", alt: "John Services Motel - Vue principale du bâtiment", isNight: false },
     { src: "/motel-night.jpeg", alt: "John Services Motel - Vue nocturne", isNight: true },
     { src: "/motel-day-2.jpeg", alt: "John Services Motel - Vue de la rue", isNight: false },
     { src: "/motel-sign-night.jpeg", alt: "John Services Motel - Enseigne illuminée", isNight: true },
