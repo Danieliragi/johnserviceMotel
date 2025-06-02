@@ -12,15 +12,17 @@ import { MagicLinkService } from "@/lib/magic-link-service"
 interface LoginFormProps {
   onSubmit: (email: string, password?: string) => Promise<void>
   loading: boolean
+  setLoading: (loading: boolean) => void
 }
 
-export function LoginForm({ onSubmit, loading }: LoginFormProps) {
+export function LoginForm({ onSubmit, loading, setLoading }: LoginFormProps) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const { toast } = useToast()
 
   const [useMagicLink, setUseMagicLink] = useState(false)
   const [magicLinkSent, setMagicLinkSent] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,7 +90,7 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
           </div>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="button" className="w-full" disabled={loading} onClick={() => setShowPopup(true)}>
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -101,6 +103,20 @@ export function LoginForm({ onSubmit, loading }: LoginFormProps) {
           )}
         </Button>
       </form>
+
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md mx-4">
+            <h3 className="text-lg font-semibold mb-4">Système en développement</h3>
+            <p className="text-gray-600 mb-4">
+              Le système est en cours de développement, réservez vos chambres directement sans vous connecter
+            </p>
+            <Button onClick={() => setShowPopup(false)} className="w-full">
+              Fermer
+            </Button>
+          </div>
+        </div>
+      )}
 
       {magicLinkSent && (
         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">

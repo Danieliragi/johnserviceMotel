@@ -7,7 +7,7 @@ function getDefaultRooms() {
     {
       id: "default-standard",
       nom: "Chambre Standard",
-      prix: 59,
+      prix: 30,
       capacite: 2,
       disponible: true,
       description: "Chambre standard confortable avec lit queen size",
@@ -16,7 +16,7 @@ function getDefaultRooms() {
     {
       id: "default-deluxe",
       nom: "Chambre De Luxe",
-      prix: 89,
+      prix: 40,
       capacite: 2,
       disponible: true,
       description: "Chambre de luxe avec lit double et coin salon",
@@ -25,7 +25,7 @@ function getDefaultRooms() {
     {
       id: "default-vip",
       nom: "Chambre VIP",
-      prix: 99,
+      prix: 70,
       capacite: 2,
       disponible: true,
       description: "Chambre VIP avec lit double et décoration élégante",

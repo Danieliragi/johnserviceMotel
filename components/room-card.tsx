@@ -114,7 +114,7 @@ export default function RoomCard({
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-1 text-sm text-gray-600">
             <BedDouble className="h-4 w-4 text-slate-800" />
-            {type === "standard" && "Lit Queen Size"}
+            {type === "standard" && "Lit Standard"}
             {type === "deluxe" && "Lit King Size"}
             {type === "vip" && "Lit King Size Premium"}
           </div>
@@ -132,7 +132,9 @@ export default function RoomCard({
           ))}
         </ul>
         <div className="flex gap-2">
-          <Button className="w-full btn-primary">Réserver</Button>
+          <Link href="/chambres#booking-section" className="w-full">
+            <Button className="w-full btn-primary">Réserver</Button>
+          </Link>
           <Link href={`/chambres/${slug}`} className="w-full">
             <Button
               variant="outline"

@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
 import Link from "next/link"
 
+// Mark this route as dynamic to prevent static rendering
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: "Gestion des Factures | John Services Motel",
   description: "Gérez les factures du motel",

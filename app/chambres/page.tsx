@@ -29,14 +29,44 @@ export default function ChambresPage() {
       {/* Booking Section */}
       <section className="py-12 px-4 md:px-8">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="bg-white rounded-xl shadow-xl -mt-20 relative z-10 p-6 md:p-8 border border-gray-100 animate-slide-up">
-            <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center mr-3 text-lg">
-                1
-              </span>
-              Vérifiez la disponibilité
-            </h2>
-            <BookingForm />
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 -mt-20 z-10 p-8 md:p-12 animate-slide-up overflow-hidden">
+            {/* Decorative background elements */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-primary/5 to-transparent rounded-full translate-y-12 -translate-x-12"></div>
+
+            {/* Content wrapper with relative positioning */}
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white flex items-center justify-center mr-5 text-xl font-bold shadow-xl ring-4 ring-primary/10">
+                    1
+                  </div>
+                  <div>
+                    <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                      Réservez votre séjour
+                    </h2>
+                    <p className="text-gray-600 mt-2 text-lg">Trouvez votre chambre idéale en quelques clics</p>
+                  </div>
+                </div>
+                <div className="hidden md:block">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center shadow-lg border border-primary/10">
+                    <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced form container */}
+              <div className="bg-gradient-to-br from-white to-gray-50/30 rounded-2xl p-8 border border-gray-100/50 shadow-lg backdrop-blur-sm">
+                <BookingForm />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -77,7 +107,7 @@ export default function ChambresPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <RoomCard
                   name="Chambre Standard"
-                  description="Chambre confortable avec lit queen size et salle de bain privée."
+                  description="Chambre confortable avec lit standard et salle de bain privée."
                   price={59}
                   image="/standard7.jpeg"
                   rating={3}
@@ -102,7 +132,7 @@ export default function ChambresPage() {
 
                 <RoomCard
                   name="Chambre VIP"
-                  description="Chambre VIP élégante avec lit double, coin salon et décoration soignée."
+                  description="Chambre VIP élégante avec lit double vip, coin salon et décoration soignée."
                   price={99}
                   image="/vip-swan1.jpeg"
                   rating={5}
@@ -118,7 +148,7 @@ export default function ChambresPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <RoomCard
                   name="Chambre Standard"
-                  description="Chambre confortable avec lit queen size et salle de bain privée."
+                  description="Chambre confortable avec lit standard et salle de bain privée."
                   price={59}
                   image="/standard7.jpeg"
                   rating={3}
@@ -224,11 +254,7 @@ export default function ChambresPage() {
             <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
               Réserver maintenant
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-primary/90 transition-all duration-300"
-            >
+            <Button size="lg" className="bg-primary text-white hover:bg-primary/90 transition-all duration-300">
               Contactez-nous
             </Button>
           </div>

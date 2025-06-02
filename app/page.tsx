@@ -15,6 +15,7 @@ import { useState } from "react"
 
 export default function Home() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  const [isTableReservationModalOpen, setIsTableReservationModalOpen] = useState(false)
   return (
     <main className="flex min-h-screen flex-col">
       {/* Hero Section */}
@@ -50,6 +51,196 @@ export default function Home() {
               Réservez votre séjour
             </h2>
             <BookingForm />
+          </div>
+        </div>
+      )}
+
+      {/* Table Reservation Modal */}
+      {isTableReservationModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 border border-gray-100 relative">
+            <button
+              onClick={() => setIsTableReservationModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            >
+              ×
+            </button>
+            <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <span className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center mr-3 text-lg">
+                🍽️
+              </span>
+              Réserver une table
+            </h2>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                const formData = new FormData(e.target as HTMLFormElement)
+                const data = {
+                  nom: formData.get("nom"),
+                  telephone: formData.get("telephone"),
+                  email: formData.get("email"),
+                  date: formData.get("date"),
+                  heure: formData.get("heure"),
+                  personnes: formData.get("personnes"),
+                  demandes: formData.get("demandes"),
+                }
+
+                const message =
+                  `🍽️ *RÉSERVATION DE TABLE*\n\n` +
+                  `👤 *Client:* ${data.nom}\n` +
+                  `📞 *Téléphone:* ${data.telephone}\n` +
+                  `📧 *Email:* ${data.email}\n\n` +
+                  `📅 *Date:* ${data.date}\n` +
+                  `🕐 *Heure:* ${data.heure}\n` +
+                  `👥 *Nombre de personnes:* ${data.personnes}\n\n` +
+                  `💬 *Demandes spéciales:* ${data.demandes || "Aucune"}\n\n` +
+                  `Merci de confirmer cette réservation.`
+
+                const whatsappUrl = `https://wa.me/243997163443?text=${encodeURIComponent(message)}`
+                window.open(whatsappUrl, "_blank")
+                setIsTableReservationModalOpen(false)
+              }}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom complet *
+                  </label>
+                  <input
+                    type="text"
+                    id="nom"
+                    name="nom"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors"
+                    placeholder="Votre nom complet"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="telephone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Téléphone *
+                  </label>
+                  <input
+                    type="tel"
+                    id="telephone"
+                    name="telephone"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors"
+                    placeholder="+243 xxx xxx xxx"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors"
+                  placeholder="votre@email.com"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+                    Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                    min={new Date().toISOString().split("T")[0]}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="heure" className="block text-sm font-medium text-gray-700 mb-2">
+                    Heure *
+                  </label>
+                  <select
+                    id="heure"
+                    name="heure"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors"
+                  >
+                    <option value="">Choisir l'heure</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="personnes" className="block text-sm font-medium text-gray-700 mb-2">
+                    Personnes *
+                  </label>
+                  <select
+                    id="personnes"
+                    name="personnes"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors"
+                  >
+                    <option value="">Nombre</option>
+                    <option value="1">1 personne</option>
+                    <option value="2">2 personnes</option>
+                    <option value="3">3 personnes</option>
+                    <option value="4">4 personnes</option>
+                    <option value="5">5 personnes</option>
+                    <option value="6">6 personnes</option>
+                    <option value="7">7 personnes</option>
+                    <option value="8">8 personnes</option>
+                    <option value="8+">Plus de 8</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="demandes" className="block text-sm font-medium text-gray-700 mb-2">
+                  Demandes spéciales
+                </label>
+                <textarea
+                  id="demandes"
+                  name="demandes"
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 transition-colors resize-none"
+                  placeholder="Allergies, préférences de table, occasion spéciale..."
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl py-3"
+                  onClick={() => setIsTableReservationModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1 bg-slate-800 hover:bg-slate-700 text-white rounded-xl py-3 font-semibold transition-colors"
+                >
+                  Envoyer la réservation
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -125,12 +316,12 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre Standard</h3>
-                  <p className="font-bold text-slate-800">À partir de $59</p>
+                  <p className="font-bold text-slate-800">À partir de $30</p>
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Lit Queen Size
+                    Lit Standard
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
@@ -171,11 +362,11 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre De Luxe</h3>
-                  <p className="font-bold text-slate-800">À partir de $89</p>
+                  <p className="font-bold text-slate-800">À partir de $40</p>
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>1 Lit confortable
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>1 Lit de Luxe
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
@@ -215,12 +406,12 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre VIP</h3>
-                  <p className="font-bold text-slate-800">À partir de $99</p>
+                  <p className="font-bold text-slate-800">À partir de $70</p>
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Lit confortable
+                    Lit VIP
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
@@ -291,10 +482,10 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button className="btn-primary">Voir la carte</Button>
                   <Button
                     variant="outline"
                     className="border-2 border-primary-950 text-primary-950 hover:bg-primary-50"
+                    onClick={() => setIsTableReservationModalOpen(true)}
                   >
                     Réserver une table
                   </Button>
@@ -406,6 +597,7 @@ export default function Home() {
             <Button
               size="lg"
               className="bg-primary-950 text-white border-2 border-white hover:bg-primary-900 transition-all duration-300"
+              onClick={() => (window.location.href = "/contact")}
             >
               Contactez-nous
             </Button>

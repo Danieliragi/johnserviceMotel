@@ -210,67 +210,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="section-padding bg-muted/30 container-padding">
-        <div className="max-w-7xl mx-auto">
-          <ScrollAnimation direction="up">
-            <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold mb-8 text-center text-foreground">Questions Fréquentes</h2>
-
-              <div className="space-y-6">
-                <div className="bg-card p-6 rounded-lg shadow-sm border">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    Quelles sont les heures d&apos;arrivée et de départ?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    L&apos;heure d&apos;arrivée (check-in) est à partir de 14h00 et l&apos;heure de départ (check-out)
-                    est jusqu&apos;à 11h00. Si vous avez besoin d&apos;arrangements spéciaux, veuillez nous contacter à
-                    l&apos;avance.
-                  </p>
-                </div>
-
-                <div className="bg-card p-6 rounded-lg shadow-sm border">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Comment puis-je réserver une chambre?</h3>
-                  <p className="text-muted-foreground">
-                    Vous pouvez réserver une chambre directement sur notre site web, par téléphone, ou par email. Nous
-                    recommandons de réserver à l&apos;avance pendant la haute saison pour garantir la disponibilité.
-                  </p>
-                </div>
-
-                <div className="bg-card p-6 rounded-lg shadow-sm border">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    Acceptez-vous les animaux de compagnie?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Nous n&apos;acceptons pas les animaux de compagnie dans notre établissement, à l&apos;exception des
-                    chiens d&apos;assistance. Nous vous remercions de votre compréhension.
-                  </p>
-                </div>
-
-                <div className="bg-card p-6 rounded-lg shadow-sm border">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Y a-t-il un restaurant sur place?</h3>
-                  <p className="text-muted-foreground">
-                    Oui, nous avons un restaurant sur place qui sert le petit-déjeuner, le déjeuner et le dîner. Nous
-                    proposons une cuisine locale et internationale. Le service en chambre est également disponible.
-                  </p>
-                </div>
-
-                <div className="bg-card p-6 rounded-lg shadow-sm border">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    Proposez-vous un service de navette depuis l&apos;aéroport?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Oui, nous proposons un service de navette depuis l&apos;aéroport moyennant des frais
-                    supplémentaires. Veuillez nous informer de vos détails de vol à l&apos;avance pour que nous
-                    puissions organiser votre transfert.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </ScrollAnimation>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="section-padding hero-gradient text-white container-padding">
         <div className="max-w-7xl mx-auto text-center">

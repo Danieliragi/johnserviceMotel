@@ -143,8 +143,8 @@ export default function DeluxeRoomPage() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-lg font-bold">Prix par nuit</span>
                     <div className="text-right">
-                      <span className="text-sm text-gray-500 line-through mr-2">$99</span>
-                      <span className="text-2xl font-bold text-slate-800">$89</span>
+                      <span className="text-sm text-gray-500 line-through mr-2">$50</span>
+                      <span className="text-2xl font-bold text-slate-800">$40</span>
                     </div>
                   </div>
                   <p className="text-sm text-gray-600 mb-4">Petit-déjeuner non inclus (+$9 par personne)</p>
@@ -493,7 +493,7 @@ export default function DeluxeRoomPage() {
                 <CardContent className="p-6">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold">Chambre Standard</h3>
-                    <p className="font-bold text-slate-800">À partir de $59</p>
+                    <p className="font-bold text-slate-800">À partir de $30</p>
                   </div>
                   <p className="text-gray-600 mb-4">
                     Chambre confortable avec lit queen size et salle de bain privée, idéale pour 2 personnes.
@@ -519,7 +519,7 @@ export default function DeluxeRoomPage() {
                 <CardContent className="p-6">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold">Chambre VIP</h3>
-                    <p className="font-bold text-slate-800">À partir de $99</p>
+                    <p className="font-bold text-slate-800">À partir de $70</p>
                   </div>
                   <p className="text-gray-600 mb-4">
                     Chambre VIP avec lit king size, coin salon et petit-déjeuner inclus pour un séjour luxueux.
