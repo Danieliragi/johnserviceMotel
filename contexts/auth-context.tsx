@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
-import { createClient } from "@supabase/supabase-js"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { useAppDispatch } from "@/lib/redux/hooks"
@@ -46,20 +46,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const dispatch = useAppDispatch()
 
+  // Check if environment variables are available
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // Create a conditional supabase client
-  const supabase =
-    supabaseUrl && supabaseAnonKey
-      ? createClient(supabaseUrl, supabaseAnonKey, {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true,
-          },
-        })
-      : null
+  // Only create supabase client if environment variables are available
+  const supabase = supabaseUrl && supabaseAnonKey ? createClientComponentClient() : null
 
   useEffect(() => {
     const fetchSession = async () => {
