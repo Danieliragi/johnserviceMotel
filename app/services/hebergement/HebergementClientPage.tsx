@@ -77,24 +77,24 @@ export default function HebergementClientPage() {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length)
     }, 5000)
 
-    // Preload all hero images with better error handling
+    // Preload images with better error handling
     heroImages.forEach((image, index) => {
       const img = new Image()
       img.onload = () => {
-        console.log(`Hero image ${index + 1} loaded successfully: ${image.src}`)
+        console.log(`Hero image ${index + 1} loaded successfully`)
       }
       img.onerror = () => {
-        console.warn(`Failed to load hero image ${index + 1}: ${image.src}. Using fallback.`)
-        // Set a fallback image if the original fails
+        console.warn(`Failed to load hero image ${index + 1}: ${image.src}`)
+        // If it's the first image and it fails, try to use a known working fallback
         if (index === 0) {
-          setCurrentImageIndex(1) // Skip to next available image
+          heroImages[0].src = "/placeholder.svg?height=600&width=1200&text=John+Services+Motel"
         }
       }
       img.src = image.src
     })
 
     return () => clearInterval(interval)
-  }, [heroImages])
+  }, [])
 
   return (
     <div className="bg-gray-50">
@@ -103,7 +103,7 @@ export default function HebergementClientPage() {
         <div className="absolute inset-0">
           {heroImages.map((image, index) => (
             <div
-              key={image.src}
+              key={`hero-${index}`}
               className={`absolute inset-0 transition-all duration-1500 ease-in-out ${
                 index === currentImageIndex ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
@@ -116,7 +116,7 @@ export default function HebergementClientPage() {
                 priority={index === 0}
                 className="object-cover"
                 sizes="100vw"
-                fallbackSrc="/motel-day-1.jpeg"
+                fallbackSrc="/placeholder.svg?height=600&width=1200&text=John+Services+Motel"
                 onError={() => {
                   console.error(`Failed to load hero image: ${image.src}`)
                 }}
@@ -269,7 +269,7 @@ export default function HebergementClientPage() {
                         alt="John Services Motel - Vue d'ensemble"
                         fill
                         className="object-cover"
-                        fallbackSrc="/motel-day-1.jpeg"
+                        fallbackSrc="/placeholder.svg?height=500&width=600&text=John+Services+Motel"
                       />
                     </div>
                     <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg w-40 hidden md:block">
@@ -330,7 +330,7 @@ export default function HebergementClientPage() {
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          fallbackSrc="/john-motel-service-home.jpeg"
+                          fallbackSrc="/placeholder.svg?height=400&width=600&text=Chambre+Standard"
                           onError={() => {
                             console.error("Failed to load standard room image")
                           }}
@@ -386,7 +386,7 @@ export default function HebergementClientPage() {
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          fallbackSrc="/john-motel-service-home.jpeg"
+                          fallbackSrc="/placeholder.svg?height=400&width=600&text=Chambre+De+Luxe"
                         />
                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
                           <p className="text-sm font-medium flex items-center">
@@ -438,7 +438,7 @@ export default function HebergementClientPage() {
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          fallbackSrc="/john-motel-service-home.jpeg"
+                          fallbackSrc="/placeholder.svg?height=400&width=600&text=Chambre+VIP"
                         />
                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
                           <p className="text-sm font-medium flex items-center">
@@ -497,7 +497,7 @@ export default function HebergementClientPage() {
                 alt="Motel at night"
                 fill
                 className="object-cover"
-                fallbackSrc="/motel-day-1.jpeg"
+                fallbackSrc="/placeholder.svg?height=400&width=1200&text=Motel+Night"
               />
             </div>
             <div className="container mx-auto text-center relative z-10">
