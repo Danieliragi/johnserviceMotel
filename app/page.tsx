@@ -289,12 +289,22 @@ export default function Home() {
       {/* Rooms Section */}
       <section className="section-padding container-padding max-w-7xl mx-auto">
         <ScrollAnimation>
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-10">
-            <h2 className="text-3xl font-bold">Nos Chambres</h2>
-            <Link href="/chambres" className="text-slate-800 hover:text-slate-600 flex items-center mt-2 md:mt-0 group">
-              <span>Voir toutes nos chambres</span>
-              <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
-            </Link>
+          <div className="text-center mb-12">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Nos Chambres</h2>
+              <div className="w-20 h-1 bg-primary-950 mx-auto mb-6 rounded-full"></div>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Découvrez nos chambres confortables et modernes, conçues pour répondre à tous vos besoins. Du standard
+                au VIP, chaque espace offre le confort et les équipements nécessaires pour un séjour parfait.
+              </p>
+              <Link
+                href="/chambres"
+                className="inline-flex items-center gap-2 bg-primary-950 text-white px-6 py-3 rounded-xl hover:bg-primary-900 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                <span>Voir toutes nos chambres</span>
+                <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
         </ScrollAnimation>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -316,7 +326,12 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre Standard</h3>
-                  <p className="font-bold text-slate-800">À partir de $30</p>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500 font-medium">À partir de</p>
+                    <p className="text-2xl font-bold text-primary-950 bg-primary-50 px-3 py-1 rounded-lg border border-primary-200">
+                      $30
+                    </p>
+                  </div>
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
@@ -325,7 +340,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Climatisation
+                    wifi gratuit
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
@@ -362,7 +377,12 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre De Luxe</h3>
-                  <p className="font-bold text-slate-800">À partir de $40</p>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500 font-medium">À partir de</p>
+                    <p className="text-2xl font-bold text-primary-950 bg-primary-50 px-3 py-1 rounded-lg border border-primary-200">
+                      $40
+                    </p>
+                  </div>
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
@@ -370,7 +390,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
-                    Climatisation
+                    wifi gratuit
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
@@ -406,7 +426,12 @@ export default function Home() {
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Chambre VIP</h3>
-                  <p className="font-bold text-slate-800">À partir de $70</p>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500 font-medium">À partir de</p>
+                    <p className="text-2xl font-bold text-primary-950 bg-primary-50 px-3 py-1 rounded-lg border border-primary-200">
+                      $70
+                    </p>
+                  </div>
                 </div>
                 <ul className="mb-4 text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">

@@ -17,7 +17,6 @@ export default function HebergementClientPage() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
 
   const heroImages = [
-    { src: "/john-motel-service-home.jpeg", alt: "John Services Motel - Accueil" },
     { src: "/motel-day-1.jpeg", alt: "Motel pendant la journée" },
     { src: "/motel-day-2.jpeg", alt: "Vue extérieure du motel" },
     { src: "/motel-day-3.jpeg", alt: "Façade du motel" },
@@ -78,11 +77,19 @@ export default function HebergementClientPage() {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length)
     }, 5000)
 
-    // Preload all hero images
+    // Preload all hero images with better error handling
     heroImages.forEach((image, index) => {
       const img = new Image()
-      img.onload = () => console.log(`Hero image ${index + 1} loaded successfully: ${image.src}`)
-      img.onerror = () => console.error(`Failed to load hero image ${index + 1}: ${image.src}`)
+      img.onload = () => {
+        console.log(`Hero image ${index + 1} loaded successfully: ${image.src}`)
+      }
+      img.onerror = () => {
+        console.warn(`Failed to load hero image ${index + 1}: ${image.src}. Using fallback.`)
+        // Set a fallback image if the original fails
+        if (index === 0) {
+          setCurrentImageIndex(1) // Skip to next available image
+        }
+      }
       img.src = image.src
     })
 
@@ -109,7 +116,7 @@ export default function HebergementClientPage() {
                 priority={index === 0}
                 className="object-cover"
                 sizes="100vw"
-                fallbackSrc="/john-motel-service-home.jpeg"
+                fallbackSrc="/motel-day-1.jpeg"
                 onError={() => {
                   console.error(`Failed to load hero image: ${image.src}`)
                 }}

@@ -108,7 +108,7 @@ export default function ChambresPage() {
                 <RoomCard
                   name="Chambre Standard"
                   description="Chambre confortable avec lit standard et salle de bain privée."
-                  price={59}
+                  price={30}
                   image="/standard7.jpeg"
                   rating={3}
                   type="standard"
@@ -120,7 +120,7 @@ export default function ChambresPage() {
                 <RoomCard
                   name="Chambre De Luxe"
                   description="Spacieuse chambre de luxe avec un lit double confortable et coin salon."
-                  price={89}
+                  price={40}
                   image="/deluxe-room-1.jpeg"
                   rating={4}
                   type="deluxe"
@@ -133,7 +133,7 @@ export default function ChambresPage() {
                 <RoomCard
                   name="Chambre VIP"
                   description="Chambre VIP élégante avec lit double vip, coin salon et décoration soignée."
-                  price={99}
+                  price={70}
                   image="/vip-swan1.jpeg"
                   rating={5}
                   type="vip"
@@ -149,7 +149,7 @@ export default function ChambresPage() {
                 <RoomCard
                   name="Chambre Standard"
                   description="Chambre confortable avec lit standard et salle de bain privée."
-                  price={59}
+                  price={30}
                   image="/standard7.jpeg"
                   rating={3}
                   type="standard"
@@ -165,7 +165,7 @@ export default function ChambresPage() {
                 <RoomCard
                   name="Chambre De Luxe"
                   description="Spacieuse chambre de luxe avec un lit double confortable et coin salon."
-                  price={89}
+                  price={40}
                   image="/deluxe-room-1.jpeg"
                   rating={4}
                   type="deluxe"
@@ -182,7 +182,7 @@ export default function ChambresPage() {
                 <RoomCard
                   name="Chambre VIP"
                   description="Chambre VIP élégante avec lit double, coin salon et décoration soignée."
-                  price={99}
+                  price={70}
                   image="/vip-swan1.jpeg"
                   rating={5}
                   type="vip"
