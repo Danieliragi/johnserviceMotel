@@ -279,13 +279,13 @@ export default function Header() {
             <div className="relative h-10 w-10 sm:h-12 sm:w-12 overflow-hidden transition-transform duration-300 group-hover:scale-110 border border-gray-200 shadow-sm bg-primary">
               <Image src="/logo-motel-john.png" alt="John Services Motel New Logo" fill className="object-contain" />
             </div>
-            <span className="hidden sm:inline-flex md:hidden lg:inline-flex flex-col items-center leading-tight font-bold text-lg sm:text-xl transition-colors duration-300 group-hover:text-slate-800">
+            <span className="hidden lg:inline-flex flex-col items-center leading-tight font-bold text-lg sm:text-xl transition-colors duration-300 group-hover:text-slate-800">
               <span className="text-2xl sm:text-3xl">John</span>
               <span className="text-xs sm:text-sm font-medium font-['Poppins']">Services Motel</span>
             </span>
-            <span className="inline-flex sm:hidden flex-col items-center leading-tight font-bold text-sm transition-colors duration-300 group-hover:text-slate-800">
-              <span className="text-lg">John</span>
-              <span className="text-xs font-medium font-['Poppins']">Services Motel</span>
+            <span className="inline-flex lg:hidden flex-col items-center leading-tight font-bold text-sm sm:text-lg transition-colors duration-300 group-hover:text-slate-800">
+              <span className="text-lg sm:text-2xl">John</span>
+              <span className="text-xs sm:text-sm font-medium font-['Poppins']">Services Motel</span>
             </span>
           </Link>
 
