@@ -113,7 +113,7 @@ export default function ChambresPage() {
                   rating={3}
                   type="standard"
                   capacity={2}
-                  features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée"]}
+                  features={["Wi-Fi gratuit", "TV", "Climatisation", "Salle de bain privée"]}
                   slug="standard"
                 />
 
@@ -125,7 +125,7 @@ export default function ChambresPage() {
                   rating={4}
                   type="deluxe"
                   capacity={2}
-                  features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec fauteuil", "Décoration élégante"]}
+                  features={["Wi-Fi gratuit", "TV", "Climatisation", "Coin salon avec fauteuil", "Décoration élégante"]}
                   slug="deluxe"
                   popular={true}
                 />
@@ -138,7 +138,7 @@ export default function ChambresPage() {
                   rating={5}
                   type="vip"
                   capacity={2}
-                  features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec table", "Service de chambre"]}
+                  features={["Wi-Fi gratuit", "TV", "Climatisation", "Coin salon avec table", "Service de chambre"]}
                   slug="vip"
                 />
               </div>
@@ -154,7 +154,7 @@ export default function ChambresPage() {
                   rating={3}
                   type="standard"
                   capacity={2}
-                  features={["Wi-Fi", "TV", "Climatisation", "Salle de bain privée"]}
+                  features={["Wi-Fi gratuit", "TV", "Climatisation", "Salle de bain privée"]}
                   slug="standard"
                 />
               </div>
@@ -170,7 +170,7 @@ export default function ChambresPage() {
                   rating={4}
                   type="deluxe"
                   capacity={2}
-                  features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec fauteuil", "Décoration élégante"]}
+                  features={["Wi-Fi gratuit", "TV", "Climatisation", "Coin salon avec fauteuil", "Décoration élégante"]}
                   slug="deluxe"
                   popular={true}
                 />
@@ -187,7 +187,7 @@ export default function ChambresPage() {
                   rating={5}
                   type="vip"
                   capacity={2}
-                  features={["Wi-Fi", "TV", "Climatisation", "Coin salon avec table", "Service de chambre"]}
+                  features={["Wi-Fi gratuit", "TV", "Climatisation", "Coin salon avec table", "Service de chambre"]}
                   slug="vip"
                 />
               </div>
