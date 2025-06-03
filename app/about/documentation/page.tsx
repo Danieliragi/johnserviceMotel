@@ -16,21 +16,78 @@ export default function DocumentationPage() {
       <section className="relative py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-2 mb-6">
-              <Link href="/" className="text-sm text-gray-500 hover:text-primary">
-                Accueil
-              </Link>
-              <span className="text-gray-400">/</span>
-              <Link href="/about" className="text-sm text-gray-500 hover:text-primary">
-                À propos
-              </Link>
-              <span className="text-gray-400">/</span>
-              <span className="text-sm text-gray-700">Documentation</span>
-            </div>
+            {/* Enhanced breadcrumb with better styling */}
+            <nav
+              aria-label="Breadcrumb"
+              className="bg-white/80 backdrop-blur-sm py-3 px-4 rounded-lg shadow-sm mb-8 border border-gray-100"
+            >
+              <ol className="flex items-center space-x-2 text-sm">
+                <li>
+                  <Link href="/" className="text-gray-600 hover:text-primary transition-colors flex items-center">
+                    <span className="sr-only">Accueil</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
+                    </svg>
+                    <span>Accueil</span>
+                  </Link>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </li>
+                <li>
+                  <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">
+                    À propos
+                  </Link>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </li>
+                <li>
+                  <span className="text-primary font-medium">Documentation</span>
+                </li>
+              </ol>
+            </nav>
 
-            <div className="text-center mb-12">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">Documentation</h1>
-              <div className="w-20 h-1 bg-[#8c3d0e] mx-auto rounded-full"></div>
+            {/* Enhanced page header with better styling */}
+            <div className="text-center mb-12 relative">
+              <span className="text-sm font-semibold text-primary/80 uppercase tracking-wider mb-2 block">
+                Tout ce que vous devez savoir
+              </span>
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 relative inline-block">
+                Documentation
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-[#8c3d0e] rounded-full"></span>
+              </h1>
+              <p className="text-gray-600 max-w-2xl mx-auto mt-6">
+                Découvrez tous les détails sur notre établissement, nos services et nos engagements pour vous offrir un
+                séjour exceptionnel.
+              </p>
             </div>
 
             <Card className="mb-10 overflow-hidden border-none shadow-lg">

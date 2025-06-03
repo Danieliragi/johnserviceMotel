@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { StarIcon, BedDouble, Users } from "lucide-react"
+import { StarIcon } from "lucide-react"
 import React from "react"
 
 interface RoomCardProps {
@@ -111,18 +111,6 @@ export default function RoomCard({
           ))}
         </div>
         <p className="text-gray-600 mb-4 line-clamp-2">{description}</p>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="flex items-center gap-1 text-sm text-gray-600">
-            <BedDouble className="h-4 w-4 text-slate-800" />
-            {type === "standard" && "Lit Standard"}
-            {type === "deluxe" && "Lit King Size"}
-            {type === "vip" && "Lit King Size Premium"}
-          </div>
-          <div className="flex items-center gap-1 text-sm text-gray-600">
-            <Users className="h-4 w-4 text-slate-800" />
-            {capacity} {capacity === 1 ? "personne" : "personnes"}
-          </div>
-        </div>
         <ul className="mb-4 text-gray-600 space-y-2">
           {features.slice(0, 4).map((feature, index) => (
             <li key={index} className="flex items-center gap-2">

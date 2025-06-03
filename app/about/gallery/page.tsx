@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,39 +23,26 @@ export default function GalleryPage() {
     // Chambres Standard
     { src: "/standard-room-1.jpeg", alt: "Chambre Standard - Vue d'ensemble", category: "standard" },
     { src: "/standard-room-2.jpeg", alt: "Chambre Standard - Lit confortable", category: "standard" },
-    { src: "/standard-room-3.jpeg", alt: "Chambre Standard - Espace de travail", category: "standard" },
     { src: "/standard-room-4.jpeg", alt: "Chambre Standard - Salle de bain", category: "standard" },
-    { src: "/standard-room-5.jpeg", alt: "Chambre Standard - Coin détente", category: "standard" },
-    { src: "/standard-room-6.jpeg", alt: "Chambre Standard - Vue fenêtre", category: "standard" },
-    { src: "/standard-room-7.jpeg", alt: "Chambre Standard - Aménagement", category: "standard" },
 
     // Chambres Deluxe
     { src: "/deluxe-room-1.jpeg", alt: "Chambre Deluxe - Suite spacieuse", category: "deluxe" },
     { src: "/deluxe-room-2.jpeg", alt: "Chambre Deluxe - Salon privé", category: "deluxe" },
-    { src: "/deluxe-room-3.jpeg", alt: "Chambre Deluxe - Chambre principale", category: "deluxe" },
-    { src: "/deluxe-room-4.jpeg", alt: "Chambre Deluxe - Salle de bain premium", category: "deluxe" },
 
     // Chambres VIP
     { src: "/vip1.jpeg", alt: "Suite VIP - Luxe et confort", category: "vip" },
     { src: "/vip2.jpeg", alt: "Suite VIP - Salon exécutif", category: "vip" },
-    { src: "/vip3.jpeg", alt: "Suite VIP - Chambre master", category: "vip" },
     { src: "/vip4.jpeg", alt: "Suite VIP - Salle de bain spa", category: "vip" },
     { src: "/vip5.jpeg", alt: "Suite VIP - Espace détente", category: "vip" },
-    { src: "/vip6.jpeg", alt: "Suite VIP - Vue panoramique", category: "vip" },
-    { src: "/vip7.jpeg", alt: "Suite VIP - Aménagement de luxe", category: "vip" },
 
     // Extérieur et Bâtiment
-    { src: "/john-motel-service-home.jpeg", alt: "John Services Motel - Façade principale", category: "exterior" },
     { src: "/motel-night.jpeg", alt: "Motel de nuit - Ambiance nocturne", category: "exterior" },
     { src: "/motel-day-1.jpeg", alt: "Motel de jour - Vue d'ensemble", category: "exterior" },
-    { src: "/motel-day-2.jpeg", alt: "Motel - Entrée principale", category: "exterior" },
-    { src: "/motel-day-3.jpeg", alt: "Motel - Parking et accès", category: "exterior" },
     { src: "/motel-sign-night.jpeg", alt: "Enseigne illuminée", category: "exterior" },
 
     // Services et Espaces Communs
     { src: "/motel-reception.jpeg", alt: "Réception - Accueil chaleureux", category: "services" },
     { src: "/motel-restaurant.jpeg", alt: "Restaurant - Salle à manger", category: "services" },
-    { src: "/motel-restaurant-2.jpeg", alt: "Restaurant - Espace bar", category: "services" },
     { src: "/motel-bar.jpeg", alt: "Bar - Ambiance conviviale", category: "services" },
   ]
 
@@ -159,16 +146,6 @@ export default function GalleryPage() {
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-white font-medium text-sm line-clamp-2">{image.alt}</p>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
-                        <Maximize2 className="h-4 w-4 text-white" />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>

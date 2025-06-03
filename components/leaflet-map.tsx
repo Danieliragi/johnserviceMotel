@@ -69,6 +69,11 @@ export default function LeafletMap({
             return
           }
 
+          // Nettoyer toute instance existante sur cet élément
+          if (mapElement._leaflet_id) {
+            delete mapElement._leaflet_id
+          }
+
           // Correction pour les icônes Leaflet
           if (window.L.Icon && window.L.Icon.Default) {
             delete window.L.Icon.Default.prototype._getIconUrl
@@ -101,12 +106,12 @@ export default function LeafletMap({
 
           // Créer un contenu HTML personnalisé pour le popup
           const popupContent = `
-          <div style="padding: 10px; max-width: 250px; font-family: system-ui, sans-serif;">
-            <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">${address}</h3>
-            <p style="margin: 0 0 8px 0; font-size: 14px; color: #555;">${detailedAddress}</p>
-            <p style="margin: 0; font-size: 12px; color: #777;">Coordonnées: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
-          </div>
-        `
+        <div style="padding: 10px; max-width: 250px; font-family: system-ui, sans-serif;">
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">${address}</h3>
+          <p style="margin: 0 0 8px 0; font-size: 14px; color: #555;">${detailedAddress}</p>
+          <p style="margin: 0; font-size: 12px; color: #777;">Coordonnées: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
+        </div>
+      `
 
           // Ajouter un marqueur avec un popup amélioré
           const marker = window.L.marker([latitude, longitude]).addTo(map).bindPopup(popupContent, {
@@ -160,7 +165,10 @@ export default function LeafletMap({
 
   // Fonction appelée lorsque le script Leaflet est chargé
   const handleLeafletLoad = () => {
-    setLeafletLoaded(true)
+    // Vérifier que Leaflet est bien chargé avant de continuer
+    if (window.L && typeof window.L.map === "function") {
+      setLeafletLoaded(true)
+    }
   }
 
   return (
