@@ -519,8 +519,7 @@ export default function Header() {
             ) : (
               <Button variant="outline" className="hidden sm:inline-flex text-xs sm:text-sm px-2 sm:px-3" asChild>
                 <Link href="/auth/login">
-                  <span className="hidden lg:inline">{t("auth.signIn")}</span>
-                  <span className="inline lg:hidden">{t("auth.login")}</span>
+                  <span>{t("auth.signIn")}</span>
                 </Link>
               </Button>
             )}
